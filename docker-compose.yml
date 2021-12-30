@@ -30,6 +30,7 @@ services:
       - 27018:27017
     volumes:
       - mongodb:/data/db
+      - ./docker/mongo:/data/configdb
 
   mongo-express:
     image: mongo-express
