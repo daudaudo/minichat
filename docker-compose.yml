@@ -16,10 +16,40 @@ services:
     networks:
       - minichat_network
 
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    container_name: minichat-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: minichat
+      MONGO_INITDB_DATABASE: minichat
+    networks:
+      - minichat_network
+    ports:
+      - 27018:27017
+    volumes:
+      - mongodb:/data/db
+
+  mongo-express:
+    image: mongo-express
+    restart: unless-stopped
+    container_name: minichat-mongo-express
+    ports:
+      - 8082:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: minichat
+      ME_CONFIG_MONGODB_URL: mongodb://root:minichat@mongo:27017/
+    networks:
+      - minichat_network
+    depends_on:
+      - mongo
+
 networks:
   minichat_network:
     driver: bridge
 
 volumes:
-  dbdata:
+  mongodb:
     driver: local
