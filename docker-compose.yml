@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: docker/Dockerfile
+    image: minichatapp
+    container_name: minichat-app
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www/
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./:/var/www
+    networks:
+      - minichat_network
+
+networks:
+  minichat_network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
