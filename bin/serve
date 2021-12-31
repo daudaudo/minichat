@@ -4,11 +4,10 @@
  * Module dependencies.
  */
 
-var app = require('./app');
+var {app, redisClient} = require('./app');
 var debug = require('debug')('www:server');
 var http = require('http');
-const { createAdapter } = require("@socket.io/redis-adapter");
-const Redis = require("ioredis");
+var { createAdapter } = require("@socket.io/redis-adapter");
 
 /**
  * Get port from environment and store in Express.
@@ -24,10 +23,7 @@ app.set('port', port);
 var server = http.createServer(app);
 var io = require("socket.io")(server);
 
-const pubClient = new Redis(6379, 'minichat-redis');
-const subClient = pubClient.duplicate();
-
-io.adapter(createAdapter(pubClient, subClient));
+io.adapter(createAdapter(redisClient, redisClient.duplicate()));
 
 /**
  * Listen socket.

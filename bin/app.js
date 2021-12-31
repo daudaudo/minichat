@@ -21,12 +21,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(path.dirname(__dirname), 'public')));
+
+/**
+ * Use redis session
+ */
+var redisClient = new Redis(6379, 'minichat-redis');
+var redisStore = new RedisStore({client: redisClient});
 app.use(session({
-  store: new RedisStore({client: new Redis(6379, 'minichat-redis')}),
+  store: redisStore,
   secret: 'minichat',
   resave: true,
   saveUninitialized: true,
 }));
+
+/**
+ * Register router web and api
+ */
 
 app.use('/', webRouter);
 app.use('/api', apiRouter);
@@ -47,4 +57,4 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+module.exports = {app, redisClient, redisStore};
