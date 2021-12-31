@@ -6,13 +6,18 @@
     "start": "node ./bin/serve"
   },
   "dependencies": {
+    "@socket.io/redis-adapter": "^7.1.0",
+    "@socket.io/sticky": "^1.0.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
+    "ioredis": "^4.28.2",
     "mongoose": "^6.1.4",
     "morgan": "~1.9.1",
-    "socket.io": "^4.4.0"
+    "redis": "^4.0.1",
+    "socket.io": "^4.4.0",
+    "uuid": "^8.3.2"
   }
 }

@@ -47,6 +47,18 @@ services:
     depends_on:
       - mongo
 
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    container_name: minichat-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - ./docker/redis:/data
+    ports:
+      - 6381:6379
+    networks:
+      - minichat_network
+
 networks:
   minichat_network:
     driver: bridge

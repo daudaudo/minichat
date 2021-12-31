@@ -7,6 +7,8 @@
 var app = require('../app');
 var debug = require('debug')('www:server');
 var http = require('http');
+const { createAdapter } = require("@socket.io/redis-adapter");
+const Redis = require("ioredis");
 
 /**
  * Get port from environment and store in Express.
@@ -20,18 +22,28 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-var io = require('socket.io')(server)
+var io = require("socket.io")(server);
+
+const pubClient = new Redis(6379, 'minichat-redis');
+const subClient = pubClient.duplicate();
+
+io.adapter(createAdapter(pubClient, subClient));
 
 /**
  * Listen socket.
  */
 
 io.on('connection', function(socket) {
-  console.log('Welcome to server chat');
+  console.log(socket);
 
-  socket.on('send', function(data) {
-    io.sockets.emit('send', data);
+  socket.on('private', function(data) {
+    io.sockets.emit('private', data);
   });
+
+  socket.on('public', function(data) {
+    io.sockets.emit('public', data);
+  });
+
 });
 
 /**

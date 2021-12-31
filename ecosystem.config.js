@@ -1,6 +1,6 @@
 module.exports = {
   apps: [{
-    script: 'node ./bin/serve',
+    script: 'node ./bin/serve > storage/logs/serve.log',
     watch: '.',
     autorestart: false,
     env: {
