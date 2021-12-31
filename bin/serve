@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('./app');
 var debug = require('debug')('www:server');
 var http = require('http');
 const { createAdapter } = require("@socket.io/redis-adapter");
