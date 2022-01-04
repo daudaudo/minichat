@@ -1,10 +1,4 @@
 #!/usr/bin/env node
-
-/**
- * Load enviroment form a .env file
- */
-
-require('dotenv').config();
 /**
  * Module dependencies.
  */
