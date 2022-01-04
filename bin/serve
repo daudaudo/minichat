@@ -2,7 +2,7 @@
 /**
  * Module dependencies.
  */
-var {app, redisClient} = require('./app');
+var {app, redisClient, redisStore} = require('./app');
 var debug = require('debug')('www:server');
 var http = require('http');
 var { createAdapter } = require("@socket.io/redis-adapter");
@@ -33,8 +33,10 @@ io.use((socket, next) => {
 });
 
 io.on('connection', function(socket) {
-  console.log(socket);
   socket.on('private', function(data) {
+    redisStore.get(this.handshake.signedCookies['connect.sid'], function(err, session){
+      console.log(session)
+    });
     io.sockets.emit('private', data);
   });
 
