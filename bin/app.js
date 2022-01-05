@@ -12,6 +12,16 @@ var logger = require('morgan');
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session)
 var Redis = require("ioredis");
+const mongoose = require('mongoose');
+
+/**
+ * Connect mongoose
+ */
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
 
 var webRouter = require('../routes/web');
 var apiRouter = require('../routes/api');
