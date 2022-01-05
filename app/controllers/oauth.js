@@ -1,4 +1,6 @@
-var { google } = require('googleapis');
+var {
+  google
+} = require('googleapis');
 var User = require('../model/User');
 var oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -7,21 +9,33 @@ var oauth2Client = new google.auth.OAuth2(
 )
 
 function oauthGoogle(req, res) {
-    var url = oauth2Client.generateAuthUrl({
-        access_type: 'offline',
-        scope: ['email']
-    });
-    res.redirect(url);
+  var url = oauth2Client.generateAuthUrl({
+    access_type: 'offline',
+    scope: [
+      'openid',
+      'profile',
+      'email',
+    ]
+  });
+  res.redirect(url);
 }
 
-async function callbackGoogle(req, res) {
-    var {tokens} = await oauth2Client.getToken(req.query.code);
-    oauth2Client.setCredentials(tokens);
-    var user = await (await google.oauth2('v2').userinfo.get({auth: oauth2Client})).data;
-    await User.create({
-        'email': user.email,
-    });
-    res.json(user);
+function callbackGoogle(req, res) {
+  oauth2Client
+    .getToken(req.query.code)
+    .then(({
+      tokens
+    }) => {
+      oauth2Client.setCredentials(tokens);
+      google.oauth2('v2').userinfo.get({
+          auth: oauth2Client,
+          url: 'https://www.googleapis.com/oauth2/v3/userinfo',
+        })
+        .then((user) => {
+          res.json(user)
+        })
+    })
+    .catch(err => res.send(err, 500))
 }
 
 module.exports = {
