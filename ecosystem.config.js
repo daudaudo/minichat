@@ -1,8 +1,8 @@
 module.exports = {
   apps: [{
     script: './bin/serve',
-    watch: '.',
-    autorestart: false,
+    watch: true,
+    autorestart: true,
     env: {
       NODE_ENV: 'development',
     },
