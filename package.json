@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/serve",
-    "tailwind:css": "postcss public/stylesheets/tailwind.css -o public/stylesheets/style.css"
+    "tailwind:css": "postcss public/stylesheets/build.css -o public/stylesheets/style.css"
   },
   "dependencies": {
     "@socket.io/redis-adapter": "^7.1.0",

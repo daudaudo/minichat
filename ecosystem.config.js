@@ -7,6 +7,6 @@ module.exports = {
       NODE_ENV: 'development',
     },
   }, {
-    script: 'npx tailwindcss -i public/stylesheets/tailwind.css -o public/stylesheets/style.css --watch',
+    script: 'npx tailwindcss -i public/stylesheets/build.css -o public/stylesheets/style.css --watch',
   }],
 };
