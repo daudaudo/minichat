@@ -9,6 +9,7 @@ module.exports = {
     minWidth: (theme) => ({
       auto: 'auto',
       ...theme('spacing'),
+      ...theme('screens'),
     }),
   },
   plugins: [],
