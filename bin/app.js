@@ -24,6 +24,7 @@ mongoose.connect(process.env.MONGO_URI, {
   dbName: 'minichat',
 })
 
+// router web and api
 var webRouter = require('../routes/web');
 var apiRouter = require('../routes/api');
 
@@ -33,6 +34,7 @@ var app = express();
 app.set('views', path.join(path.dirname(__dirname), 'views'));
 app.set('view engine', 'ejs');
 
+// global middleware
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
