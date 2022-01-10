@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon node ./bin/serve",
+    "start": "nodemon ./bin/serve",
     "tailwind:css": "postcss public/stylesheets/build.css -o public/stylesheets/style.css"
   },
   "dependencies": {
