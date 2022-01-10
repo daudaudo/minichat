@@ -8,6 +8,11 @@ var oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_REDIRECT_URL
 )
 
+/**
+ * 
+ * @param {import("express").Request} req 
+ * @param {import("express").Response} res 
+ */
 function oauthGoogle(req, res) {
   var url = oauth2Client.generateAuthUrl({
     access_type: 'offline',
@@ -20,6 +25,11 @@ function oauthGoogle(req, res) {
   res.redirect(url);
 }
 
+/**
+ * 
+ * @param {import("express").Request} req 
+ * @param {import("express").Response} res 
+ */
 function callbackGoogle(req, res) {
   oauth2Client
     .getToken(req.query.code)
