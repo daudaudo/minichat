@@ -30,22 +30,25 @@ function oauthGoogle(req, res) {
  * @param {import("express").Request} req 
  * @param {import("express").Response} res 
  */
-function callbackGoogle(req, res) {
-  oauth2Client
-    .getToken(req.query.code)
-    .then(({
+async function callbackGoogle(req, res) {
+  try {
+    var {
       tokens
-    }) => {
-      oauth2Client.setCredentials(tokens);
-      google.oauth2('v2').userinfo.get({
-          auth: oauth2Client,
-          url: 'https://www.googleapis.com/oauth2/v3/userinfo',
-        })
-        .then((user) => {
-          res.json(user)
-        })
+    } = await oauth2Client.getToken(req.query.code);
+    oauth2Client.setCredentials(tokens);
+    var user = await google.oauth2('v2').userinfo.get({
+      auth: oauth2Client
     })
-    .catch(err => res.send(err, 500))
+    user = user.data;
+    await User.create({
+      username: user.name,
+      email: user.email,
+    });
+    res.send(user)
+  } catch (err) {
+    res.send(err);
+  }
+
 }
 
 module.exports = {
