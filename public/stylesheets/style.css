@@ -570,6 +570,16 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-right: auto;
 }
 
+.mx-2{
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.mx-4{
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
 .mb-8{
   margin-bottom: 2rem;
 }
@@ -584,6 +594,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .mb-2{
   margin-bottom: 0.5rem;
+}
+
+.mt-4{
+  margin-top: 1rem;
 }
 
 .box-border{
@@ -620,6 +634,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .cursor-pointer{
   cursor: pointer;
+}
+
+.flex-wrap{
+  flex-wrap: wrap;
 }
 
 .items-center{
@@ -674,6 +692,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-width: 2px;
 }
 
+.border-r{
+  border-right-width: 1px;
+}
+
 .border-slate-200{
   --tw-border-opacity: 1;
   border-color: rgb(226 232 240 / var(--tw-border-opacity));
@@ -697,6 +719,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .border-slate-400{
   --tw-border-opacity: 1;
   border-color: rgb(148 163 184 / var(--tw-border-opacity));
+}
+
+.border-slate-100{
+  --tw-border-opacity: 1;
+  border-color: rgb(241 245 249 / var(--tw-border-opacity));
 }
 
 .bg-slate-50{
@@ -756,6 +783,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-right: 0.5rem;
 }
 
+.pt-4{
+  padding-top: 1rem;
+}
+
 .text-4xl{
   font-size: 2.25rem;
   line-height: 2.5rem;
@@ -766,12 +797,29 @@ Ensure the default browser behavior of the `hidden` attribute.
   line-height: 1.25rem;
 }
 
+.text-2xl{
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
 .font-medium{
   font-weight: 500;
 }
 
 .font-semibold{
   font-weight: 600;
+}
+
+.leading-3{
+  line-height: .75rem;
+}
+
+.leading-5{
+  line-height: 1.25rem;
+}
+
+.leading-6{
+  line-height: 1.5rem;
 }
 
 .text-slate-700{
@@ -893,8 +941,40 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 @media (min-width: 640px){
+  .sm\:w-3\/4{
+    width: 75%;
+  }
+
   .sm\:text-sm{
     font-size: 0.875rem;
     line-height: 1.25rem;
+  }
+}
+
+@media (min-width: 768px){
+  .md\:w-1\/2{
+    width: 50%;
+  }
+
+  .md\:w-2\/3{
+    width: 66.666667%;
+  }
+
+  .md\:w-3\/4{
+    width: 75%;
+  }
+
+  .md\:border-r{
+    border-right-width: 1px;
+  }
+}
+
+@media (min-width: 1024px){
+  .lg\:w-1\/2{
+    width: 50%;
+  }
+
+  .lg\:w-2\/3{
+    width: 66.666667%;
   }
 }

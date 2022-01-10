@@ -10,7 +10,7 @@ function login(req, res)
 
 function showRegisterForm(req, res)
 {
-
+    res.render('register');
 }
 
 function register(req, res)
