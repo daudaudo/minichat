@@ -1,12 +1,15 @@
-<header class="container max-w-7xl w-full py-2 mx-auto">
-  <div class="flex p-4 justify-between items-center">
-    <div>
-      <a class="text-sky-600 text-4xl font-medium" href="/">Minichat</a>
-    </div>
-    <div class="flex items-center space-x-7">
-      <a class="text-slate-700 font-medium  hover:text-sky-600" href="/">Home</a>
-      <a class="text-slate-700 font-medium  hover:text-sky-600" href="/">Chat</a>
-      <a class="text-white font-medium p-2 px-4 bg-sky-700 rounded-lg" href="/">Login</a>
+<header class="relative">
+  <!-- <div class="absolute top-0 left-0 right-0 bottom-0 bg-blue-50 filter"></div> -->
+  <div class="container max-w-7xl w-full py-2 mx-auto z-50">
+    <div class="flex p-4 justify-between items-center font-medium">
+      <div>
+        <a class="text-sky-600 text-4xl" href="/">Minichat</a>
+      </div>
+      <div class="flex items-center space-x-7 text-sm">
+        <a class="text-slate-700 hover:text-sky-600" href="/">Home</a>
+        <a class="text-slate-700 hover:text-sky-600" href="/">Chat</a>
+        <%- include('link', {href:'/', text:'Login'}) %>
+      </div>
     </div>
   </div>
 </header>

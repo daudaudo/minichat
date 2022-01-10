@@ -4,6 +4,13 @@
     font-family: 'Quicksand', sans-serif!important;
 }
 
+header {
+    min-height: 52rem;
+    clip-path: polygon(0 0, 100% 0, 100% 95%, 0% 100%);
+    overflow: hidden;
+    background-color: rgba(234, 242, 248, .5)
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
