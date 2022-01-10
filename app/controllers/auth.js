@@ -1,3 +1,5 @@
+var {validationResult} = require('express-validator');
+
 /**
  * 
  * @param {import("express").Request} req 
@@ -35,7 +37,8 @@ function showRegisterForm(req, res)
  */
 function register(req, res)
 {
-    res.send(req.body);
+    var errors = validationResult(req);
+    res.send(errors);
 }
 
 module.exports = {
