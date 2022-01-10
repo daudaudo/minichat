@@ -539,6 +539,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   align-items: center;
 }
 
+.justify-center{
+  justify-content: center;
+}
+
 .justify-between{
   justify-content: space-between;
 }
@@ -551,22 +555,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .rounded{
   border-radius: 0.25rem;
-}
-
-.rounded-tr-xl{
-  border-top-right-radius: 0.75rem;
-}
-
-.rounded-tr-md{
-  border-top-right-radius: 0.375rem;
-}
-
-.rounded-tr-lg{
-  border-top-right-radius: 0.5rem;
-}
-
-.rounded-bl-lg{
-  border-bottom-left-radius: 0.5rem;
 }
 
 .rounded-br-lg{
