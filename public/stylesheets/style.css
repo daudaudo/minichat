@@ -722,6 +722,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding: 0.5rem;
 }
 
+.p-1{
+  padding: 0.25rem;
+}
+
 .px-8{
   padding-left: 2rem;
   padding-right: 2rem;
@@ -755,6 +759,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-sm{
   font-size: 0.875rem;
   line-height: 1.25rem;
+}
+
+.text-lg{
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
 
 .font-medium{
