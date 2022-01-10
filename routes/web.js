@@ -10,6 +10,9 @@ router.get('/', homecontroller.home);
 router.get('/google/oauth', oauthcontroller.oauthGoogle);
 router.get('/google/oauth/callback', oauthcontroller.callbackGoogle);
 
+router.get('/register', authcontroller.showRegisterForm);
+router.post('/register', authcontroller.register);
 router.get('/login', authcontroller.showLoginForm);
+router.post('/login', authcontroller.login);
 
 module.exports = router;
