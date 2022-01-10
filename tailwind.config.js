@@ -5,7 +5,11 @@ module.exports = {
     minHeight: (theme) => ({
       auto: 'auto',
       ...theme('spacing'),
-    })
+    }),
+    minWidth: (theme) => ({
+      auto: 'auto',
+      ...theme('spacing'),
+    }),
   },
   plugins: [],
 }

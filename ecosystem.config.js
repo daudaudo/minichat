@@ -1,6 +1,6 @@
 module.exports = {
   apps: [{
-    script: './bin/serve',
+    script: 'npm start',
     watch: true,
     autorestart: true,
     env: {
