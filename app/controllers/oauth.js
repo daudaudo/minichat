@@ -1,6 +1,4 @@
-var {
-  google
-} = require('googleapis');
+var google = require('googleapis').google;
 var User = require('../model/User');
 var oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -32,9 +30,7 @@ function oauthGoogle(req, res) {
  */
 async function callbackGoogle(req, res) {
   try {
-    var {
-      tokens
-    } = await oauth2Client.getToken(req.query.code);
+    var {tokens} = await oauth2Client.getToken(req.query.code);
     oauth2Client.setCredentials(tokens);
     var user = await google.oauth2('v2').userinfo.get({
       auth: oauth2Client
