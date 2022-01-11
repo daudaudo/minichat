@@ -13,8 +13,8 @@ function validateWithRedirect(redirectPath) {
   return function(req, res, next) {
     var errors = validationResult(req);
     if (!errors.isEmpty()) {
-      req.flash('errors', errors.array);
-      res.redirect(redirectPath);
+      req.flash('errors' ,errors.array());
+      return res.redirect(redirectPath);
     };
     next();
   }

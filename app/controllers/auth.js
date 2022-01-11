@@ -66,13 +66,15 @@ async function register(req, res) {
       password: bcrypt.hashSync(req.body.password, 10),
       created_at: dayjs().format('')
     })
+
+    req.flash('success', {
+      message: 'Register an account successfully!'
+    });
+
+    res.redirect('/login');
   } catch (err) {
-    res.send(err, 500);
+    res.send(err);
   }
-  req.flash('success', {
-    message: 'Register an account successfully!'
-  });
-  res.redirect('/login');
 }
 
 module.exports = {
