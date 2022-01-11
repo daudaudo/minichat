@@ -5,6 +5,7 @@ var homecontroller = require('../app/controllers/home');
 var oauthcontroller = require('../app/controllers/oauth');
 var authcontroller = require('../app/controllers/auth');
 var registerValidator = require('../app/validators/register');
+var {validateWithRedirect} = require('../app/middlewares/validate');
 
 router.get('/', homecontroller.home);
 

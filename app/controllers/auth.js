@@ -1,5 +1,3 @@
-var {validationResult} = require('express-validator');
-
 /**
  * 
  * @param {import("express").Request} req 
@@ -27,7 +25,7 @@ function login(req, res)
  */
 function showRegisterForm(req, res)
 {
-    res.render('register');
+    res.render('register', {errors: req.flash('errors')});
 }
 
 /**
@@ -38,7 +36,11 @@ function showRegisterForm(req, res)
 function register(req, res)
 {
     var errors = validationResult(req);
-    if(errors.array.length) res.redirect();
+    if(!errors.isEmpty()) {
+        req.flash('erros', errors);
+        res.redirect('back');
+    };
+    res.send(req.body);
 }
 
 module.exports = {
