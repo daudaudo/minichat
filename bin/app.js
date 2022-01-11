@@ -12,6 +12,7 @@ var logger = require('morgan');
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session)
 var Redis = require("ioredis");
+var flash = require('connect-flash');
 const mongoose = require('mongoose');
 
 /**
@@ -52,6 +53,7 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
 }));
+app.use(flash());
 
 /**
  * Register router web and api

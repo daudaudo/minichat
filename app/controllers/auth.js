@@ -38,7 +38,7 @@ function showRegisterForm(req, res)
 function register(req, res)
 {
     var errors = validationResult(req);
-    res.send(errors);
+    if(errors.array.length) res.redirect();
 }
 
 module.exports = {
