@@ -13,7 +13,7 @@ router.get('/google/oauth', oauthcontroller.oauthGoogle);
 router.get('/google/oauth/callback', oauthcontroller.callbackGoogle);
 
 router.get('/register', authcontroller.showRegisterForm);
-router.post('/register', registerValidator, authcontroller.register);
+router.post('/register', registerValidator, validateWithRedirect(), authcontroller.register);
 router.get('/login', authcontroller.showLoginForm);
 router.post('/login', authcontroller.login);
 

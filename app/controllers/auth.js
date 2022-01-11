@@ -35,11 +35,6 @@ function showRegisterForm(req, res)
  */
 function register(req, res)
 {
-    var errors = validationResult(req);
-    if(!errors.isEmpty()) {
-        req.flash('erros', errors);
-        res.redirect('back');
-    };
     res.send(req.body);
 }
 
