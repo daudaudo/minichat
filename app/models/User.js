@@ -15,8 +15,12 @@ const userSchema = new mongoose.Schema({
     'password': {
         type: String,
     },
+    'email_verified_at': {
+        type: String,
+    },
     'created_at': {
-        type: Date,
+        type: String,
+        required: true,
     }
 });
 

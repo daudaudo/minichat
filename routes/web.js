@@ -4,7 +4,9 @@ var router = express.Router();
 var homecontroller = require('../app/controllers/home');
 var oauthcontroller = require('../app/controllers/oauth');
 var authcontroller = require('../app/controllers/auth');
+
 var registerValidator = require('../app/validators/register');
+var loginValidator = require('../app/validators/login');
 var {validateWithRedirect} = require('../app/middlewares/validate');
 
 router.get('/', homecontroller.home);
@@ -15,6 +17,6 @@ router.get('/google/oauth/callback', oauthcontroller.callbackGoogle);
 router.get('/register', authcontroller.showRegisterForm);
 router.post('/register', registerValidator, validateWithRedirect(), authcontroller.register);
 router.get('/login', authcontroller.showLoginForm);
-router.post('/login', authcontroller.login);
+router.post('/login',loginValidator, validateWithRedirect(), authcontroller.login);
 
 module.exports = router;
