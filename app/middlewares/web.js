@@ -1,5 +1,3 @@
-const loginUrl = '/login';
-
 /**
  * 
  * @param {import("express").Request} req 
@@ -7,9 +5,8 @@ const loginUrl = '/login';
  * @param {import("express").NextFunction} next 
  */
 module.exports = function(req, res, next) {
-  if (req.session.auth == undefined)
-    return res.redirect(loginUrl);
-
-  res.locals.auth = req.session.auth;
+  res.locals.auth = req.session.auth ?? false;
+  res.locals.errors = req.flash('errors') ?? [];
+  res.locals.success = req.flash('success') ?? [];
   next();
 }

@@ -9,6 +9,9 @@ var registerValidator = require('../app/validators/register');
 var loginValidator = require('../app/validators/login');
 var {validateWithRedirect} = require('../app/middlewares/validate');
 var auth = require('../app/middlewares/auth');
+var webMiddleware = require('../app/middlewares/web')
+
+router.all('*', webMiddleware);
 
 router.get('/', homecontroller.home);
 
