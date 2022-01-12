@@ -7,6 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/stylesheets/style.css">
   <title>Login Minichat</title>
+  <script src="/javascripts/jquery.js"></script>
+  <script src="/javascripts/notification.js" async="true"></script>
 </head>
 
 <body class="bg-slate-50">
@@ -27,7 +29,7 @@
       </label>
       <div class="mb-4"><a class="text-sky-700 text-sm block" href="/">Forgot your password?</a></div>
       <button class="p-2 px-4 bg-sky-700 text-white rounded-full w-full font-medium mb-4 text-sm" type="submit">Log in</button>
-      <a href="/" type="button" class="border-2 border-slate-200 w-full rounded-full flex space-x-2 justify-center items-center p-2 cursor-pointer mb-4">
+      <a href="/google/oauth" type="button" class="border-2 border-slate-200 w-full rounded-full flex space-x-2 justify-center items-center p-2 cursor-pointer mb-4">
         <svg class="w-4 h-4 text-red-400" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
           <path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z" />
         </svg>
@@ -35,11 +37,12 @@
       </a>
       <div class="text-divider mb-4"><span class="px-2">or</span></div>
       <p class="text-slate-700 mb-2 text-sm">Don't have a free account yet?</p>
-      <a href="/" type="button" class="border-2 border-slate-200 w-full rounded-full flex space-x-2 justify-center items-center p-2 cursor-pointer mb-4">
+      <a href="/register" type="button" class="border-2 border-slate-200 w-full rounded-full flex space-x-2 justify-center items-center p-2 cursor-pointer mb-4">
         <p class="text-slate-700 font-medium text-sm">Create your account</p>
       </a>
     </form>
   </div>
+  <%- include('components/notifications', {errors: errors})  %> 
 </body>
 
 </html>
