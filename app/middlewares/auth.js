@@ -4,9 +4,10 @@
  * @param {import("express").Response} res 
  * @param {import("express").NextFunction} next 
  */
-module.exports = function(req, res, next)
-{
-    if(req.session.user.id == undefined)
-        res.redirect('/');
-    next();
+const loginUrl = '/login';
+
+module.exports = function(req, res, next) {
+  if (req.session.auth == undefined)
+    return res.redirect(loginUrl);
+  next();
 }
