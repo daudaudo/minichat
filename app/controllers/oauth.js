@@ -1,10 +1,6 @@
-var google = require('googleapis').google;
 var User = require('../models/User');
-var oauth2Client = new google.auth.OAuth2(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  process.env.GOOGLE_REDIRECT_URL
-)
+var {google, oauth2Client} = require('../global/oauth');
+var dayjs = require('dayjs');
 
 /**
  * 
@@ -39,6 +35,7 @@ async function callbackGoogle(req, res) {
     await User.create({
       username: user.name,
       email: user.email,
+      created_at: dayjs().format('')
     });
     res.send(user)
   } catch (err) {
