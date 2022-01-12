@@ -11,9 +11,7 @@ const homeUrl = '/';
  * @param {import("express").Response} res 
  */
 function showLoginForm(req, res) {
-  res.render('login', {
-    errors: req.flash('errors')
-  });
+  res.render('login');
 }
 
 /**
@@ -50,9 +48,7 @@ async function login(req, res) {
  * @param {import("express").Response} res 
  */
 function showRegisterForm(req, res) {
-  res.render('register', {
-    errors: req.flash('errors')
-  });
+  res.render('register');
 }
 
 /**
