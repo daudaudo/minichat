@@ -3,12 +3,14 @@
   <div class="container max-w-7xl w-full py-2 mx-auto z-50">
     <div class="flex p-4 justify-between items-center font-medium">
       <div>
-        <a class="text-sky-600 text-4xl" href="/">Minichat</a>
+        <a class="" href="/">
+            <img class="h-8 object-contain" src="/images/minichat.svg" alt="" srcset="">
+        </a>
       </div>
       <div class="flex items-center space-x-7 font-semibold">
         <a class="text-slate-700 hover:text-sky-600" href="/">Home</a>
         <a class="text-slate-700 hover:text-sky-600" href="/">Chat</a>
-        <%- include('link', {href:'/', text:'Login'}) %>
+        <%- include('link', {href:'/login', text:'Login'}) %>
       </div>
     </div>
   </div>
