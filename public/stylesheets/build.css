@@ -5,10 +5,16 @@
 }
 
 header {
-    min-height: 52rem;
-    clip-path: polygon(0 0, 100% 0, 100% 95%, 0% 100%);
-    overflow: hidden;
-    background-color: rgba(234, 242, 248, .5)
+    /* min-height: 52rem; */
+    /* clip-path: polygon(0 0, 100% 0, 100% 95%, 0% 100%); */
+    /* overflow: hidden; */
+    overflow: visible;
+}
+
+.header-mask {
+  clip-path: polygon(0 0, 100% 0, 100% 95%, 0% 100%);
+  background-color: rgba(234, 242, 248, .5);
+  z-index: -10;
 }
 
 /* Text divider */
