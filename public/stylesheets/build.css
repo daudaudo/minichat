@@ -25,6 +25,13 @@
   font-family: 'Quicksand', sans-serif !important;
 }
 
+/* Collapse */
+.collapse {
+  transition: height .45s ease;
+  overflow: hidden;
+  height: 0px;
+}
+
 header {
   /* min-height: 52rem; */
   /* clip-path: polygon(0 0, 100% 0, 100% 95%, 0% 100%); */
@@ -51,7 +58,9 @@ header {
   flex-grow: 1;
 }
 
-
+.load-css{
+  @apply h-0;
+}
 
 @tailwind base;
 @tailwind components;
