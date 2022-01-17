@@ -1,0 +1,19 @@
+<nav class="flex p-4 justify-between items-center font-medium mb-4">
+  <div>
+    <a class="" href="/">
+      <img class="h-8 object-contain" src="/images/minichat.svg" alt="" srcset="">
+    </a>
+  </div>
+  <div class="flex items-center space-x-7 font-semibold">
+    <a class="text-slate-700 hover:text-sky-600" href="/">Home</a>
+    <a class="text-slate-700 hover:text-sky-600" href="/">Chat</a>
+    <% if (auth) { %>
+    <a class="text-slate-700 hover:text-sky-600" href="/">Profile</a>
+    <a class="text-slate-700 hover:text-sky-600" href="/">Post</a>
+    <a href="/logout" class="box-border text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all">Logout</a>
+    <% } else { %>
+    <a href="/login" class="box-border text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all">Login</a>
+    <% } %>
+
+  </div>
+</nav>

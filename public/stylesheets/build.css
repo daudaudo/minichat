@@ -1,14 +1,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  @apply bg-slate-100;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-700;
+  @apply rounded-full;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-sky-700;
+}
+
 * {
-    font-family: 'Quicksand', sans-serif!important;
+  font-family: 'Quicksand', sans-serif !important;
 }
 
 header {
-    /* min-height: 52rem; */
-    /* clip-path: polygon(0 0, 100% 0, 100% 95%, 0% 100%); */
-    /* overflow: hidden; */
-    overflow: visible;
+  /* min-height: 52rem; */
+  /* clip-path: polygon(0 0, 100% 0, 100% 95%, 0% 100%); */
+  /* overflow: hidden; */
+  overflow: visible;
 }
 
 .header-mask {
@@ -19,16 +40,18 @@ header {
 
 /* Text divider */
 .text-divider {
-    @apply flex items-center text-sm text-slate-700;
+  @apply flex items-center text-sm text-slate-700;
 }
 
-.text-divider:before, .text-divider:after
-{
-    content: "";
-    height: 1px;
-    background-color: rgba(12,18,28,.38);
-    flex-grow: 1;
+.text-divider:before,
+.text-divider:after {
+  content: "";
+  height: 1px;
+  background-color: rgba(12, 18, 28, .38);
+  flex-grow: 1;
 }
+
+
 
 @tailwind base;
 @tailwind components;
