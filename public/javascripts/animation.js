@@ -27,3 +27,27 @@ $('[collapse-target]').on('click', (e) => {
     var timeout = setTimeout(() => collapseElement.addClass('hidden'), 450);
   }
 });
+
+/**
+ * Modal
+ */
+
+$('[modal-target]').on('click', (e) => {
+  var id = e.currentTarget.getAttribute('modal-target');
+  createBackDropElement('md:backdrop' ,id);
+  var modalElement = $(`#${id}`);
+  modalElement.addClass('show');
+});
+
+function createBackDropElement(attr, id) {
+  var backdropElement = $('<div>', {
+    'class': attr,
+    'data-target': id
+  });
+  backdropElement.on('click', (e) => {
+    var id = e.currentTarget.getAttribute('data-target');
+    $(`#${id}`).removeClass('show');
+    e.currentTarget.remove();
+  });
+  backdropElement.appendTo('body');
+}
