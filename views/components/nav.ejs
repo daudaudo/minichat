@@ -1,20 +1,28 @@
-<nav class="flex justify-between items-center font-medium mb-4 py-4">
+<nav class="flex flex-wrap justify-between items-center font-medium mb-4 py-4">
   <div>
     <a class="" href="/">
-      <img class="h-8 object-contain" src="/images/minichat.svg" alt="" srcset="">
+      <img class="sm:h-8 h-6 object-contain" src="/images/minichat.svg" alt="" srcset="">
     </a>
   </div>
-  <div class="flex items-center space-x-7 font-semibold">
-    <a class="text-slate-700 hover:text-sky-600" href="/">Home</a>
-    <a class="text-slate-700 hover:text-sky-600" href="/">Chat</a>
-    <% if (auth) { %>
-    <a class="text-slate-700 hover:text-sky-600" href="/">Profile</a>
-    <a class="text-slate-700 hover:text-sky-600" href="/">Post</a>
-    <a href="/logout" class="box-border text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all">Logout</a>
-    <% } else { %>
-    <a href="/login" class="box-border text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all">Login</a>
-    <a href="/register" class="box-border text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all">Register</a>
-    <% } %>
-
+  <div class="md:hidden flex">
+    <button collapse-target="menuMobileCollapse" class="text-slate-700">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-12 h-12" viewBox="0 0 16 16">
+        <path d="M14 10.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0 0 1h7a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5z"/>
+      </svg>
+    </button>
+  </div>
+  <div id="menuMobileCollapse" class= "md:collapse-none collapse md:w-auto w-full">
+    <div class="md:flex block w-full items-center md:space-x-7 md:space-y-0 space-x-0 space-y-2 font-semibold mt-2">
+      <a class="text-slate-700 hover:text-sky-600 block" href="/">Home</a>
+      <a class="text-slate-700 hover:text-sky-600 block" href="/">Chat</a>
+      <% if (auth) { %>
+      <a class="text-slate-700 hover:text-sky-600 block" href="/">Profile</a>
+      <a class="text-slate-700 hover:text-sky-600 block" href="/">Post</a>
+      <a href="/logout" class="box-border block text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all">Logout</a>
+      <% } else { %>
+      <a href="/login" class="box-border block text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all">Login</a>
+      <a href="/register" class="box-border block text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all">Register</a>
+      <% } %>
+    </div>
   </div>
 </nav>

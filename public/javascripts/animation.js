@@ -16,13 +16,14 @@ setTimeout(() => {
 $('[collapse-target]').on('click', (e) => {
   var id = e.currentTarget.getAttribute('collapse-target');
   var collapseElement = $(`#${id}`);
+  clearTimeout(timeout);
 
   if (collapseElement.height() == 0) {
+    collapseElement.removeClass('hidden');
     var intialHeight = collapseElement.prop('scrollHeight');
     collapseElement.css('height', `${intialHeight}px`);
-    collapseElement.addClass('mt-2');
   } else {
     collapseElement.css('height', '');
-    collapseElement.removeClass('mt-2');
+    var timeout = setTimeout(() => collapseElement.addClass('hidden'), 450);
   }
 });
