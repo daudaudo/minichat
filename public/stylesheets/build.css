@@ -32,6 +32,33 @@
   height: 0px;
 }
 
+/* Modal */
+.backdrop, .md\:backdrop {
+  @apply bg-slate-700 bg-opacity-50 fixed left-0 top-0 bottom-0 right-0 overflow-hidden z-10;
+}
+
+.modal, .md\:modal {
+  @apply hidden z-20;
+}
+
+.modal.show, .md\:modal.show {
+  @apply block fixed top-0 bottom-0 left-0;
+}
+
+@media (min-width: 768px) {
+  .md\:modal {
+    display: block;
+  }
+
+  .md\:modal.show {
+    position: relative;
+  }
+
+  .md\:backdrop {
+    display: none;
+  }
+}
+/* Header */
 header {
   /* min-height: 52rem; */
   /* clip-path: polygon(0 0, 100% 0, 100% 95%, 0% 100%); */
@@ -56,10 +83,6 @@ header {
   height: 1px;
   background-color: rgba(12, 18, 28, .38);
   flex-grow: 1;
-}
-
-.load-css{
-  @apply h-0;
 }
 
 @tailwind base;
