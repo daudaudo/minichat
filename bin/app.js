@@ -32,7 +32,7 @@ var apiRouter = require('../routes/api');
 var app = express();
 
 // view engine setup
-app.set('views', path.join(path.dirname(__dirname), 'views'));
+app.set('views', path.join(path.dirname(__dirname), 'views/pages'));
 app.set('view engine', 'ejs');
 
 // global middleware
