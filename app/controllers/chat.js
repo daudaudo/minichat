@@ -4,10 +4,10 @@
  * @param {import("express").Response} res 
  */
 
-function home(req, res, next) {
-  res.render('index');
+function index(req, res, next) {
+  res.render('chat');
 }
 
 module.exports = {
-  home
+  index
 };

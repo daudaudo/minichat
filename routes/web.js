@@ -4,6 +4,7 @@ var router = express.Router();
 var homecontroller = require('../app/controllers/home');
 var oauthcontroller = require('../app/controllers/oauth');
 var authcontroller = require('../app/controllers/auth');
+var chatcontroller = require('../app/controllers/chat');
 
 var registerValidator = require('../app/validators/register');
 var loginValidator = require('../app/validators/login');
@@ -13,7 +14,9 @@ var webMiddleware = require('../app/middlewares/web')
 
 router.all('*', webMiddleware);
 
+//Home Router
 router.get('/', homecontroller.home);
+router.get('/chat', chatcontroller.index);
 
 // Oauth Router
 router.get('/google/oauth', oauthcontroller.oauthGoogle);
