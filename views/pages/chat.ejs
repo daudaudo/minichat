@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <title>Minichat | Chat room</title>
+  <script src="/javascripts/jquery.js"></script>
+  <script src="/javascripts/animation.js" async="true"></script>
+</head>
+
+<body class="bg-slate-50">
+  <%- include('../components/header-page') %>
+  <main class="container max-w-7xl w-full py-2 mx-auto z-50 mb-4">
+    <div class="p-4 mb-4">
+      <button id="createRoomBtn" class="box-border text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all font-medium">Create your own room</button>
+    </div>
+    <div class="flex flex-wrap">
+      <!-- Room Item -->
+      <% for( let i = 0; i < 10; i++ ) { %>
+        <%- include('../components/room')  %> 
+      <% } %>
+    </div>
+  </main>
+  <%- include('../components/footer') %>
+</body>
+
+</html>
