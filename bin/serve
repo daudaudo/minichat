@@ -6,7 +6,6 @@ var {app, redisClient, redisStore} = require('./app');
 var debug = require('debug')('www:server');
 var http = require('http');
 var { createAdapter } = require("@socket.io/redis-adapter");
-var cookieParser = require('cookie-parser');
 
 /**
  * Get port from environment and store in Express.
@@ -21,30 +20,12 @@ app.set('port', port);
 
 var server = http.createServer(app);
 var io = require("socket.io")(server);
-
 io.adapter(createAdapter(redisClient, redisClient.duplicate()));
 
 /**
- * Listen socket.
+ * Setup socket.
  */
-
-io.use((socket, next) => {
-  cookieParser('minichat')(socket.handshake, null, next);
-});
-
-io.on('connection', function(socket) {
-  socket.on('private', function(data) {
-    redisStore.get(this.handshake.signedCookies['connect.sid'], function(err, session){
-      console.log(session)
-    });
-    io.sockets.emit('private', data);
-  });
-
-  socket.on('public', function(data) {
-    io.sockets.emit('public', data);
-  });
-
-});
+require('./socket')(io);
 
 /**
  * Listen on provided port, on all network interfaces.
