@@ -1,22 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
-/* width */
+/* Scrollbal */
 ::-webkit-scrollbar {
   width: 5px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
   @apply bg-slate-100;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
   @apply bg-slate-700;
   @apply rounded-full;
 }
 
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-sky-700;
 }
@@ -85,6 +82,7 @@ header {
   flex-grow: 1;
 }
 
+/* Tailwind */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
