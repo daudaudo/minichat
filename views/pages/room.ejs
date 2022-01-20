@@ -13,10 +13,21 @@
 </head>
 
 <body class="bg-slate-50">
-  <div id="chatroomContainer" class="fixed left-0 top-0 bottom-0 right-0 bg-slate-50">
-    <main>
-      <%- include('../components/chat-toolbar')  %> 
-    </main>
+  <div id="chatroomContainer" class="fixed left-0 top-0 bottom-0 right-0 bg-slate-50 z-10 flex">
+    <%- include('../components/chat-toolbar')  %>
+    <div class="flex-1 flex flex-col p-4">
+      <%- include('../components/header-chat-page')  %> 
+      <main class="flex flex-1 flex-wrap">
+        <!-- Message container -->
+        <div class="flex-1 h-full p-2 rounded-md border border-slate-200 relative">
+          <div class="message flex items-center space-x-4">
+            <button><img class="rounded-full w-12 h-12 object-cover" src="https://images.pexels.com/photos/10656036/pexels-photo-10656036.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="" srcset=""></button>
+            <p class="p-2 rounded-full font-medium text-slate-600 bg-slate-100">Hello! How can I help you</p>
+          </div>
+        </div>
+        <div class="flex-1 hidden"></div>
+      </main>
+    </div>
   </div>
 </body>
 
