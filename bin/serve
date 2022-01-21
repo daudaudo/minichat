@@ -2,7 +2,7 @@
 /**
  * Module dependencies.
  */
-var {app, redisClient, redisStore} = require('./app');
+var app = require('./app');
 var debug = require('debug')('www:server');
 var http = require('http');
 var { createAdapter } = require("@socket.io/redis-adapter");
@@ -20,7 +20,7 @@ app.set('port', port);
 
 var server = http.createServer(app);
 var io = require("socket.io")(server);
-io.adapter(createAdapter(redisClient, redisClient.duplicate()));
+io.adapter(createAdapter(require('./redis').client, require('./redis').client.duplicate()));
 
 /**
  * Setup socket.
