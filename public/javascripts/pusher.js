@@ -12,7 +12,13 @@ function pusher(callbacks)
     callbacks.private(data);
   });
 
+  socket.once('rooms', room => {
+    callbacks.rooms(room);
+  });
+
   socket.on('create_room', room => {
     callbacks.create_room(room);
   });
+
+  return socket;
 }

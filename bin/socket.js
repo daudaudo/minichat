@@ -15,13 +15,18 @@ function socket(io) {
 
   io.use((socket, next) => {
     redisStore.get(socket.handshake.signedCookies['connect.sid'], function(err, session) {
-      socket.auth = session.auth ?? {
+      var guest = {
         token: null,
         user: {
           username: 'guest',
           email: null
         }
-      };
+      }
+      if(!session) {
+        socket.auth = guest;
+        return next();
+      }
+      socket.auth = session.auth ?? guest;
       next();
     })
   });
@@ -76,7 +81,7 @@ async function appendRoom(room)
   var roomId = uuid.v4();
   room.id = roomId;
   rooms[roomId] = room;
-  redisClient.set('rooms', JSON.stringify(rooms));
+  await redisClient.set('rooms', JSON.stringify(rooms));
   return Promise.resolve(room);
 }
 

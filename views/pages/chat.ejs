@@ -20,11 +20,9 @@
     <div class="p-4 mb-4">
       <button id="createRoomBtn" class="box-border text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all font-medium">Create your own room</button>
     </div>
-    <div class="flex flex-wrap">
+    <div id="roomsList" class="flex flex-wrap min-h-96">
       <!-- Room Item -->
-      <% for( let i = 0; i < 10; i++ ) { %>
-        <%- include('../components/room')  %> 
-      <% } %>
+
     </div>
   </main>
   <%- include('../components/footer') %>
