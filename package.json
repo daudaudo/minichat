@@ -9,6 +9,7 @@
   "dependencies": {
     "@socket.io/redis-adapter": "^7.1.0",
     "@socket.io/sticky": "^1.0.1",
+    "axios": "^0.25.0",
     "bcrypt": "^5.0.1",
     "connect-flash": "^0.1.1",
     "connect-multiparty": "^2.2.0",
