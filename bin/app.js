@@ -10,8 +10,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
-var RedisStore = require('connect-redis')(session)
-var Redis = require("ioredis");
 var flash = require('connect-flash');
 const mongoose = require('mongoose');
 
@@ -45,10 +43,8 @@ app.use(express.static(path.join(path.dirname(__dirname), 'public')));
 /**
  * Use redis session
  */
-var redisClient = new Redis(6379, 'minichat-redis');
-var redisStore = new RedisStore({client: redisClient});
 app.use(session({
-  store: redisStore,
+  store: require('./redis').store,
   secret: 'minichat',
   resave: true,
   saveUninitialized: true,
@@ -78,4 +74,4 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-module.exports = {app, redisClient, redisStore};
+module.exports = app;
