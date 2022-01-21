@@ -36,6 +36,7 @@ app.set('view engine', 'ejs');
 // global middleware
 app.use(logger('dev'));
 app.use(express.json());
+app.use(require('connect-multiparty')());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(path.dirname(__dirname), 'public')));
