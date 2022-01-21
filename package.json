@@ -11,6 +11,7 @@
     "@socket.io/sticky": "^1.0.1",
     "bcrypt": "^5.0.1",
     "connect-flash": "^0.1.1",
+    "connect-multiparty": "^2.2.0",
     "connect-redis": "^6.0.0",
     "cookie-parser": "~1.4.4",
     "dayjs": "^1.10.7",
