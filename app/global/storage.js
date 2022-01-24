@@ -5,6 +5,7 @@ var axios = require('axios').default;
 const util = require('util');
 const stream = require('stream');
 const pipeline = util.promisify(stream.finished);
+var mime = require('mime-types');
 
 /**
  * @param {String} filename
@@ -27,7 +28,7 @@ function saveSync(src, filename) {
   try {
     fs.cpSync(src, storagePath(filename));
     fs.unlinkSync(src);
-    return true;
+    return filename;
   } catch (err) {
     throw err;
   }
@@ -42,7 +43,7 @@ function putSync(content, filename) {
   if(!filename) filename = uuid.v4();
   try {
     fs.writeFileSync(storagePath(filename), content);
-    return true;
+    return filename;
   } catch (err) {
     throw err;
   }
@@ -56,13 +57,13 @@ function putSync(content, filename) {
 async function putFromUrl(url, filename)
 {
   try {
-    if(!filename) filename = uuid.v4();
     var res = await axios.get(url, {responseType: 'stream'});
+    if(!filename) filename = `${uuid.v4()}.${mime.extension(res.headers['content-type'])}`;
     if(res.status == 200) {
       var file = fs.createWriteStream(storagePath(filename));
       res.data.pipe(file);
       await pipeline(file);
-      return true;
+      return filename;
     }
     else return false;
   } catch(err) {
