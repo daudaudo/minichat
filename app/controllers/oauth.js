@@ -1,6 +1,10 @@
 var User = require('../models/User');
 var {google, oauth2Client} = require('../global/oauth');
 var dayjs = require('dayjs');
+var storage = require('../global/storage');
+var {login} = require('../global/auth');
+
+const homeUrl = '/';
 
 /**
  * 
@@ -30,16 +34,21 @@ async function callbackGoogle(req, res) {
     oauth2Client.setCredentials(tokens);
     var user = await google.oauth2('v2').userinfo.get({
       auth: oauth2Client
-    })
-    user = user.data;
-    await User.create({
-      username: user.name,
-      email: user.email,
-      created_at: dayjs().format('')
     });
-    res.send(user)
+    user = user.data;
+    if(!(await login(user, req)))
+    {
+      user = await User.create({
+        username: user.name,
+        email: user.email,
+        created_at: dayjs().format(''),
+        picture: await storage.putFromUrl(user.picture),
+      });
+      await login(user, req);
+    }
+    res.redirect(homeUrl);
   } catch (err) {
-    res.send(err);
+    res.status(500).send(err);
   }
 
 }
