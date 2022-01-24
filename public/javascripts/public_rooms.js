@@ -32,15 +32,10 @@ function renderRoomView(room) {
           </span>
           <div>
             <p class="text-lg">${room['name']}</p>
-            <p class="font-medium text-slate-500">${room['level']} - ${room['language'] ?? 'Any'}</p>
+            <p class="font-medium text-slate-500">${room['level'] ?? 'Any'} - ${room['language'] ?? 'Any'}</p>
           </div>
         </div>
-        <div class="flex justify-start flex-wrap mb-2">
-          <div class="p-2"><button><img class="rounded-full w-20 h-20 object-cover" src="https://images.pexels.com/photos/10656036/pexels-photo-10656036.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="" srcset=""></button></div>
-          <div class="p-2"><button><img class="rounded-full w-20 h-20 object-cover" src="https://images.pexels.com/photos/10656036/pexels-photo-10656036.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="" srcset=""></button></div>
-          <div class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed"></button></div>
-          <div class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed"></button></div>
-        </div>
+        <div class="flex justify-start flex-wrap mb-2">${renderUsers(room)}</div>
         <div class="w-full p-2 flex justify-center">
           <button href="/room/232" class="box-border text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all flex items-center space-x-2">
             <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">
@@ -53,6 +48,18 @@ function renderRoomView(room) {
       </div>
     </div>
   `
+}
+
+function renderUsers(room)
+{
+  var html = '';
+  room.users.forEach(user => {
+    if(user.username == 'guest')
+      html += `<div class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest</button></div>`;
+    else 
+      html += `<div class="p-2"><button><img class="rounded-full w-20 h-20 object-cover" src="${user.picture}" alt="" srcset=""></button></div>`; 
+  });
+  return html;
 }
 
 pusher(callbacks);
