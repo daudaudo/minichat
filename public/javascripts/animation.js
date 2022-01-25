@@ -34,20 +34,22 @@ $('[collapse-target]').on('click', (e) => {
 
 $('[modal-target]').on('click', (e) => {
   var id = e.currentTarget.getAttribute('modal-target');
-  createBackDropElement('md:backdrop' ,id);
   var modalElement = $(`#${id}`);
   modalElement.addClass('show');
+  createBackDropElement(id);
 });
 
-function createBackDropElement(attr, id) {
-  var backdropElement = $('<div>', {
-    'class': attr,
+$('.modal').on('click', function(e) {
+  if(e.target !== this) return;
+  this.classList.remove('show');
+  $(`.backdrop[data-target=${this.id}`).remove();
+});
+
+function createBackDropElement(id) {
+  var attr = {
+    'class': 'backdrop',
     'data-target': id
-  });
-  backdropElement.on('click', (e) => {
-    var id = e.currentTarget.getAttribute('data-target');
-    $(`#${id}`).removeClass('show');
-    e.currentTarget.remove();
-  });
+  };
+  var backdropElement = $('<div>', attr);
   backdropElement.appendTo('body');
 }
