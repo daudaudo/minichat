@@ -19,7 +19,8 @@ function socket(io) {
         token: null,
         user: {
           username: 'guest',
-          email: null
+          email: null,
+          _id: uuid.v4(),
         }
       }
       if(!session) {
@@ -40,9 +41,15 @@ function socket(io) {
     });
 
     socket.on('create_room', async function(room) {
-      var room = await appendRoom(room);
+      var room = await appendRoom(room, socket.auth.user);
       await socket.join(room);
       io.sockets.emit('create_room', room);
+    });
+
+    socket.on('leave_room', async function(room) {
+      var room = await leaveRoom(room);
+      await socket.leave(room);
+      io.sockets.emit('leave_room', room);
     });
 
     socket.on('private', function(data) {
@@ -74,14 +81,30 @@ async function getListRooms()
 /**
  * 
  * @param {Object} room
+ * @param {Object} user
  */
-async function appendRoom(room)
+async function appendRoom(room, user)
 {
   var rooms = await getListRooms();
   var roomId = uuid.v4();
   room.id = roomId;
+  room.users = [user];
   rooms[roomId] = room;
   await redisClient.set('rooms', JSON.stringify(rooms));
+  return Promise.resolve(room);
+}
+
+/**
+ * 
+ * @param {String} roomId 
+ * @param {String} userId 
+ * @returns {Promise<Object>}
+ */
+async function leaveRoom(roomId, userId)
+{
+  var rooms = await getListRooms();
+  var room = rooms[roomId];
+
   return Promise.resolve(room);
 }
 

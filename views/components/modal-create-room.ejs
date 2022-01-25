@@ -1,0 +1,58 @@
+<div id="createRoomModal" class="modal flex items-center justify-center p-4" aria-backdrop="backdrop">
+  <div class="max-w-xl bg-white rounded-md p-4 w-full">
+    <h3 class="font-semibold text-xl text-slate-700 mb-4 p-2">Create a new room</h3>
+    <form class="flex flex-wrap">
+      <div class="flex flex-wrap">
+        <div class="w-1/2 p-2 ">
+          <p class="font-medium text-slate-700 mb-2">Topic</p>
+          <div><input class="p-2 rounded-md border border-slate-200 w-full focus:border-slate-200" type="text"></div>
+        </div>
+        <div class="w-1/2 p-2 ">
+          <p class="font-medium text-slate-700 mb-2">Maximum People</p>
+          <div data-value data-default="Choose Number" class="dropdown w-full">
+            <select>
+              <option>Unlimited</option>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+              <option>16</option>
+            </select>
+          </div>
+        </div>
+        <div class="w-1/2 p-2 ">
+          <p class="font-medium text-slate-700 mb-2">Language</p>
+          <div data-value data-default="Language" class="dropdown w-full">
+            <select>
+              <option>English</option>
+              <option>Vietnammese</option>
+              <option>Spanish</option>
+              <option>Chinese</option>
+            </select>
+          </div>
+        </div>
+        <div class="w-1/2 p-2 ">
+          <p class="font-medium text-slate-700 mb-2">Level</p>
+          <div data-value data-default="Level" class="dropdown w-full">
+            <select>
+              <option>Any Level</option>
+              <option>Beginner</option>
+              <option>Upper Beginner</option>
+              <option>Chinese</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="p-2 w-full">
+        <button id="createRoomBtn" class="w-full box-border font-medium block text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all">Create</button>
+      </div>
+      <div class="p-2 w-full">
+        <button class="w-full font-medium box-border block text-white p-1 px-4 hover:bg-white bg-red-500 hover:text-slate-700 rounded rounded-br-lg border-2 border-red-500 transition-all">Close</button>
+      </div>
+    </form>
+  </div>
+</div>
