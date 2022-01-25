@@ -53,3 +53,21 @@ function createBackDropElement(id) {
   var backdropElement = $('<div>', attr);
   backdropElement.appendTo('body');
 }
+
+/**
+ * Menu Mobile
+ */
+
+$('#openMenuMobile').on('click', e => {
+  var menuElement = $('#menuMobile');
+  console.log(menuElement.css('transition-duration'));
+  console.log(menuElement);
+  if(menuElement.hasClass('show'))
+  {
+    menuElement.removeClass('show');
+    setTimeout(() => menuElement.css('display', 'none'), 250);
+  } else {
+    menuElement.css('display', 'block');
+    setTimeout(() => menuElement.addClass('show'), 10);
+  }
+});

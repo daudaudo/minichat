@@ -83,6 +83,45 @@ header {
   flex-grow: 1;
 }
 
+/* Menu Mobile */
+
+#menuMobile {
+  @apply fixed left-0 top-0 bottom-0 shadow hidden bg-white p-4 w-72;
+  z-index: 2000;
+}
+
+@media (min-width: 768px) {
+  #menuMobile {
+    display: block!important;
+    position: relative;
+    width: auto;
+    height: auto;
+    opacity: 1;
+    transform: none;
+    box-shadow: none;
+    background: none;
+    width: auto;
+  }
+}
+
+/* Animation */
+
+.fade:not(.show) {
+  opacity: 0;
+}
+
+.fade {
+  transition: opacity .15s linear;
+}
+
+.slidex:not(.show) {
+  transform: translateX(-100%);
+}
+
+.slidex {
+  transition: transform .25s ease;
+}
+
 /* Tailwind */
 @tailwind base;
 @tailwind components;
