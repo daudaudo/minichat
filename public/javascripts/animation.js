@@ -40,7 +40,7 @@ $('[modal-target]').on('click', (e) => {
 });
 
 $('.modal').on('click', function(e) {
-  if(e.target !== this) return;
+  if (e.target !== this) return;
   this.classList.remove('show');
   $(`.backdrop[data-target=${this.id}`).remove();
 });
@@ -60,14 +60,35 @@ function createBackDropElement(id) {
 
 $('#openMenuMobile').on('click', e => {
   var menuElement = $('#menuMobile');
-  console.log(menuElement.css('transition-duration'));
-  console.log(menuElement);
-  if(menuElement.hasClass('show'))
-  {
+  if (menuElement.hasClass('show')) {
     menuElement.removeClass('show');
     setTimeout(() => menuElement.css('display', 'none'), 250);
   } else {
     menuElement.css('display', 'block');
     setTimeout(() => menuElement.addClass('show'), 10);
   }
+});
+
+/**
+ * Select Dropdown
+ */
+
+$('.dropdown').each(function() {
+  var list = $('<ul />');
+  var defaultText = $(this).attr('data-default') ?? 'Please choose an option!';
+  $(this).find('option').each(function() {
+    list.append($('<li />').append($('<a />').text($(this).text())));
+  });
+  list.appendTo(this);
+  $(this).append($('<span>').text(defaultText));
+});
+
+$('.dropdown > span').on('click touch', e => {
+  e.target.parentElement.classList.toggle('show');
+});
+
+$('.dropdown > ul > li').on('click touch', function(e) {
+  var dropdownElement = $(this.parentElement.parentElement);
+  dropdownElement.removeClass('show');
+  dropdownElement.children('span').text(e.currentTarget.innerText);
 });

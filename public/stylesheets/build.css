@@ -56,6 +56,7 @@
   @apply bg-slate-700;
   opacity: .5;
 }
+
 /* Header */
 header {
   /* min-height: 52rem; */
@@ -92,7 +93,7 @@ header {
 
 @media (min-width: 768px) {
   #menuMobile {
-    display: block!important;
+    display: block !important;
     position: relative;
     width: auto;
     height: auto;
@@ -120,6 +121,111 @@ header {
 
 .slidex {
   transition: transform .25s ease;
+}
+
+/* Select Dropdown */
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown select {
+  display: none;
+}
+
+.dropdown>span {
+  cursor: pointer;
+  padding: 9px 16px;
+  display: block;
+  position: relative;
+  transition: all 0.3s ease;
+  @apply bg-white text-slate-700 font-medium border border-slate-200 rounded-md;
+}
+
+.dropdown>span:before,
+.dropdown>span:after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 8px;
+  height: 2px;
+  border-radius: 1px;
+  top: 50%;
+  right: 15px;
+  transition: all 0.3s ease;
+  @apply bg-slate-700;
+}
+
+.dropdown>span:before {
+  margin-right: 4px;
+  transform: scale(0.96, 0.8) rotate(50deg);
+}
+
+.dropdown>span:after {
+  transform: scale(0.96, 0.8) rotate(-50deg);
+}
+
+.dropdown ul {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  max-height: 210px;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  right: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transform-origin: 0 0;
+  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.3s cubic-bezier(0.4, 0.6, 0.5, 1.32);
+  transform: scale(0.8) translate(0, 4px);
+  @apply border border-t-0 border-slate-300 bg-white rounded-md rounded-t-none;
+}
+
+.dropdown ul li {
+  opacity: 0;
+  transform: translate(6px, 0);
+  transition: all 0.3s ease;
+}
+
+.dropdown ul li a {
+  cursor: pointer;
+  display: block;
+  padding: 10px 16px;
+  color: var(--listText);
+  text-decoration: none;
+  outline: none;
+  position: relative;
+  transition: all 0.3s ease;
+  @apply font-medium text-base text-slate-700;
+}
+
+.dropdown ul li:hover {
+  @apply bg-slate-100;
+}
+
+.dropdown.show>span {
+  @apply border-slate-300 rounded-b-none;
+}
+
+.dropdown.show>span:before {
+  transform: scale(0.96, 0.8) rotate(-50deg);
+}
+
+.dropdown.show>span:after {
+  transform: scale(0.96, 0.8) rotate(50deg);
+}
+
+.dropdown.show ul {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s cubic-bezier(0.4, 0.6, 0.5, 1.32);
+}
+
+.dropdown.show ul li {
+  opacity: 1;
+  transform: translate(0, 0);
 }
 
 /* Tailwind */
