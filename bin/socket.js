@@ -23,7 +23,7 @@ function socket(io) {
           _id: uuid.v4(),
         }
       }
-      if(!session) {
+      if (!session) {
         socket.auth = guest;
         return next();
       }
@@ -46,6 +46,12 @@ function socket(io) {
       io.sockets.emit('create_room', room);
     });
 
+    socket.on('join_room', async function(roomId) {
+      await joinRoom(roomId, socket.auth.user);
+      socket.join(roomId);
+      io.to(roomId).emit('join_room', socket.auth.user);
+    });
+
     socket.on('leave_room', async function(room) {
       var room = await leaveRoom(room);
       await socket.leave(room);
@@ -66,32 +72,43 @@ function socket(io) {
  * 
  * @returns {Object}
  */
-async function getListRooms()
-{
+async function getListRooms() {
   try {
     var rooms = await redisClient.get('rooms');
     return JSON.parse(rooms);
-  } catch(err)
-  {
+  } catch (err) {
     return {};
   }
-  
+
 }
 
 /**
  * 
  * @param {Object} room
  * @param {Object} user
+ * @returns {Promise<Object>}
  */
-async function appendRoom(room, user)
-{
+async function appendRoom(room, user) {
   var rooms = await getListRooms();
   var roomId = uuid.v4();
   room.id = roomId;
-  room.users = [user];
+  room.users = {};
+  room.users[user._id] = user;
   rooms[roomId] = room;
   await redisClient.set('rooms', JSON.stringify(rooms));
   return Promise.resolve(room);
+}
+
+/**
+ * 
+ * @param {String} roomId
+ * @param {Object} user
+ * @returns {Promise<void>}
+ */
+async function joinRoom(roomId, user) {
+  var rooms = await getListRooms();
+  rooms[roomId].users[user._id] = user;
+  await redisClient.set('rooms', JSON.stringify(rooms));
 }
 
 /**
@@ -100,8 +117,7 @@ async function appendRoom(room, user)
  * @param {String} userId 
  * @returns {Promise<Object>}
  */
-async function leaveRoom(roomId, userId)
-{
+async function leaveRoom(roomId, userId) {
   var rooms = await getListRooms();
   var room = rooms[roomId];
 

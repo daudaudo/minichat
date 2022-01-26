@@ -53,7 +53,8 @@ function renderRoomView(room) {
 function renderUsers(room)
 {
   var html = '';
-  room.users.forEach(user => {
+  Object.keys(room.users).forEach(userId => {
+    var user = room.users[userId];
     if(user.username == 'guest')
       html += `<div class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest</button></div>`;
     else 
