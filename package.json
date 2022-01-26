@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/serve -e js,ejs,css,scss",
-    "tailwind:css": "postcss public/stylesheets/build.css -o public/stylesheets/style.css"
+    "build:css": "postcss public/stylesheets/build.css -o public/stylesheets/style.css",
+    "storage:link": "node ./bin/storage-link.js"
   },
   "dependencies": {
     "@socket.io/redis-adapter": "^7.1.0",
