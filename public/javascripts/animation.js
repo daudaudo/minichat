@@ -77,7 +77,9 @@ $('.dropdown').each(function() {
   var list = $('<ul />');
   var defaultText = $(this).attr('data-default') ?? 'Please choose an option!';
   $(this).find('option').each(function() {
-    list.append($('<li />').append($('<a />').text($(this).text())));
+    var li = $('<li />').append($('<a />').text($(this).text()));
+    li.attr('data-value', $(this).attr('value') ?? $(this).text());
+    list.append(li);
   });
   list.appendTo(this);
   $(this).append($('<span>').text(defaultText));
@@ -89,6 +91,8 @@ $('.dropdown > span').on('click touch', e => {
 
 $('.dropdown > ul > li').on('click touch', function(e) {
   var dropdownElement = $(this.parentElement.parentElement);
+  dropdownElement.children('select').val($(this).attr('data-value'));
   dropdownElement.removeClass('show');
   dropdownElement.children('span').text(e.currentTarget.innerText);
+  dropdownElement.attr('data-value', $(this).attr('data-value'));
 });

@@ -57,9 +57,23 @@ function renderUsers(room)
     if(user.username == 'guest')
       html += `<div class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest</button></div>`;
     else 
-      html += `<div class="p-2"><button><img class="rounded-full w-20 h-20 object-cover" src="${user.picture}" alt="" srcset=""></button></div>`; 
+      html += `<div class="p-2"><button><img class="rounded-full w-20 h-20 object-cover" src="/storage/${user.picture}" alt="" srcset=""></button></div>`; 
   });
   return html;
 }
 
-pusher(callbacks);
+const socket = pusher(callbacks);
+
+$('#createRoomBtn').on('click touch', function(e) {
+  e.preventDefault();
+  var topic = $('#topicTextInput').val();
+  var language = $('#languageSelectInput').val();
+  var maximumPeople = $('#maximumPeopleSelectInput').val();
+  var level = $('#levelSelectInput').val();
+  socket.emit('create_room', {
+    name: topic,
+    language: language,
+    maximumPeople: maximumPeople,
+    level: level,
+  });
+});
