@@ -1,4 +1,4 @@
-const redis = require('../../bin/redis');
+var getListRooms = require('../global/room-manager').getListRooms;
 
 /**
  * 
@@ -6,8 +6,9 @@ const redis = require('../../bin/redis');
  * @param {import("express").Response} res 
  */
 
-function index(req, res) {
-  res.render('chat');
+async function index(req, res) {
+  var rooms = await getListRooms();
+  res.render('chat', {rooms: rooms});
 }
 
 /**
@@ -18,8 +19,7 @@ function index(req, res) {
 
 async function room(req, res) {
   var roomId = req.params.id;
-  var rooms = await redis.client.get('rooms');
-  rooms = JSON.parse(rooms);
+  var rooms = await getListRooms();
   if(!rooms[roomId]) 
     return res.status(404).send('404 error');
   res.render('room', {roomId: roomId});

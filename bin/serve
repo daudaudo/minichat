@@ -25,7 +25,7 @@ io.adapter(createAdapter(require('./redis').client, require('./redis').client.du
 /**
  * Setup socket.
  */
-require('./socket')(io);
+require('../routes/channel')(io);
 
 /**
  * Listen on provided port, on all network interfaces.

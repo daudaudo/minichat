@@ -14,11 +14,6 @@ function pusher(callbacks)
     callbacks.private(data);
   });
 
-  socket.once('rooms', room => {
-    if(!callbacks.rooms) return;
-    callbacks.rooms(room);
-  });
-
   socket.on('create_room', room => {
     if(!callbacks.create_room) return;
     callbacks.create_room(room);

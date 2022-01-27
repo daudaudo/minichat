@@ -10,14 +10,6 @@ const callbacks = {
   create_room: (data) => {
     $('#roomsList').append(renderRoomView(data));
   },
-  rooms: (data) => {
-    var roomIds = Object.keys(data);
-    roomIds.forEach(roomId => {
-      if(!listRooms[roomId])
-        $('#roomsList').append(renderRoomView(data[roomId]));
-    });
-    listRooms = data;
-  }
 }
 
 function renderRoomView(room) {
