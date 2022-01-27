@@ -41,14 +41,16 @@ function socket(io) {
     socket.emit('connection', `Hi ${socket.auth.user.username}. Welcome to minichat rooms!`);
 
     socket.on('create_room', async function(room) {
+      if(socket.auth.user.username == 'guest') 
+        return;
       var room = await appendRoom(room, socket.auth.user);
       await socket.join(room);
       io.sockets.emit('create_room', room);
     });
 
     socket.on('join_room', async function(roomId) {
-      await joinRoom(roomId, socket.auth.user);
-      socket.join(roomId);
+      await joinRoom(roomId, socket.auth.user, socket.id);
+      await socket.join(roomId);
       io.to(roomId).emit('join_room', socket.auth.user);
     });
 
@@ -64,6 +66,15 @@ function socket(io) {
 
     socket.on('public', function(data) {
       io.sockets.emit('public', data);
+    });
+
+    socket.on('connect', function() {
+      console.log(socket.id);
+    });
+
+    socket.on('disconnecting',async function() {
+      console.log(`${socket.id} is disconnecting`);
+      await leaveRoom(socket.rooms, socket.auth.user, socket.id);
     });
   });
 }
