@@ -42,10 +42,37 @@ function closeFullscreen() {
 }
 
 /**
+ * 
+ * @param {Object} notify
+ * @returns {String} 
+ */
+function renderNotification(notify) {
+  switch(notify.type) {
+    case 'primary':
+      return `<p class='font-semibold text-sm text-sky-700'>${notify.text}</p>`;
+    case 'error':
+      return `<p class='font-semibold text-sm text-red-500'>${notify.text}</p>`;
+    case 'warn':
+      return `<p class='font-semibold text-sm text-yellow-500'>${notify.text}</p>`;
+    default:
+      return `<p class='font-semibold text-sm text-slate-600'>${notify.text}</p>`;
+  }
+}
+
+/**
+ * 
+ * @param {Object} message
+ * @returns {String} 
+ */
+function renderMessage(message) {
+  return ``;
+}
+
+/**
  * Callback for socket
  */
 
-var listRooms = {};
+const roomId = $('meta[name="chat-room-id"]').attr('content');
 
 const callbacks = {
   connection: (data) => {
@@ -54,11 +81,16 @@ const callbacks = {
   private: (data) => {
     console.log(data);
   },
-  join_room: (user) => {
-    $('#messageBox').append(`<p class='font-semibold text-sm text-slate-600'>Welcome ${user.username} join the chat room!</p>`);
+  room: (evt) => {
+    switch(evt.type) {
+      case 'notification':
+        $('#messageBox').append(renderNotification(evt.data));
+        break;
+      default:
+        break;
+    }
   }
 }
 
 const socket = pusher(callbacks);
-var roomId = $('meta[name="chat-room-id"]').attr('content');
 socket.emit('join_room', roomId);

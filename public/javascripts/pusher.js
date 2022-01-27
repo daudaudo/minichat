@@ -19,6 +19,11 @@ function pusher(callbacks)
     callbacks.public(data);
   });
 
+  socket.on('room', data => {
+    if(!callbacks.room) return;
+    callbacks.room(data);
+  });
+
   socket.on('create_room', room => {
     if(!callbacks.create_room) return;
     callbacks.create_room(room);

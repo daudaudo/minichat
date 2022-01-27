@@ -51,7 +51,7 @@ function socket(io) {
     socket.on('join_room', async function(roomId) {
       await joinRoom(roomId, socket.auth.user, socket.id);
       await socket.join(roomId);
-      io.to(roomId).emit('join_room', socket.auth.user);
+      io.to(roomId).emit('room', {type: 'notification', data: {type: 'primary', text: `User ${socket.auth.user.username} has joined this room.`}});
       io.sockets.emit('public', {type: 'join_room', data: {roomId: roomId, user: socket.auth.user}});
     });
 
