@@ -62,7 +62,8 @@ function socket(io) {
     });
 
     socket.on('private', function(data) {
-      io.to(data.room).emit('private', data.message);
+      if(socket.auth.user.username == 'guest') return;
+      io.to(data.room).emit('private', {sender: socket.auth.user, message: data.message});
     });
 
     socket.on('public', function(data) {

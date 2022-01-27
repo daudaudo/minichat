@@ -64,8 +64,25 @@ function renderNotification(notify) {
  * @param {Object} message
  * @returns {String} 
  */
-function renderMessage(message) {
-  return ``;
+function renderMessage(message, sender) {
+  if(lastSenderId != sender._id)
+    return `
+      <div class="message flex space-x-4">
+        <button><img class="rounded-full w-8 h-8 object-cover" src="/storage/${sender.picture}" alt="" srcset=""></button>
+        <div class="message-text space-y-2">
+          <p class="block p-2 px-4 rounded-full font-medium text-slate-600 bg-slate-100">${message.text}</p>
+        </div>
+      </div>
+    `;
+  else 
+    return `
+      <div class="message flex space-x-4">
+        <div class="w-8 h-8"></div>
+        <div class="message-text space-y-2">
+          <p class="block p-2 px-4 rounded-full font-medium text-slate-600 bg-slate-100">${message.text}</p>
+        </div>
+      </div>
+    `;
 }
 
 /**
@@ -73,13 +90,17 @@ function renderMessage(message) {
  */
 
 const roomId = $('meta[name="chat-room-id"]').attr('content');
+var lastSenderId = null;
 
 const callbacks = {
   connection: (data) => {
     console.log(data);
   },
   private: (data) => {
-    console.log(data);
+    var htmlMessage = renderMessage(data.message, data.sender);
+    $('#messageBox').append(htmlMessage);
+    lastSenderId = data.sender._id;
+    $('#messageBox').scrollTop($('#messageBox').prop('scrollHeight'));
   },
   room: (evt) => {
     switch(evt.type) {
@@ -94,3 +115,18 @@ const callbacks = {
 
 const socket = pusher(callbacks);
 socket.emit('join_room', roomId);
+
+/**
+ * Register event for DOM
+ */
+
+$('#messageTextInput').on('keydown', function(e) {
+  if(e.code !== "Enter") return;
+  socket.emit('private', {
+    room: roomId,
+    message: {
+      text: $('#messageTextInput').val(),
+    }
+  });
+  $('#messageTextInput').val('');
+});
