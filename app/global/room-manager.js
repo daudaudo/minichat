@@ -1,5 +1,6 @@
 var redisClient = require('./redis').client;
 var uuid = require('uuid');
+const Server = require("socket.io").Server;
 /**
  * 
  * @returns {Object}
@@ -57,9 +58,10 @@ async function joinRoom(roomId, user, socketId) {
  * @param {Set} listRooms 
  * @param {Object} currentUser
  * @param {String} socketId
- * @returns {Promise<Object>}
+ * @param {Server} io
+ * @returns {Promise<void>}
  */
-async function leaveRoom(listRooms, currentUser, socketId) {
+async function leaveRoom(listRooms, currentUser, socketId, io) {
   var rooms = await getListRooms();
   listRooms.forEach(roomId => {
     if(!rooms[roomId]) return true;
@@ -74,12 +76,14 @@ async function leaveRoom(listRooms, currentUser, socketId) {
       }
     }
     if(Object.keys(room.users).length === 0) {
+      io.sockets.emit('public', {type: 'delete_room', data: room});
       delete rooms[roomId];
     } else {
       rooms[roomId] = room;
     }
   });
   await redisClient.set('rooms', JSON.stringify(rooms));
+  return Promise.resolve();
 }
 
 module.exports = {

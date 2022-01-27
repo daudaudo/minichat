@@ -1,4 +1,4 @@
-<div class="p-4 xl:w-1/3 md:w-1/2 w-full">
+<div room room-id="<%= room.id %>" class="p-4 xl:w-1/3 md:w-1/2 w-full">
   <div class="p-2 bg-slate-100 rounded rounded-br-lg">
     <div class="w-full p-2 font-semibold text-lg text-slate-600 flex space-x-4 items-center mb-4">
       <span>
@@ -11,7 +11,7 @@
         <p class="font-medium text-slate-500"><%= room.language %> - <%= room.level %></p>
       </div>
     </div>
-    <div class="flex justify-start flex-wrap mb-2">
+    <div room-users class="flex justify-start flex-wrap mb-2">
       <% Object.keys(room.users).forEach(userId => { var user = room.users[userId]; %>
       <% if (user.username == 'guest') { %>
       <div class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest</button></div>

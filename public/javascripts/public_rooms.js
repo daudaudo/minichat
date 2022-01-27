@@ -7,17 +7,31 @@ const callbacks = {
   private: (data) => {
     console.log(data);
   },
-  public: (data) => {
-    console.log(data);
-  },
-  create_room: (data) => {
-    $('#roomsList').append(renderRoomView(data));
+  public: (evt) => {
+    switch(evt.type) {
+      case 'create_room':
+        $('#roomsList').append(renderRoomView(evt.data));
+        break;
+      case 'join_room':
+        var user = evt.data.user;
+        $(`[room][room-id="${evt.data.roomId}"]`).find('[room-users]').append(renderUserHtml(user));
+        break;  
+      case 'leave_room':
+        console.log($(`[room][room-id="${evt.data.roomId}"]`));
+        break;  
+      case 'delete_room':
+        $(`[room][room-id="${evt.data.id}"]`).remove();
+        break;
+      default:
+        console.log(evt);
+        break;
+    }
   },
 }
 
 function renderRoomView(room) {
   return `
-    <div class="p-4 xl:w-1/3 md:w-1/2 w-full">
+    <div room room-id="${room.id}" class="p-4 xl:w-1/3 md:w-1/2 w-full">
       <div class="p-2 bg-slate-100 rounded rounded-br-lg">
         <div class="w-full p-2 font-semibold text-lg text-slate-600 flex space-x-4 items-center mb-4">
           <span>
@@ -27,10 +41,10 @@ function renderRoomView(room) {
           </span>
           <div>
             <p class="text-lg">${room['name']}</p>
-            <p class="font-medium text-slate-500">${room['level'] ?? 'Any'} - ${room['language'] ?? 'Any'}</p>
+            <p class="font-medium text-slate-500">${room['language'] ?? 'Any'} - ${room['level'] ?? 'Any'}</p>
           </div>
         </div>
-        <div class="flex justify-start flex-wrap mb-2">${renderUsers(room)}</div>
+        <div room-users class="flex justify-start flex-wrap mb-2">${renderUsers(room)}</div>
         <div class="w-full p-2 flex justify-center">
           <a href="/room/${room['id']}" target="_blank" class="box-border text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all flex items-center space-x-2">
             <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">
@@ -50,11 +64,19 @@ function renderUsers(room)
   var html = '';
   Object.keys(room.users).forEach(userId => {
     var user = room.users[userId];
-    if(user.username == 'guest')
-      html += `<div class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest</button></div>`;
-    else 
-      html += `<div class="p-2"><button><img class="rounded-full w-20 h-20 object-cover" src="/storage/${user.picture}" alt="" srcset=""></button></div>`; 
+    html += renderUserHtml(user);
   });
+  
+  return html;
+}
+
+function renderUserHtml(user) {
+  var html = '';
+  if (user.username == 'guest')
+    html += `<div class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest</button></div>`;
+  else
+    html += `<div class="p-2"><button><img class="rounded-full w-20 h-20 object-cover" src="/storage/${user.picture}" alt="" srcset=""></button></div>`;
+
   return html;
 }
 
