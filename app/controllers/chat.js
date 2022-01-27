@@ -1,11 +1,14 @@
+var getListRooms = require('../global/room-manager').getListRooms;
+
 /**
  * 
  * @param {import("express").Request} req 
  * @param {import("express").Response} res 
  */
 
-function index(req, res, next) {
-  res.render('chat');
+async function index(req, res) {
+  var rooms = await getListRooms();
+  res.render('chat', {rooms: rooms});
 }
 
 /**
@@ -14,8 +17,12 @@ function index(req, res, next) {
  * @param {import("express").Response} res 
  */
 
-function room(req, res, next) {
-  res.render('room');
+async function room(req, res) {
+  var roomId = req.params.id;
+  var rooms = await getListRooms();
+  if(!rooms[roomId]) 
+    return res.status(404).send('404 error');
+  res.render('room', {roomId: roomId});
 }
 
 module.exports = {

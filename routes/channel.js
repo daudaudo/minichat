@@ -1,8 +1,13 @@
 const Server = require("socket.io").Server;
 var cookieParser = require('cookie-parser');
-var redisStore = require('./redis').store;
-var redisClient = require('./redis').client;
+var redisStore = require('../app/global/redis').store;
 var uuid = require('uuid');
+var {
+  getListRooms,
+  appendRoom,
+  joinRoom,
+  leaveRoom
+} = require('../app/global/room-manager');
 
 /**
  * 
@@ -23,7 +28,7 @@ function socket(io) {
           _id: uuid.v4(),
         }
       }
-      if(!session) {
+      if (!session) {
         socket.auth = guest;
         return next();
       }
@@ -34,16 +39,17 @@ function socket(io) {
 
   io.on('connection', function(socket) {
     socket.emit('connection', `Hi ${socket.auth.user.username}. Welcome to minichat rooms!`);
-    getListRooms().then(rooms => socket.emit('rooms', rooms));
-
-    socket.on('rooms', async function(rooms) {
-      socket.emit('rooms', rooms);
-    });
 
     socket.on('create_room', async function(room) {
       var room = await appendRoom(room, socket.auth.user);
       await socket.join(room);
       io.sockets.emit('create_room', room);
+    });
+
+    socket.on('join_room', async function(roomId) {
+      await joinRoom(roomId, socket.auth.user);
+      socket.join(roomId);
+      io.to(roomId).emit('join_room', socket.auth.user);
     });
 
     socket.on('leave_room', async function(room) {
@@ -60,52 +66,6 @@ function socket(io) {
       io.sockets.emit('public', data);
     });
   });
-}
-
-/**
- * 
- * @returns {Object}
- */
-async function getListRooms()
-{
-  try {
-    var rooms = await redisClient.get('rooms');
-    return JSON.parse(rooms);
-  } catch(err)
-  {
-    return {};
-  }
-  
-}
-
-/**
- * 
- * @param {Object} room
- * @param {Object} user
- */
-async function appendRoom(room, user)
-{
-  var rooms = await getListRooms();
-  var roomId = uuid.v4();
-  room.id = roomId;
-  room.users = [user];
-  rooms[roomId] = room;
-  await redisClient.set('rooms', JSON.stringify(rooms));
-  return Promise.resolve(room);
-}
-
-/**
- * 
- * @param {String} roomId 
- * @param {String} userId 
- * @returns {Promise<Object>}
- */
-async function leaveRoom(roomId, userId)
-{
-  var rooms = await getListRooms();
-  var room = rooms[roomId];
-
-  return Promise.resolve(room);
 }
 
 module.exports = socket;
