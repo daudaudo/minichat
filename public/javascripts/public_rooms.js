@@ -7,6 +7,9 @@ const callbacks = {
   private: (data) => {
     console.log(data);
   },
+  public: (data) => {
+    console.log(data);
+  },
   create_room: (data) => {
     $('#roomsList').append(renderRoomView(data));
   },

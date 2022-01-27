@@ -70,11 +70,11 @@ async function leaveRoom(listRooms, currentUser, socketId) {
       if(user.sockets.length) {
         room.users[user._id] = user;
       } else {
-        room.users[user._id] = undefined;
+        delete room.users[user._id];
       }
     }
     if(Object.keys(room.users).length === 0) {
-      rooms[roomId] = undefined;
+      delete rooms[roomId];
     } else {
       rooms[roomId] = room;
     }
