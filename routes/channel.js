@@ -2,6 +2,7 @@ const Server = require("socket.io").Server;
 var cookieParser = require('cookie-parser');
 var redisStore = require('../app/global/redis').store;
 var uuid = require('uuid');
+var {promisify} = require('util');
 var {
   getListRooms,
   appendRoom,
@@ -14,34 +15,25 @@ var {
  * @param {Server} io
  */
 function socket(io) {
-  io.use((socket, next) => {
-    cookieParser('minichat')(socket.handshake, null, next);
-  });
+  io.use(async (socket, next) => {
+    var promiseResolveUser = new Promise((resolve, rejects) => {
+      cookieParser('minichat')(socket.handshake, null, () => {
+        redisStore.get(socket.handshake.signedCookies['connect.sid'], (err, session) => {
+          if(err) rejects(err);
+          resolve(session.auth);
+        });
+      });
+    });
 
-  io.use((socket, next) => {
-    redisStore.get(socket.handshake.signedCookies['connect.sid'], function(err, session) {
-      var guest = {
-        token: null,
-        user: {
-          username: 'guest',
-          email: null,
-          _id: uuid.v4(),
-        }
-      }
-      if (!session) {
-        socket.auth = guest;
-        return next();
-      }
-      socket.auth = session.auth ?? guest;
-      next();
-    })
+    socket.auth = await promiseResolveUser;
+    next();
   });
 
   io.on('connection', function(socket) {
     socket.emit('connection', `Hi ${socket.auth.user.username}. Welcome to minichat rooms!`);
 
     socket.on('create_room', async function(room) {
-      if(socket.auth.user.username == 'guest') 
+      if(!socket.auth.auth) 
         return;
       var room = await appendRoom(room, socket.auth.user);
       await socket.join(room);
@@ -49,10 +41,9 @@ function socket(io) {
     });
 
     socket.on('join_room', async function(roomId) {
-      await joinRoom(roomId, socket.auth.user, socket.id);
+      await joinRoom(roomId, socket.auth.user, socket.id, io);
       await socket.join(roomId);
       io.to(roomId).emit('room', {type: 'notification', data: {type: 'primary', text: `User ${socket.auth.user.username} has joined this room.`}});
-      io.sockets.emit('public', {type: 'join_room', data: {roomId: roomId, user: socket.auth.user}});
     });
 
     socket.on('leave_room', async function(room) {
@@ -62,7 +53,8 @@ function socket(io) {
     });
 
     socket.on('private', function(data) {
-      if(socket.auth.user.username == 'guest') return;
+      if(!socket.auth.auth) 
+        return;
       io.to(data.room).emit('private', {sender: socket.auth.user, message: data.message});
     });
 

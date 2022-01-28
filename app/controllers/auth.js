@@ -32,6 +32,7 @@ async function login(req, res) {
     req.session.auth = {
       user: user,
       token: uuid.v4(),
+      auth: true,
     }
     res.redirect(homeUrl);
   } else {
