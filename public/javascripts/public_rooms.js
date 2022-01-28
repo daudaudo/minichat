@@ -17,7 +17,7 @@ const callbacks = {
         $(`[room][room-id="${evt.data.roomId}"]`).find('[room-users]').append(renderUserHtml(user));
         break;  
       case 'leave_room':
-        console.log($(`[room][room-id="${evt.data.roomId}"]`));
+        $(`[room][room-id="${evt.data.roomId}"]`).find(`[room-user-id="${evt.data.user._id}"]`).remove();
         break;  
       case 'delete_room':
         $(`[room][room-id="${evt.data.id}"]`).remove();
@@ -73,9 +73,9 @@ function renderUsers(room)
 function renderUserHtml(user) {
   var html = '';
   if (user.username == 'guest')
-    html += `<div class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest</button></div>`;
+    html += `<div room-user-id="${user._id}" class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest</button></div>`;
   else
-    html += `<div class="p-2"><button><img class="rounded-full w-20 h-20 object-cover" src="/storage/${user.picture}" alt="" srcset=""></button></div>`;
+    html += `<div room-user-id="${user._id}" class="p-2"><button><img class="rounded-full w-20 h-20 object-cover" src="/storage/${user.picture}" alt="" srcset=""></button></div>`;
 
   return html;
 }

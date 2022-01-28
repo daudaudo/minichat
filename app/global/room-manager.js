@@ -73,14 +73,10 @@ async function leaveRoom(listRooms, currentUser, socketId, io) {
         room.users[user._id] = user;
       } else {
         delete room.users[user._id];
+        io.sockets.emit('public', {type: 'leave_room', data: {roomId: roomId, user: currentUser}});
       }
     }
-    if(Object.keys(room.users).length === 0) {
-      io.sockets.emit('public', {type: 'delete_room', data: room});
-      delete rooms[roomId];
-    } else {
-      rooms[roomId] = room;
-    }
+    rooms[roomId] = room;
   });
   await redisClient.set('rooms', JSON.stringify(rooms));
   return Promise.resolve();
