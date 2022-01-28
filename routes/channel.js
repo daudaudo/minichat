@@ -41,15 +41,18 @@ function socket(io) {
     socket.emit('connection', `Hi ${socket.auth.user.username}. Welcome to minichat rooms!`);
 
     socket.on('create_room', async function(room) {
+      if(socket.auth.user.username == 'guest') 
+        return;
       var room = await appendRoom(room, socket.auth.user);
       await socket.join(room);
-      io.sockets.emit('create_room', room);
+      io.sockets.emit('public', {type: 'create_room', data: room});
     });
 
     socket.on('join_room', async function(roomId) {
-      await joinRoom(roomId, socket.auth.user);
-      socket.join(roomId);
-      io.to(roomId).emit('join_room', socket.auth.user);
+      await joinRoom(roomId, socket.auth.user, socket.id);
+      await socket.join(roomId);
+      io.to(roomId).emit('room', {type: 'notification', data: {type: 'primary', text: `User ${socket.auth.user.username} has joined this room.`}});
+      io.sockets.emit('public', {type: 'join_room', data: {roomId: roomId, user: socket.auth.user}});
     });
 
     socket.on('leave_room', async function(room) {
@@ -59,11 +62,21 @@ function socket(io) {
     });
 
     socket.on('private', function(data) {
-      io.to(data.room).emit('private', data.message);
+      if(socket.auth.user.username == 'guest') return;
+      io.to(data.room).emit('private', {sender: socket.auth.user, message: data.message});
     });
 
     socket.on('public', function(data) {
       io.sockets.emit('public', data);
+    });
+
+    socket.on('connect', function() {
+      console.log(socket.id);
+    });
+
+    socket.on('disconnecting',async function() {
+      console.log(`${socket.id} is disconnecting`);
+      await leaveRoom(socket.rooms, socket.auth.user, socket.id, io);
     });
   });
 }
