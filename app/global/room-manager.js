@@ -37,9 +37,10 @@ async function appendRoom(room, user) {
  * @param {String} roomId
  * @param {Object} user
  * @param {String} socketId
+ * @param {Server} io
  * @returns {Promise<void>}
  */
-async function joinRoom(roomId, user, socketId) {
+async function joinRoom(roomId, user, socketId, io) {
   var rooms = await getListRooms();
   if(rooms[roomId].users[user._id]) {
     var sockets = rooms[roomId].users[user._id].sockets;
@@ -49,6 +50,7 @@ async function joinRoom(roomId, user, socketId) {
   } else {
     user.sockets = [socketId];
     rooms[roomId].users[user._id] = user;
+    io.sockets.emit('public', {type: 'join_room', data: {roomId: roomId, user: user}});
   };
   await redisClient.set('rooms', JSON.stringify(rooms));
 }

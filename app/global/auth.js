@@ -14,6 +14,7 @@ async function login(user, req)
   req.session.auth = {
     user: users[0],
     token: uuid.v4(),
+    auth: true,
   };
   return true;
 }
