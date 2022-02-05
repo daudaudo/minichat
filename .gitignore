@@ -3,3 +3,4 @@ node_modules/
 .env
 public/stylesheets/style.css
 public/storage
+public/js

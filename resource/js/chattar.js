@@ -1,3 +1,5 @@
+const $ = require('./animation');
+
 /**
  * Toolbar for roomchat
  */
@@ -47,7 +49,7 @@ function closeFullscreen() {
  * @returns {String} 
  */
 function renderNotification(notify) {
-  switch(notify.type) {
+  switch (notify.type) {
     case 'primary':
       return `<p class='font-semibold text-sm text-sky-700'>${notify.text}</p>`;
     case 'error':
@@ -67,7 +69,7 @@ function renderNotification(notify) {
 function renderMessage(message, sender) {
   var isMyMessage = sender._id === currentUserId;
   console.log(isMyMessage);
-  if(lastSenderId != sender._id)
+  if (lastSenderId != sender._id)
     return `
       <div class="message w-full flex items-end space-x-4 ${isMyMessage ? 'justify-end' : ''}">
         ${isMyMessage ? '' : `<button><img class="rounded-full w-8 h-8 object-cover" src="/storage/${sender.picture}" alt="" srcset=""></button>`}
@@ -76,7 +78,7 @@ function renderMessage(message, sender) {
         </div>
       </div>
     `;
-  else 
+  else
     return `
       <p class="block p-2 px-4 rounded-md font-medium ${isMyMessage ? 'text-white bg-sky-700' : 'text-slate-600 bg-slate-100 '}">${message.text}</p>
     `;
@@ -96,7 +98,7 @@ const callbacks = {
   },
   private: (data) => {
     var htmlMessage = renderMessage(data.message, data.sender);
-    if(lastSenderId != data.sender._id) {
+    if (lastSenderId != data.sender._id) {
       $('#messageBox').append(htmlMessage);
     } else {
       $('#messageBox .message:last-child .message-text').append(htmlMessage);
@@ -105,7 +107,7 @@ const callbacks = {
     $('#messageBox').scrollTop($('#messageBox').prop('scrollHeight'));
   },
   room: (evt) => {
-    switch(evt.type) {
+    switch (evt.type) {
       case 'notification':
         $('#messageBox').append(renderNotification(evt.data));
         lastSenderId = null;
@@ -124,8 +126,8 @@ socket.emit('join_room', roomId);
  */
 
 $('#messageTextInput').on('keydown', function(e) {
-  if(e.code !== "Enter") return;
-  if($('#messageTextInput').val().length == 0) return;
+  if (e.code !== "Enter") return;
+  if ($('#messageTextInput').val().length == 0) return;
   socket.emit('private', {
     room: roomId,
     message: {

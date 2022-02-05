@@ -1,4 +1,4 @@
-//const { io } = require("socket.io-client");
+const { io } = require("socket.io-client");
 
 function pusher(callbacks)
 {
@@ -36,3 +36,5 @@ function pusher(callbacks)
 
   return socket;
 }
+
+module.exports = pusher;
