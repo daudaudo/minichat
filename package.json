@@ -5,13 +5,15 @@
   "scripts": {
     "start": "nodemon ./bin/serve -e js,ejs,css,scss",
     "build:css": "postcss public/stylesheets/build.css -o public/stylesheets/style.css",
-    "storage:link": "node ./bin/storage-link.js"
+    "storage:link": "node ./bin/storage-link.js",
+    "resource:complie": "node ./bin/resource-complie.js"
   },
   "dependencies": {
     "@socket.io/redis-adapter": "^7.1.0",
     "@socket.io/sticky": "^1.0.1",
     "axios": "^0.25.0",
     "bcrypt": "^5.0.1",
+    "browserify": "^17.0.0",
     "connect-flash": "^0.1.1",
     "connect-multiparty": "^2.2.0",
     "connect-redis": "^6.0.0",
