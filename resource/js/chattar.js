@@ -118,7 +118,7 @@ const callbacks = {
   }
 }
 
-const socket = pusher(callbacks);
+const socket = require('./pusher')(callbacks);
 socket.emit('join_room', roomId);
 
 /**
@@ -136,3 +136,32 @@ $('#messageTextInput').on('keydown', function(e) {
   });
   $('#messageTextInput').val('');
 });
+
+/**
+ * Establish P2P connection
+ */
+
+window.isSharingScreen = false;
+
+$('#shareScreenBtn').on('click', function(e) {
+  if (window.isSharingScreen) return;
+  navigator.mediaDevices.getDisplayMedia({
+    video: {
+      cursor: "always",
+    },
+    audio: false
+  }).then(stream => {
+    window.isSharingScreen = true;
+    var video = $('<video>');
+    video.prop('srcObject', stream);
+    video.attr('autoplay', true);
+    $('#videoContainer').append(video);
+    stream.getVideoTracks()[0].onended = () => {
+      window.isSharingScreen = false;
+      video.remove();
+    };
+  });
+});
+
+//peer.signal(roomId);
+//peer.send("Hello Peer");

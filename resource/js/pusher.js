@@ -1,37 +1,48 @@
 const { io } = require("socket.io-client");
+const SimplePeer = require('simple-peer');
 
 function pusher(callbacks)
 {
   const socket = io();
 
-  socket.on('connection', data => {
-    if(!callbacks.connection) return;
-    callbacks.connection(data);
-  });
+  for(var channel in callbacks)
+  {
+    socket.on(channel, callbacks[channel]);
+  }
 
-  socket.on('private', data => {
-    if(!callbacks.private) return;
-    callbacks.private(data);
-  });
+  socket.on('p2p', data => {
+    var peerId = data.peerId;
 
-  socket.on('public', data => {
-    if(!callbacks.public) return;
-    callbacks.public(data);
-  });
+    var peer = new SimplePeer({
+      initiator: data.initiator,
+      trickle: false
+    });
 
-  socket.on('room', data => {
-    if(!callbacks.room) return;
-    callbacks.room(data);
-  });
+    socket.on('signal', function(data) {
+      if (data.peerId == peerId) {
+        peer.signal(data.signal);
+      }
+    });
+  
+    peer.on('signal', function(data) {
+      socket.emit('signal', {
+        signal: data,
+        peerId: peerId
+      });
+    });
 
-  socket.on('create_room', room => {
-    if(!callbacks.create_room) return;
-    callbacks.create_room(room);
-  });
+    peer.on('error', function(e) {
+      console.log(e);
+    });
 
-  socket.on('join_room', room => {
-    if(!callbacks.join_room) return;
-    callbacks.join_room(room);
+    peer.on('connect', function() {
+      peer.send("hey peer");
+    });
+    
+    peer.on('data', function(data) {
+      console.log(data);
+    });
+
   });
 
   return socket;

@@ -17,7 +17,7 @@
     <%- include('../components/chat-toolbar')  %>
     <div class="flex-1 flex flex-col p-4 items-stretch">
       <%- include('../components/header-chat-page')  %>
-      <main class="flex flex-1 flex-wrap items-stretch">
+      <main class="flex flex-1 flex-wrap items-stretch space-x-4">
         <!-- Message container -->
         <div class="relative w-full flex-1 flex flex-col border border-slate-200 rounded bg-white">
           <div id="messageBox" class="p-2 rounded-md space-y-2 overflow-auto h-0 flex-auto">
@@ -33,6 +33,10 @@
               </button>
             </div>
           </div>
+        </div>
+        <!-- Video Container -->
+        <div id="videoContainer" class="relative w-full flex-1 flex flex-col border border-slate-200 rounded bg-white">
+          
         </div>
 
         <!-- Other container -->

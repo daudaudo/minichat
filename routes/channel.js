@@ -31,6 +31,27 @@ function socket(io) {
 
   io.on('connection', function(socket) {
     socket.emit('connection', `Hi ${socket.auth.user.username}. Welcome to minichat rooms!`);
+    io.sockets.sockets.forEach(socket2 => {
+      socket2.emit('p2p', {
+        peerId: socket.id,
+        initiator: true
+      });
+      socket.emit('p2p', {
+        peerId: socket2.id,
+        initiator: false
+      });
+    });
+
+    socket.on('signal', function(data) {
+      var socket2 = io.sockets.sockets.get(data.peerId);
+      if (!socket2) { return; }
+      console.log('Proxying signal from peer %s to %s', socket.id, socket2.id);
+
+      socket2.emit('signal', {
+        signal: data.signal,
+        peerId: socket.id
+      });
+    });
 
     socket.on('create_room', async function(room) {
       if(!socket.auth.auth) 
