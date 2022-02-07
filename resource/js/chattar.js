@@ -90,7 +90,9 @@ function renderMessage(message, sender) {
 
 const roomId = $('meta[name="chat-room-id"]').attr('content');
 const currentUserId = $('meta[name="user-id"]').attr('content');
+const SimplePeer = require('simple-peer');
 var lastSenderId = null;
+window.peers = {};
 
 const callbacks = {
   connection: (data) => {
@@ -112,9 +114,31 @@ const callbacks = {
         $('#messageBox').append(renderNotification(evt.data));
         lastSenderId = null;
         break;
+      case 'join_room':
+        var peer = new SimplePeer({initiator: true});
+        if(window.isSharingScreen) peer.addStream(window.shareScreenStream);
+        peer.on('signal', signal => {
+          socket.emit('signal', {signal: signal, roomId: roomId, peerId: evt.data.peerId});
+        });
+        peer.on('connect', () => console.log(`Hey peer from dream`));
+        peer.on('error', err => console.log(err));
+        window.peers[`${socket.id}-${evt.data.peerId}`] = peer;
+        break;
       default:
         break;
     }
+  },
+  signal: (data) => {
+    var peer = window.peers[`${socket.id}-${data.peerId}`];
+    if(!peer) {
+      var peer = new SimplePeer();
+      peer.on('connect', () => console.log(`Hey peer from dream`));
+      peer.on('signal', signal => socket.emit('signal', {signal: signal, roomId: roomId, peerId: data.peerId}));
+      peer.on('error', err => console.log(err));
+      peer.on('stream', startSharingScreen);
+      window.peers[`${socket.id}-${data.peerId}`] = peer;
+    }
+    peer.signal(data.signal);
   }
 }
 
@@ -150,18 +174,35 @@ $('#shareScreenBtn').on('click', function(e) {
       cursor: "always",
     },
     audio: false
-  }).then(stream => {
-    window.isSharingScreen = true;
-    var video = $('<video>');
-    video.prop('srcObject', stream);
-    video.attr('autoplay', true);
-    $('#videoContainer').append(video);
-    stream.getVideoTracks()[0].onended = () => {
-      window.isSharingScreen = false;
-      video.remove();
-    };
-  });
+  }).then(gotShareScreenStream);
 });
 
-//peer.signal(roomId);
-//peer.send("Hello Peer");
+/**
+ * 
+ * @param {MediaStream} stream 
+ */
+function gotShareScreenStream(stream) {
+  window.isSharingScreen = true;
+  window.shareScreenStream = stream;
+  for(var name in window.peers) {
+    var peer = window.peers[name];
+    if(!peer.destroyed) peer.addStream(stream);
+  }
+  startSharingScreen(stream);
+}
+
+/**
+ * 
+ * @param {MediaStream} stream 
+ */
+function startSharingScreen(stream) {
+  var video = $('<video>');
+  video.prop('srcObject', stream);
+  video.prop('muted', true);
+  video.attr('autoplay', true);
+  $('#videoContainer').append(video);
+  stream.getVideoTracks()[0].onended = () => {
+    window.isSharingScreen = false;
+    video.remove();
+  };
+}
