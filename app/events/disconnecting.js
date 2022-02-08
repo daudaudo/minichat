@@ -20,7 +20,8 @@ function handle(io, socket) {
         room.users.delete(socketId);
         await Room.updateOne(filter, {users: room.users});
         io.sockets.emit('public', {type: 'leave_room', data: {roomId: roomId, user: currentUser}});
-        io.to(roomId).emit('room', {type: 'notification', data: {type: 'primary', text: `User ${currentUser.username} has exited this room.`}});
+        io.to(roomId).emit('room', {type: 'notification', data: {type: 'primary', text: `User ${currentUser.username} has just leave this room.`}});
+        io.to(roomId).emit('room', {type: 'leave_room', data: {socketId: socketId}});
       }
 
     });

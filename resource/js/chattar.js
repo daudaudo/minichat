@@ -90,6 +90,18 @@ function renderMessage(message, sender) {
     `;
 }
 
+function renderUserInRoom(user) {
+  var socketId = user.socket_id;
+  return `
+    <div socket-id="${socketId}" class="w-1/3 p-4">
+      <div class="p-2 shadow relative rounded-xl cursor-pointer h-full flex flex-col items-center justify-center">
+        <div class="flex justify-center mb-2"><button><img class="rounded-full w-20 h-20 object-cover" src="/storage/${user.picture}" alt="" srcset=""></button></div>
+        <p class="text-base font-medium text-slate-700 text-center">${user.username}</p>
+      </div>
+    </div>
+  `
+}
+
 /**
  * Callback for socket
  */
@@ -124,12 +136,23 @@ const callbacks = {
         var peer = new SimplePeer({initiator: true});
         if(window.isSharingScreen) peer.addStream(window.shareScreenStream);
         peer.on('signal', signal => {
-          socket.emit('signal', {signal: signal, roomId: roomId, peerId: evt.data.peerId});
+          socket.emit('signal', {signal: signal, roomId: roomId, peerId: evt.data.user.socket_id});
         });
         peer.on('connect', () => console.log(`Hey peer from dream`));
         peer.on('error', err => console.log(err));
         peer.on('stream', openSharingScreenStream);
-        window.peers[evt.data.peerId] = peer;
+        window.peers[evt.data.user.socket_id] = peer;
+        $('#videoContainer').append(renderUserInRoom(evt.data.user));
+        break;
+      case 'leave_room':
+        delete window.peers[evt.data.socketId];
+        $(`#videoContainer [socket-id="${evt.data.socketId}"]`).remove();
+        break;
+      case 'users':
+        Object.keys(evt.data.users).forEach(socketId => {
+          var user = evt.data.users[socketId];
+          $('#videoContainer').append(renderUserInRoom(user));
+        });
         break;
       default:
         break;
@@ -193,7 +216,7 @@ function gotShareScreenStream(stream) {
   window.shareScreenStream = stream;
   for(var name in window.peers) {
     var peer = window.peers[name];
-    if(!peer.destroyed) peer.addStream(stream);
+    if(peer && !peer.destroyed) peer.addStream(stream);
   }
   openSharingScreenStream(stream);
 }
@@ -203,11 +226,13 @@ function gotShareScreenStream(stream) {
  * @param {MediaStream} stream 
  */
 function openSharingScreenStream(stream) {
-  var video = $('<video class="w-full rounded-xl" muted autoplay></video>');
+  var video = $('<video class="w-full rounded-xl h-full" muted autoplay></video>');
   video.prop('srcObject', stream);
-  $('<div class="w-1/3 p-4"></div>').append($('<div class="p-2 shadow relative rounded-xl h-fit cursor-pointer"></div>').append(video)).appendTo('#videoContainer');
+  $('<div class="w-1/3 p-4"></div>')
+    .append($('<div class="p-2 shadow relative rounded-xl h-full flex items-center justify-center cursor-pointer"></div>').append(video))
+    .appendTo('#videoContainer');
   stream.getVideoTracks()[0].onended = () => {
     window.isSharingScreen = false;
-    video.parent().remove();
+    video.parent().parent().remove();
   };
 }

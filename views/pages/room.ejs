@@ -13,14 +13,14 @@
 </head>
 
 <body class="bg-slate-50">
-  <div id="chatroomContainer" class="fixed left-0 top-0 bottom-0 right-0 bg-slate-50 z-10 flex items-stretch">
+  <div id="chatroomContainer" class="fixed left-0 top-0 bottom-0 right-0 bg-slate-50 z-10 flex">
     <%- include('../components/chat-toolbar')  %>
-    <div class="flex-1 flex flex-col items-stretch relative">
+    <div class="flex-1 relative overflow-y-auto">
       <%- include('../components/header-chat-page')  %>
-      <main class="flex flex-1 flex-wrap items-stretch relative">
+      <main class="relative">
         <!-- Video Container -->
-        <div id="videoContainer" class="relative w-2/3 flex flex-wrap">
-
+        <div id="videoContainer" class="relative w-full flex flex-wrap items-stretch">
+          
         </div>
         <!-- Message container -->
         <div id="messageContainer" class="fixed top-0 bottom-0 right-0 p-8 z-50 hidden">
