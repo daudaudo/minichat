@@ -1,3 +1,4 @@
+const $ = require('jquery');
 /**
  * Notification
  */
@@ -96,3 +97,5 @@ $('.dropdown > ul > li').on('click touch', function(e) {
   dropdownElement.children('span').text(e.currentTarget.innerText);
   dropdownElement.attr('data-value', $(this).attr('data-value'));
 });
+
+module.exports = $;

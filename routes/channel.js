@@ -32,6 +32,10 @@ function socket(io) {
   io.on('connection', function(socket) {
     socket.emit('connection', `Hi ${socket.auth.user.username}. Welcome to minichat rooms!`);
 
+    socket.on('signal', data => {
+      io.sockets.sockets.get(data.peerId).emit('signal', {peerId: socket.id, signal: data.signal});
+    });
+
     socket.on('create_room', async function(room) {
       if(!socket.auth.auth) 
         return;
@@ -44,6 +48,7 @@ function socket(io) {
       await joinRoom(roomId, socket.auth.user, socket.id, io);
       await socket.join(roomId);
       io.to(roomId).emit('room', {type: 'notification', data: {type: 'primary', text: `User ${socket.auth.user.username} has joined this room.`}});
+      socket.broadcast.to(roomId).emit('room', {type: 'join_room', data: {user: socket.auth.user, peerId: socket.id}});
     });
 
     socket.on('leave_room', async function(room) {

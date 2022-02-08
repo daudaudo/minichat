@@ -8,6 +8,7 @@ const Server = require("socket.io").Server;
 async function getListRooms() {
   try {
     var rooms = await redisClient.get('rooms');
+    if(!rooms) rooms = "{}";
     return JSON.parse(rooms);
   } catch (err) {
     return {};

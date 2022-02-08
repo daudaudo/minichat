@@ -5,6 +5,7 @@ const util = require('util');
 const stream = require('stream');
 const pipeline = util.promisify(stream.finished);
 const browserify = require('browserify');
+var minifyStream = require('minify-stream')
 
 const basePath = path.dirname(__dirname);
 const resourcePath = path.join(basePath, 'resource/js');
@@ -20,7 +21,7 @@ async function complie() {
   for(let file of fs.readdirSync(resourcePath)) {
     var filePath = path.join(resourcePath, file);
     var fileStream = fs.createWriteStream(path.join(publicPath, file));
-    browserify(filePath).bundle().pipe(fileStream);
+    browserify(filePath).bundle().pipe(minifyStream({ sourceMap: false })).pipe(fileStream);
     await pipeline(fileStream);
   }
 

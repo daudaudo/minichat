@@ -1,4 +1,4 @@
-var listRooms = {};
+const $ = require('./animation');
 
 const callbacks = {
   connection: (data) => {
@@ -80,7 +80,7 @@ function renderUserHtml(user) {
   return html;
 }
 
-const socket = pusher(callbacks);
+const socket = require('./pusher')(callbacks);
 
 $('#createRoomBtn').on('click touch', function(e) {
   e.preventDefault();
@@ -95,3 +95,5 @@ $('#createRoomBtn').on('click touch', function(e) {
     level: level,
   });
 });
+
+module.exports = $;
