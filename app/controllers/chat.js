@@ -1,4 +1,4 @@
-var getListRooms = require('../global/room-manager').getListRooms;
+const Room = require('../models/Room');
 
 /**
  * 
@@ -7,7 +7,7 @@ var getListRooms = require('../global/room-manager').getListRooms;
  */
 
 async function index(req, res) {
-  var rooms = await getListRooms();
+  var rooms = await Room.find();
   res.render('chat', {rooms: rooms});
 }
 
@@ -19,9 +19,9 @@ async function index(req, res) {
 
 async function room(req, res) {
   var roomId = req.params.id;
-  var rooms = await getListRooms();
-  if(!rooms[roomId]) 
-    return res.status(404).send('404 error');
+  var room = await Room.find({id: roomId});
+  if(!room.length)
+    return res.status(404).send('404');
   res.render('room', {roomId: roomId});
 }
 

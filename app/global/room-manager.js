@@ -1,20 +1,5 @@
-var redisClient = require('./redis').client;
-var uuid = require('uuid');
 const Server = require("socket.io").Server;
-/**
- * 
- * @returns {Object}
- */
-async function getListRooms() {
-  try {
-    var rooms = await redisClient.get('rooms');
-    if(!rooms) rooms = "{}";
-    return JSON.parse(rooms);
-  } catch (err) {
-    return {};
-  }
-
-}
+const Room = require('../models/Room');
 
 /**
  * 
@@ -23,14 +8,9 @@ async function getListRooms() {
  * @returns {Promise<Object>}
  */
 async function appendRoom(room, user) {
-  var rooms = await getListRooms();
-  var roomId = uuid.v4();
-  room.id = roomId;
-  room.primary_user = user;
-  room.users = {};
-  rooms[roomId] = room;
-  await redisClient.set('rooms', JSON.stringify(rooms));
-  return Promise.resolve(room);
+  room.primary_user = user._id;
+  var roomAppended = await Room.create(room);
+  return Promise.resolve(roomAppended);
 }
 
 /**
@@ -42,18 +22,16 @@ async function appendRoom(room, user) {
  * @returns {Promise<void>}
  */
 async function joinRoom(roomId, user, socketId, io) {
-  var rooms = await getListRooms();
-  if(rooms[roomId].users[user._id]) {
-    var sockets = rooms[roomId].users[user._id].sockets;
-    if(!sockets) sockets = [];
-    sockets.push(socketId);
-    rooms[roomId].users[user._id].sockets = sockets;
+  var filter = {id: roomId};
+  let room = await Room.findOne(filter);
+  if(room.users.has(user._id)) {
+    return;
   } else {
-    user.sockets = [socketId];
-    rooms[roomId].users[user._id] = user;
+    room.users.set(socketId, user);
+    await Room.updateOne(filter, {users: room.users});
     io.sockets.emit('public', {type: 'join_room', data: {roomId: roomId, user: user}});
-  };
-  await redisClient.set('rooms', JSON.stringify(rooms));
+  }
+  return Promise.resolve();
 }
 
 /**
@@ -65,28 +43,20 @@ async function joinRoom(roomId, user, socketId, io) {
  * @returns {Promise<void>}
  */
 async function leaveRoom(listRooms, currentUser, socketId, io) {
-  var rooms = await getListRooms();
-  listRooms.forEach(roomId => {
-    if(!rooms[roomId]) return true;
-    var room = rooms[roomId];
-    if(room.users[currentUser._id]) {
-      var user = room.users[currentUser._id];
-      user.sockets = user.sockets.filter(id => id !== socketId);
-      if(user.sockets.length) {
-        room.users[user._id] = user;
-      } else {
-        delete room.users[user._id];
-        io.sockets.emit('public', {type: 'leave_room', data: {roomId: roomId, user: currentUser}});
-      }
+  listRooms.forEach(async roomId => {
+    let filter = {id: roomId};
+    let room = await Room.findOne(filter);
+    if(room) {
+      room.users.delete(socketId);
+      await Room.updateOne(filter, {users: room.users});
+      io.sockets.emit('public', {type: 'leave_room', data: {roomId: roomId, user: currentUser}});
+      io.to(roomId).emit('room', {type: 'notification', data: {type: 'primary', text: `User ${currentUser.username} has exited this room.`}});
     }
-    rooms[roomId] = room;
   });
-  await redisClient.set('rooms', JSON.stringify(rooms));
   return Promise.resolve();
 }
 
 module.exports = {
-  getListRooms,
   appendRoom,
   joinRoom,
   leaveRoom

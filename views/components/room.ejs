@@ -12,11 +12,11 @@
       </div>
     </div>
     <div room-users class="flex justify-start flex-wrap mb-2">
-      <% Object.keys(room.users).forEach(userId => { var user = room.users[userId]; %>
+      <% room.users.forEach(user => { %>
       <% if (user.username == 'guest') { %>
-      <div room-user-id="<%= user._id %>" class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest</button></div>
+      <div socket-id="<%= user.socket_id %>" class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest</button></div>
       <% } else { %>
-      <div room-user-id="<%= user._id %>" class="p-2"><button><img class="rounded-full w-20 h-20 object-cover" src="/storage/<%= user.picture %> " alt="" srcset=""></button></div>
+      <div socket-id="<%= user.socket_id %>" class="p-2"><button><img class="rounded-full w-20 h-20 object-cover" src="/storage/<%= user.picture %> " alt="" srcset=""></button></div>
       <% } %>
       <% }) %>
     </div>

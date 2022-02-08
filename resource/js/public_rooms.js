@@ -11,13 +11,14 @@ const callbacks = {
     switch(evt.type) {
       case 'create_room':
         $('#roomsList').append(renderRoomView(evt.data));
+        console.log(evt.data);
         break;
       case 'join_room':
         var user = evt.data.user;
         $(`[room][room-id="${evt.data.roomId}"]`).find('[room-users]').append(renderUserHtml(user));
         break;  
       case 'leave_room':
-        $(`[room][room-id="${evt.data.roomId}"]`).find(`[room-user-id="${evt.data.user._id}"]`).remove();
+        $(`[room][room-id="${evt.data.roomId}"]`).find(`[socket-id="${evt.data.user.socket_id}"]`).remove();
         break;  
       case 'delete_room':
         $(`[room][room-id="${evt.data.id}"]`).remove();
@@ -26,7 +27,7 @@ const callbacks = {
         console.log(evt);
         break;
     }
-  },
+  }
 }
 
 function renderRoomView(room) {
@@ -73,9 +74,9 @@ function renderUsers(room)
 function renderUserHtml(user) {
   var html = '';
   if (user.username == 'guest')
-    html += `<div room-user-id="${user._id}" class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest</button></div>`;
+    html += `<div socket-id="${user.socket_id}" class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest</button></div>`;
   else
-    html += `<div room-user-id="${user._id}" class="p-2"><button><img class="rounded-full w-20 h-20 object-cover" src="/storage/${user.picture}" alt="" srcset=""></button></div>`;
+    html += `<div socket-id="${user.socket_id}" class="p-2"><button><img class="rounded-full w-20 h-20 object-cover" src="/storage/${user.picture}" alt="" srcset=""></button></div>`;
 
   return html;
 }
@@ -91,7 +92,7 @@ $('#createRoomBtn').on('click touch', function(e) {
   socket.emit('create_room', {
     name: topic,
     language: language,
-    maximumPeople: maximumPeople,
+    maximum_people: maximumPeople,
     level: level,
   });
 });

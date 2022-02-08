@@ -1,10 +1,7 @@
 const Server = require("socket.io").Server;
 var cookieParser = require('cookie-parser');
 var redisStore = require('../app/global/redis').store;
-var uuid = require('uuid');
-var {promisify} = require('util');
 var {
-  getListRooms,
   appendRoom,
   joinRoom,
   leaveRoom
@@ -26,6 +23,7 @@ function socket(io) {
     });
 
     socket.auth = await promiseResolveUser;
+    socket.auth.user.socket_id = socket.id;
     next();
   });
 
