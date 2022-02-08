@@ -4,7 +4,13 @@ const $ = require('./animation');
  * Toolbar for roomchat
  */
 
-$('#fullscreenBtn').on('click', e => {
+$('#openMessageBoxBtn').on('click touch', function(e) {
+  $('#messageContainer').toggleClass('hidden flex');
+  $(this).toggleClass('bg-sky-700 text-white');
+});
+
+$('#fullscreenBtn').on('click', function() {
+  $(this).toggleClass('bg-sky-700 text-white');
   var element = document.getElementById('chatroomContainer');
   if (window.innerHeight == screen.height) {
     closeFullscreen();
@@ -122,21 +128,22 @@ const callbacks = {
         });
         peer.on('connect', () => console.log(`Hey peer from dream`));
         peer.on('error', err => console.log(err));
-        window.peers[`${socket.id}-${evt.data.peerId}`] = peer;
+        peer.on('stream', openSharingScreenStream);
+        window.peers[evt.data.peerId] = peer;
         break;
       default:
         break;
     }
   },
   signal: (data) => {
-    var peer = window.peers[`${socket.id}-${data.peerId}`];
+    var peer = window.peers[data.peerId];
     if(!peer) {
       var peer = new SimplePeer();
       peer.on('connect', () => console.log(`Hey peer from dream`));
       peer.on('signal', signal => socket.emit('signal', {signal: signal, roomId: roomId, peerId: data.peerId}));
       peer.on('error', err => console.log(err));
-      peer.on('stream', startSharingScreen);
-      window.peers[`${socket.id}-${data.peerId}`] = peer;
+      peer.on('stream', openSharingScreenStream);
+      window.peers[data.peerId] = peer;
     }
     peer.signal(data.signal);
   }
@@ -162,7 +169,7 @@ $('#messageTextInput').on('keydown', function(e) {
 });
 
 /**
- * Establish P2P connection
+ * Open ShareScreen Stream
  */
 
 window.isSharingScreen = false;
@@ -188,21 +195,19 @@ function gotShareScreenStream(stream) {
     var peer = window.peers[name];
     if(!peer.destroyed) peer.addStream(stream);
   }
-  startSharingScreen(stream);
+  openSharingScreenStream(stream);
 }
 
 /**
  * 
  * @param {MediaStream} stream 
  */
-function startSharingScreen(stream) {
-  var video = $('<video>');
+function openSharingScreenStream(stream) {
+  var video = $('<video class="w-full rounded-xl" muted autoplay></video>');
   video.prop('srcObject', stream);
-  video.prop('muted', true);
-  video.attr('autoplay', true);
-  $('#videoContainer').append(video);
+  $('<div class="w-1/3 p-4"></div>').append($('<div class="p-2 shadow relative rounded-xl h-fit cursor-pointer"></div>').append(video)).appendTo('#videoContainer');
   stream.getVideoTracks()[0].onended = () => {
     window.isSharingScreen = false;
-    video.remove();
+    video.parent().remove();
   };
 }

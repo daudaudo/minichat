@@ -1,5 +1,5 @@
 module.exports = {
-  content: ["./views/**/*.ejs", "./public/**/*.js"],
+  content: ["./views/**/*.ejs", "./resource/js/*.js"],
   theme: {
     extend: {},
     minHeight: (theme) => ({
