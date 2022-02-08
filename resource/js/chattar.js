@@ -231,8 +231,18 @@ function openSharingScreenStream(stream) {
   $('<div class="w-1/3 p-4"></div>')
     .append($('<div class="p-2 shadow relative rounded-xl h-full flex items-center justify-center cursor-pointer"></div>').append(video))
     .appendTo('#videoContainer');
+
   stream.getVideoTracks()[0].onended = () => {
     window.isSharingScreen = false;
     video.parent().parent().remove();
+    for(var name in window.peers) {
+      var peer = window.peers[name];
+      if(peer && !peer.destroyed) peer.removeStream(stream);
+    }
   };
+
+  stream.onremovetrack = () => {
+    video.parent().parent().remove();
+  };
+
 }
