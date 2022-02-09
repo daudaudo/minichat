@@ -74,7 +74,6 @@ function renderNotification(notify) {
  */
 function renderMessage(message, sender) {
   var isMyMessage = sender._id === currentUserId;
-  console.log(isMyMessage);
   if (lastSenderId != sender._id)
     return `
       <div class="message w-full flex items-end space-x-4 ${isMyMessage ? 'justify-end' : ''}">

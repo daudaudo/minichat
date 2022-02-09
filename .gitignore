@@ -1,6 +1,6 @@
 node_modules/
 .vscode/
 .env
-public/stylesheets/style.css
+public/stylesheets
 public/storage
 public/js
