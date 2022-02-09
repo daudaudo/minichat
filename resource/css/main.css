@@ -248,6 +248,20 @@ header {
   @apply flex flex-col items-center justify-center;
 }
 
+/* Has Message Animation */
+
+.has-message-animation {
+  animation: has-message .1s linear alternate infinite;
+  background-color: rgb(3 105 161)!important;
+  color: white!important;
+}
+
+@keyframes has-message {
+  to {
+    @apply transform rotate-12;
+  }
+}
+
 /* Tailwind */
 @tailwind base;
 @tailwind components;

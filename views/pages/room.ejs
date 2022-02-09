@@ -46,10 +46,13 @@
         </div>
       </div>
       <!-- Message container -->
-      <div id="messageContainer" class="fixed top-0 bottom-0 right-0 p-8 z-50 hidden">
+      <div id="messageContainer" class="fixed top-0 bottom-0 right-0 p-8 z-50 hidden transition-all transform translate-x-full">
         <div class="flex flex-col rounded bg-white z-50 w-96 shadow-xl h-full">
+          <div class="p-4 rounded-md rounded-b-none border-b border-slate-200">
+            <h3 class="font-semibold text-slate-700 text-xl">Messages Box</h3>
+          </div>
           <div id="messageBox" class="p-4 rounded-md space-y-2 overflow-auto h-0 flex-auto">
-
+            
           </div>
           <div class="bottom-0 left-0 right-0 z-10 p-2 border-t border-slate-200 flex items-center">
             <div class="flex-1"><input id="messageTextInput" type="text" class="py-2 bg-transparent font-medium text-slate-700 w-full"></div>

@@ -5,9 +5,26 @@ const {openFullscreen, closeFullscreen} = require('./fullscreen');
  * Toolbar for roomchat
  */
 
+var openingMessageBox = false;
+
 $('#openMessageBoxBtn').on('click touch', function(e) {
-  $('#messageContainer').toggleClass('hidden flex');
   $(this).toggleClass('bg-sky-700 text-white');
+  $(this).removeClass('has-message-animation');
+  if(openingMessageBox) {
+    openingMessageBox = false;
+    $('#messageContainer').addClass('translate-x-full');
+    setTimeout(() => {
+      $('#messageContainer').addClass('hidden');
+      $('#messageContainer').removeClass('flex');
+    }, 150);
+  } else {
+    openingMessageBox = true;
+    $('#messageContainer').removeClass('hidden');
+    $('#messageContainer').addClass('flex');
+    setTimeout(() => {
+      $('#messageContainer').removeClass('translate-x-full');
+    }, 25);
+  }
 });
 
 $('#fullscreenBtn').on('click', function() {
@@ -19,6 +36,12 @@ $('#fullscreenBtn').on('click', function() {
     openFullscreen(element);
   }
 });
+
+function notifyHavingMessage() {
+  if(!openingMessageBox) {
+    $('#openMessageBoxBtn').addClass('has-message-animation');
+  }
+}
 
 /**
  * Renderer
@@ -98,6 +121,7 @@ const callbacks = {
       $('#messageBox .message:last-child .message-text').append(htmlMessage);
     }
     lastSenderId = data.sender._id;
+    notifyHavingMessage();
     $('#messageBox').scrollTop($('#messageBox').prop('scrollHeight'));
   },
   room: (evt) => {
@@ -105,6 +129,7 @@ const callbacks = {
       case 'notification':
         $('#messageBox').append(renderNotification(evt.data));
         lastSenderId = null;
+        notifyHavingMessage();
         break;
       case 'join_room':
         if(socket.id === evt.data.user.socket_id) {
