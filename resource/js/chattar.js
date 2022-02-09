@@ -108,9 +108,9 @@ function renderUserInRoom(user) {
 
 const roomId = $('meta[name="chat-room-id"]').attr('content');
 const currentUserId = $('meta[name="user-id"]').attr('content');
+const peers = {};
 const SimplePeer = require('simple-peer');
 var lastSenderId = null;
-window.peers = {};
 
 const callbacks = {
   connection: (data) => {
@@ -133,19 +133,14 @@ const callbacks = {
         lastSenderId = null;
         break;
       case 'join_room':
-        var peer = new SimplePeer({initiator: true});
-        if(window.isSharingScreen) peer.addStream(window.shareScreenStream);
-        peer.on('signal', signal => {
-          socket.emit('signal', {signal: signal, roomId: roomId, peerId: evt.data.user.socket_id});
-        });
-        peer.on('connect', () => console.log(`Hey peer from dream`));
-        peer.on('error', err => console.log(err));
-        peer.on('stream', openSharingScreenStream);
-        window.peers[evt.data.user.socket_id] = peer;
+        if(socket.id === evt.data.user.socket_id) {
+          return peers[socket.id] = evt.data.user;
+        }
+        createPeer(true, evt.data.user.socket_id, evt.data.user);
         $('#videoContainer').append(renderUserInRoom(evt.data.user));
         break;
       case 'leave_room':
-        delete window.peers[evt.data.socketId];
+        delete peers[evt.data.socketId];
         $(`#videoContainer [socket-id="${evt.data.socketId}"]`).remove();
         break;
       case 'users':
@@ -159,17 +154,29 @@ const callbacks = {
     }
   },
   signal: (data) => {
-    var peer = window.peers[data.peerId];
-    if(!peer) {
-      var peer = new SimplePeer();
-      peer.on('connect', () => console.log(`Hey peer from dream`));
-      peer.on('signal', signal => socket.emit('signal', {signal: signal, roomId: roomId, peerId: data.peerId}));
-      peer.on('error', err => console.log(err));
-      peer.on('stream', openSharingScreenStream);
-      window.peers[data.peerId] = peer;
+    if(!peers[data.peerId]) {
+      createPeer(false, data.peerId, data.user);
     }
-    peer.signal(data.signal);
+    peers[data.peerId].peer.signal(data.signal);
   }
+}
+
+/**
+ * Create a new peer
+ * @param {Boolean} initiator 
+ * @param {String} peerId
+ * @param {Object} user
+ */
+function createPeer(initiator, peerId, user) {
+  var peer = new SimplePeer({initiator: initiator});
+  peer.on('connect', () => console.log(`Peer connected`));
+  peer.on('signal', signal => socket.emit('signal', {signal: signal, roomId: roomId, peerId: peerId}));
+  peer.on('error', err => console.error(err));
+  peer.on('stream', openSharingScreenStream);
+  if(window.isSharingScreen) peer.addStream(window.shareScreenStream);
+  peers[peerId] = user;
+  peers[peerId].peer = peer;
+  return peer;
 }
 
 const socket = require('./pusher')(callbacks);
@@ -214,8 +221,8 @@ $('#shareScreenBtn').on('click', function(e) {
 function gotShareScreenStream(stream) {
   window.isSharingScreen = true;
   window.shareScreenStream = stream;
-  for(var name in window.peers) {
-    var peer = window.peers[name];
+  for(var name in peers) {
+    var peer = peers[name].peer;
     if(peer && !peer.destroyed) peer.addStream(stream);
   }
   openSharingScreenStream(stream);
@@ -235,8 +242,8 @@ function openSharingScreenStream(stream) {
   stream.getVideoTracks()[0].onended = () => {
     window.isSharingScreen = false;
     video.parent().parent().remove();
-    for(var name in window.peers) {
-      var peer = window.peers[name];
+    for(var name in peers) {
+      var peer = peers[name].peer;
       if(peer && !peer.destroyed) peer.removeStream(stream);
     }
   };
@@ -244,5 +251,4 @@ function openSharingScreenStream(stream) {
   stream.onremovetrack = () => {
     video.parent().parent().remove();
   };
-
 }
