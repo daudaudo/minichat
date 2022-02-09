@@ -1,4 +1,5 @@
 const $ = require('./animation');
+const {openFullscreen, closeFullscreen} = require('./fullscreen');
 
 /**
  * Toolbar for roomchat
@@ -20,34 +21,8 @@ $('#fullscreenBtn').on('click', function() {
 });
 
 /**
- * @param {HTMLElement} elem 
+ * Renderer
  */
-function openFullscreen(elem) {
-  if (elem.requestFullscreen) {
-    elem.requestFullscreen();
-  } else if (elem.webkitRequestFullscreen) {
-    /* Safari */
-    elem.webkitRequestFullscreen();
-  } else if (elem.msRequestFullscreen) {
-    /* IE11 */
-    elem.msRequestFullscreen();
-  }
-}
-
-/**
- * @param {HTMLElement} elem 
- */
-function closeFullscreen() {
-  if (document.exitFullscreen) {
-    document.exitFullscreen();
-  } else if (document.webkitExitFullscreen) {
-    /* Safari */
-    document.webkitExitFullscreen();
-  } else if (document.msExitFullscreen) {
-    /* IE11 */
-    document.msExitFullscreen();
-  }
-}
 
 /**
  * 
@@ -92,8 +67,8 @@ function renderMessage(message, sender) {
 function renderUserInRoom(user) {
   var socketId = user.socket_id;
   return `
-    <div socket-id="${socketId}" class="w-1/3 p-4">
-      <div class="p-2 shadow relative rounded-xl cursor-pointer h-full flex flex-col items-center justify-center">
+    <div socket-id="${socketId}" class="user-room">
+      <div class="user-room-inner">
         <div class="flex justify-center mb-2"><button><img class="rounded-full w-20 h-20 object-cover" src="/storage/${user.picture}" alt="" srcset=""></button></div>
         <p class="text-base font-medium text-slate-700 text-center">${user.username}</p>
       </div>
@@ -171,7 +146,9 @@ function createPeer(initiator, peerId, user) {
   peer.on('connect', () => console.log(`Peer connected`));
   peer.on('signal', signal => socket.emit('signal', {signal: signal, roomId: roomId, peerId: peerId}));
   peer.on('error', err => console.error(err));
-  peer.on('stream', openSharingScreenStream);
+  peer.on('stream', stream => {
+    openSharingScreenStream(stream, peerId);
+  });
   if(window.isSharingScreen) peer.addStream(window.shareScreenStream);
   peers[peerId] = user;
   peers[peerId].peer = peer;
@@ -197,11 +174,22 @@ $('#messageTextInput').on('keydown', function(e) {
   $('#messageTextInput').val('');
 });
 
+$('#closeFullScreenVideoBtn').on('click touch', closeViewLargeVideo);
+
+function closeViewLargeVideo() {
+  $('#videoFullScreenContainer').addClass('hidden');
+  $('#videoFullScreenContainer').removeClass('flex');
+  $('#videoFullScreenInfo img').prop('src', '');
+  $('#videoFullScreenInfo p').text('');
+  window.streamLargeScreenId = null;
+}
+
 /**
  * Open ShareScreen Stream
  */
 
 window.isSharingScreen = false;
+window.streamLargeScreenId = null;
 
 $('#shareScreenBtn').on('click', function(e) {
   if (window.isSharingScreen) return;
@@ -224,22 +212,32 @@ function gotShareScreenStream(stream) {
     var peer = peers[name].peer;
     if(peer && !peer.destroyed) peer.addStream(stream);
   }
-  openSharingScreenStream(stream);
+  openSharingScreenStream(stream, socket.id);
 }
 
 /**
  * 
  * @param {MediaStream} stream 
  */
-function openSharingScreenStream(stream) {
+function openSharingScreenStream(stream, socketId) {
   var video = $('<video class="w-full rounded-xl h-full" muted autoplay></video>');
   video.prop('srcObject', stream);
-  $('<div class="w-1/3 p-4"></div>')
-    .append($('<div class="p-2 shadow relative rounded-xl h-full flex items-center justify-center cursor-pointer"></div>').append(video))
-    .appendTo('#videoContainer');
+  $(`<div socket-id="${socketId}" class="user-share-screen"></div>`)
+    .append($('<div class="user-share-screen-inner"></div>').append(video))
+    .appendTo('#videoContainer')
+    .on('click touch', function(e) {
+      $('#videoFullScreen').prop('srcObject', stream);
+      $('#videoFullScreenContainer').removeClass('hidden');
+      $('#videoFullScreenContainer').addClass('flex');
+      $('#videoFullScreenInfo img').prop('src', `/storage/${peers[socketId].picture}`);
+      $('#videoFullScreenInfo p').text(`${peers[socketId].username} is sharing screen.`);
+      window.streamLargeScreenId = stream.id;
+    });
 
   stream.getVideoTracks()[0].onended = () => {
     window.isSharingScreen = false;
+    if(window.streamLargeScreenId === stream.id) 
+      closeViewLargeVideo();
     video.parent().parent().remove();
     for(var name in peers) {
       var peer = peers[name].peer;
@@ -249,5 +247,7 @@ function openSharingScreenStream(stream) {
 
   stream.onremovetrack = () => {
     video.parent().parent().remove();
+    if(window.streamLargeScreenId === stream.id) 
+      closeViewLargeVideo();
   };
 }

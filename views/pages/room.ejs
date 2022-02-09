@@ -15,34 +15,54 @@
 <body class="bg-slate-50">
   <div id="chatroomContainer" class="fixed left-0 top-0 bottom-0 right-0 bg-slate-50 z-10 flex">
     <%- include('../components/chat-toolbar')  %>
-    <div class="flex-1 relative overflow-y-auto">
+    <div class="flex-1 relative flex flex-col">
       <%- include('../components/header-chat-page')  %>
-      <main class="relative">
-        <!-- Video Container -->
-        <div id="videoContainer" class="relative w-full flex flex-wrap items-stretch">
-          
+      <!-- Video Container -->
+      <main class="relative flex-auto h-0 overflow-auto">
+        <div id="videoContainer" class="flex flex-wrap items-stretch">
+
         </div>
-        <!-- Message container -->
-        <div id="messageContainer" class="fixed top-0 bottom-0 right-0 p-8 z-50 hidden">
-          <div class="flex flex-col rounded bg-white z-50 w-96 shadow-xl h-full">
-            <div id="messageBox" class="p-4 rounded-md space-y-2 overflow-auto h-0 flex-auto">
-  
+      </main>
+      <!-- Video FullScreen Container -->
+      <div id="videoFullScreenContainer" class="absolute left-0 top-0 bottom-0 right-0 z-40 hidden items-center justify-center p-4 bg-slate-50">
+        <div class="p-2 flex flex-col w-full h-full">
+          <div class="mb-2 flex items-center justify-between p-2 rounded bg-sky-700">
+            <div id="videoFullScreenInfo" class="flex space-x-2 items-center">
+              <img class="w-8 h-8 rounded-full">
+              <p class="font-semibold text-white"></p>
             </div>
-            <div class="bottom-0 left-0 right-0 z-10 p-2 border-t border-slate-200 flex items-center">
-              <div class="flex-1"><input id="messageTextInput" type="text" class="py-2 bg-transparent font-medium text-slate-700 w-full"></div>
-              <div>
-                <button id="sendMessageBtn" class="text-sky-700 p-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">
-                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z" />
-                  </svg>
-                </button>
-              </div>
+            <div>
+              <button id="closeFullScreenVideoBtn" class="text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">
+                  <path d="M0 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2H2a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H2z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="flex-auto h-0 w-full relative">
+            <video id="videoFullScreen" class="rounded bg-slate-900 w-full h-full" muted autoplay></video>
+            <div class="absolute left-0 top-0 right-0 bottom-0 z-1"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Message container -->
+      <div id="messageContainer" class="fixed top-0 bottom-0 right-0 p-8 z-50 hidden">
+        <div class="flex flex-col rounded bg-white z-50 w-96 shadow-xl h-full">
+          <div id="messageBox" class="p-4 rounded-md space-y-2 overflow-auto h-0 flex-auto">
+
+          </div>
+          <div class="bottom-0 left-0 right-0 z-10 p-2 border-t border-slate-200 flex items-center">
+            <div class="flex-1"><input id="messageTextInput" type="text" class="py-2 bg-transparent font-medium text-slate-700 w-full"></div>
+            <div>
+              <button id="sendMessageBtn" class="text-sky-700 p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">
+                  <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
-
-        <!-- Other container -->
-      </main>
+      </div>
     </div>
   </div>
 </body>

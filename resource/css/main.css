@@ -234,6 +234,20 @@ header {
   transform: translate(0, 0);
 }
 
+/* User in room */
+
+.user-room, .user-share-screen, .user-video {
+  @apply w-1/3 p-4;
+}
+
+.user-room-inner, .user-share-screen-inner, .user-video-inner {
+  @apply p-2 shadow relative rounded-xl h-full flex items-center justify-center cursor-pointer bg-white;
+}
+
+.user-room-inner {
+  @apply flex flex-col items-center justify-center;
+}
+
 /* Tailwind */
 @tailwind base;
 @tailwind components;
