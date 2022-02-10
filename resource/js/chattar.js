@@ -1,5 +1,37 @@
 const $ = require('./animation');
 const {openFullscreen, closeFullscreen} = require('./fullscreen');
+const editor = require('./editor');
+
+editor('#messageTextInput', submitMessage);
+/**
+ * 
+ * @param {String} text 
+ * @returns 
+ */
+function submitMessage(text) {
+  if (text.length == 0) return;
+  text = text.trim();
+  socket.emit('private', {
+    room: roomId,
+    message: {
+      text: text,
+    }
+  });
+}
+
+/**
+ * Register event for DOM
+ */
+
+$('#closeFullScreenVideoBtn').on('click touch', closeViewLargeVideo);
+
+function closeViewLargeVideo() {
+  $('#videoFullScreenContainer').addClass('hidden');
+  $('#videoFullScreenContainer').removeClass('flex');
+  $('#videoFullScreenInfo img').prop('src', '');
+  $('#videoFullScreenInfo p').text('');
+  window.streamLargeScreenId = null;
+}
 
 /**
  * Toolbar for roomchat
@@ -77,13 +109,13 @@ function renderMessage(message, sender) {
       <div class="message w-full flex items-end space-x-4 ${isMyMessage ? 'justify-end' : ''}">
         ${isMyMessage ? '' : `<button><img class="rounded-full w-8 h-8 object-cover" src="/storage/${sender.picture}" alt="" srcset=""></button>`}
         <div class="message-text space-y-2 flex flex-col ${isMyMessage ? 'items-end' : 'items-start'}">
-          <p class="block p-2 px-4 rounded-md font-medium ${isMyMessage ? 'text-white bg-sky-700' : 'text-slate-600 bg-slate-100 '}">${message.text}</p>
+          <p class="block p-2 px-4 font-medium ${isMyMessage ? 'text-white bg-sky-700' : 'text-slate-600 bg-slate-100 '}">${message.text}</p>
         </div>
       </div>
     `;
   else
     return `
-      <p class="block p-2 px-4 rounded-md font-medium ${isMyMessage ? 'text-white bg-sky-700' : 'text-slate-600 bg-slate-100 '}">${message.text}</p>
+      <p class="block p-2 px-4 font-medium ${isMyMessage ? 'text-white bg-sky-700' : 'text-slate-600 bg-slate-100 '}">${message.text}</p>
     `;
 }
 
@@ -182,32 +214,6 @@ function createPeer(initiator, peerId, user) {
 
 const socket = require('./pusher')(callbacks);
 socket.emit('join_room', roomId);
-
-/**
- * Register event for DOM
- */
-
-$('#messageTextInput').on('keydown', function(e) {
-  if (e.code !== "Enter") return;
-  if ($('#messageTextInput').val().length == 0) return;
-  socket.emit('private', {
-    room: roomId,
-    message: {
-      text: $('#messageTextInput').val(),
-    }
-  });
-  $('#messageTextInput').val('');
-});
-
-$('#closeFullScreenVideoBtn').on('click touch', closeViewLargeVideo);
-
-function closeViewLargeVideo() {
-  $('#videoFullScreenContainer').addClass('hidden');
-  $('#videoFullScreenContainer').removeClass('flex');
-  $('#videoFullScreenInfo img').prop('src', '');
-  $('#videoFullScreenInfo p').text('');
-  window.streamLargeScreenId = null;
-}
 
 /**
  * Open ShareScreen Stream

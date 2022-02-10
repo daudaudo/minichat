@@ -34,7 +34,7 @@
             <div>
               <button id="closeFullScreenVideoBtn" class="text-white">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">
-                  <path d="M0 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2H2a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H2z"/>
+                  <path d="M0 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2H2a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H2z" />
                 </svg>
               </button>
             </div>
@@ -52,10 +52,16 @@
             <h3 class="font-semibold text-slate-700 text-xl">Messages Box</h3>
           </div>
           <div id="messageBox" class="p-4 rounded-md space-y-2 overflow-auto h-0 flex-auto">
-            
+
           </div>
           <div class="bottom-0 left-0 right-0 z-10 p-2 border-t border-slate-200 flex items-center">
-            <div class="flex-1"><input id="messageTextInput" type="text" class="py-2 bg-transparent font-medium text-slate-700 w-full"></div>
+            <div class="flex-auto">
+              <div class="py-2 bg-transparent font-medium text-slate-700 w-full">
+                <div contenteditable="true" id="messageTextInput" class="content-editable" spellcheck="false" tabindex="1" autocomplete="off" autocorrect="off">
+                  
+                </div>
+              </div>
+            </div>
             <div>
               <button id="sendMessageBtn" class="text-sky-700 p-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">

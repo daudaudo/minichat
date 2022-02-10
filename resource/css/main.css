@@ -248,7 +248,7 @@ header {
   @apply flex flex-col items-center justify-center;
 }
 
-/* Has Message Animation */
+/* Messages */
 
 .has-message-animation {
   animation: has-message .1s linear alternate infinite;
@@ -260,6 +260,40 @@ header {
   to {
     @apply transform rotate-12;
   }
+}
+
+.message-text {
+  max-width: 80%;
+}
+
+.message-text p {
+  @apply rounded-md transition-all;
+}
+
+.message-text p:first-child {
+  @apply rounded-tr-2xl;
+}
+
+.message-text p:last-child {
+  @apply rounded-bl-2xl;
+}
+
+/* ContentEditable */
+
+.content-editable {
+  user-select: text; 
+  outline: none;
+  @apply font-medium text-slate-700;
+}
+
+.content-editable p {
+  word-break: break-all; 
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+[contenteditable]:focus {
+  outline: none;
 }
 
 /* Tailwind */
