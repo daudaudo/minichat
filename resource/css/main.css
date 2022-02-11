@@ -297,6 +297,32 @@ header {
   outline: none;
 }
 
+/* Dialog */
+
+.dialog {
+  position: absolute;
+  @apply rounded shadow-xl p-2 bg-white;
+}
+
+.dialog.dialog-lt {
+  @apply bottom-full right-1 transform -translate-y-1;
+}
+
+.dialog.dialog-lt::before {
+  position: absolute;
+  content: '';
+  top: 100%;
+  transform: translate(-10px, -7px) rotate(-45deg);
+  right: 0;
+  border-width: 6px;
+  border-style: solid;
+  border-top-color: transparent;
+  border-left-color: white;
+  border-bottom-color: white;
+  border-right-color: transparent;
+  box-shadow: -1px 1px 1px rgba(255, 255, 255, .5);
+}
+
 /* Tailwind */
 @tailwind base;
 @tailwind components;

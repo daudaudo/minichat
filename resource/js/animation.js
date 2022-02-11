@@ -14,8 +14,8 @@ setTimeout(() => {
  * Collapse
  */
 
-$('[collapse-target]').on('click', (e) => {
-  var id = e.currentTarget.getAttribute('collapse-target');
+$('[collapse-target]').on('click', function(e) {
+  var id = $(this).attr('collapse-target');
   var collapseElement = $(`#${id}`);
   clearTimeout(timeout);
 
@@ -33,8 +33,8 @@ $('[collapse-target]').on('click', (e) => {
  * Modal
  */
 
-$('[modal-target]').on('click', (e) => {
-  var id = e.currentTarget.getAttribute('modal-target');
+$('[modal-target]').on('click', function(e) {
+  var id = $(this).attr('modal-target');
   var modalElement = $(`#${id}`);
   modalElement.addClass('show');
   createBackDropElement(id);
@@ -96,6 +96,16 @@ $('.dropdown > ul > li').on('click touch', function(e) {
   dropdownElement.removeClass('show');
   dropdownElement.children('span').text(e.currentTarget.innerText);
   dropdownElement.attr('data-value', $(this).attr('data-value'));
+});
+
+/**
+ * Dialog
+ */
+
+$('[dialog-target]').on('click', function(e) {
+  var id = $(this).attr('dialog-target');
+  var dialog = $(`#${id}`);
+  dialog.toggleClass('hidden');
 });
 
 module.exports = $;

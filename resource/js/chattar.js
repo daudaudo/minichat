@@ -1,8 +1,7 @@
 const $ = require('./animation');
 const {openFullscreen, closeFullscreen} = require('./fullscreen');
-const editor = require('./editor');
-
-editor('#messageTextInput', submitMessage);
+const Editor = require('./editor');
+const edittor = new Editor('#messageTextInput', submitMessage, '#emojList');
 /**
  * 
  * @param {String} text 
@@ -24,6 +23,10 @@ function submitMessage(text) {
  */
 
 $('#closeFullScreenVideoBtn').on('click touch', closeViewLargeVideo);
+
+$('#sendMessageBtn').on('click touch', function(e) {
+  edittor.submitData();
+});
 
 function closeViewLargeVideo() {
   $('#videoFullScreenContainer').addClass('hidden');
