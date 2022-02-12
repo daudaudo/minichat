@@ -8,7 +8,7 @@ const callbacks = {
     console.log(data);
   },
   public: (evt) => {
-    switch(evt.type) {
+    switch (evt.type) {
       case 'create_room':
         $('#roomsList').append(renderRoomView(evt.data));
         console.log(evt.data);
@@ -16,17 +16,23 @@ const callbacks = {
       case 'join_room':
         var user = evt.data.user;
         $(`[room][room-id="${evt.data.roomId}"]`).find('[room-users]').append(renderUserHtml(user));
-        break;  
+        break;
       case 'leave_room':
         $(`[room][room-id="${evt.data.roomId}"]`).find(`[socket-id="${evt.data.user.socket_id}"]`).remove();
-        break;  
+        break;
       case 'delete_room':
         $(`[room][room-id="${evt.data.id}"]`).remove();
+        break;
+      case 'rooms':
+        evt.data.rooms.forEach(room => $('#roomsList').append(renderRoomView(room)));
         break;
       default:
         console.log(evt);
         break;
     }
+  },
+  connect: () => {
+    $('#roomsList').empty();
   }
 }
 
@@ -60,14 +66,13 @@ function renderRoomView(room) {
   `
 }
 
-function renderUsers(room)
-{
+function renderUsers(room) {
   var html = '';
   Object.keys(room.users).forEach(userId => {
     var user = room.users[userId];
     html += renderUserHtml(user);
   });
-  
+
   return html;
 }
 

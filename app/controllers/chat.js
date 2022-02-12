@@ -8,7 +8,7 @@ const Room = require('../models/Room');
 
 async function index(req, res) {
   var rooms = await Room.find();
-  res.render('chat', {rooms: rooms});
+  res.render('chat');
 }
 
 /**
