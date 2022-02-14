@@ -2,11 +2,13 @@ const $ = require('jquery');
 
 const emojs = [{
     name: 'angry',
-    img: '/images/emoj/angry.png'
+    img: '/images/emoj/angry.png',
+    symbol: '😡',
   },
   {
     name: 'confused',
-    img: '/images/emoj/confused.png'
+    img: '/images/emoj/confused.png',
+    symbol: '😡',
   },
   {
     name: 'confusing',
@@ -155,18 +157,50 @@ class Editor {
   constructor(id, submit, emojListId) {
     this.editable = $(id);
     this.submit = submit;
-    this.content = $('<p><br></p>');
+    this.content = $('<p dir="ltr" class="input"><br></p>');
     this.editable.append(this.content);
-    this.editable.on('keydown', e => {
-      if (e.code !== "Enter") return;
-      e.preventDefault();
-      this.submitData();
-    });
 
     if (emojListId) {
       this.emojable = $(emojListId);
       this.renderEmojList();
     }
+    this.registerEvent();
+  }
+
+  registerEvent() {
+    this.editable.on('keydown', e => {
+      var offset = window.getSelection().anchorOffset;
+      if (e.code === "Backspace") {
+        if (this.content.text().length == 0) e.preventDefault();
+        return;
+      }
+
+      if (e.keyCode >= 65 && e.keyCode <= 90) {
+        var charAppend = String.fromCharCode(e.keyCode);
+        if (!e.shiftKey) charAppend = charAppend.toLowerCase();
+        var spanAppend = $(`<span>${charAppend}</span>`);
+        var selectionElement = $(window.getSelection().anchorNode.parentElement);
+
+        if (this.content.text().length === 0) {
+          this.content.text('');
+          this.content.append(spanAppend);
+          window.getSelection().setBaseAndExtent(spanAppend[0].firstChild, 1, spanAppend[0].firstChild, 1);
+          e.preventDefault();
+        }
+
+        if (selectionElement.hasClass('emoj')) {
+          this.insertAt(selectionElement, spanAppend, offset);
+          e.preventDefault();
+        }
+
+        return;
+      }
+
+      if (e.code === 'Enter') {
+        e.preventDefault();
+        this.submitData();
+      }
+    });
   }
 
   clear() {
@@ -175,18 +209,89 @@ class Editor {
 
   submitData() {
     if (!this.submit) return;
-    this.submit(this.content.text());
+    this.submit(this.content[0].innerHTML);
     this.clear();
   }
 
   renderEmojList() {
     emojs.forEach(emoj => {
       this.emojable.append(`
-        <div emoj emoj-name="${emoj.name}" class="p-2">
-          <button class="flex items-center justify-center"><img class="w-6 h-6 object-contain" src="${emoj.img}" alt=""></button>
-        </div>
-      `);
+      <div emoj emoj-name="${emoj.name}" class="p-2">
+        <button class="flex items-center justify-center"><img class="w-6 h-6 object-contain" src="${emoj.img}" alt=""></button>
+      </div>
+    `);
     });
+    this.emojable.find('[emoj][emoj-name]').on('click', e => {
+      var srcIcon = $(e.currentTarget).find('img').attr('src');
+      var emojAppend = this.renderEmojElement(srcIcon);
+      var offset = window.getSelection().anchorOffset;
+
+      if (window.getSelection().anchorNode == null) {
+        if (this.content.text().length == 0)
+          this.content.empty();
+        this.content.append(emojAppend);
+        this.moveSelection(emojAppend[0].firstChild, 1);
+        return;
+      }
+
+      switch (window.getSelection().anchorNode.nodeName) {
+        case "P":
+          if (window.getSelection().anchorNode === this.content[0]) {
+            this.content.empty();
+            this.content.append(emojAppend);
+            this.moveSelection(emojAppend[0].firstChild, 1);
+          }
+          break;
+        case "#text":
+          if (window.getSelection().anchorNode.parentElement.parentElement === this.content[0]) {
+            var selection = $(window.getSelection().anchorNode.parentElement);
+            let text = selection.text();
+            if (selection.hasClass('emoj'))
+              return this.insertAt(selection, emojAppend, offset);
+            if (offset === 0) {
+              this.insertAt(selection, emojAppend, 0);
+            } else if (offset === text.length) {
+              this.insertAt(selection, emojAppend, 1);
+            } else {
+              selection.text(text.substring(0, offset));
+              selection.after(`<span>${text.substring(offset, text.length)}</span>`);
+              this.insertAt(selection, emojAppend, 1);
+            }
+          }
+          break;
+        case "SPAN":
+          var selection = $(window.getSelection().anchorNode.parentElement);
+          this.insertAt(selection, emojAppend, offset);
+          break;
+        default:
+          break;
+      }
+
+    });
+  }
+
+  renderEmojElement(src, el) {
+    var emoj = $('<span>😡</span>');
+    if (el) {
+      emoj = el;
+      emoj.text('😡');
+    }
+    emoj.addClass('emoj');
+    emoj.css('background-image', `url('${src}')`);
+    return emoj;
+  }
+
+  moveSelection(el, offset) {
+    window.getSelection().setBaseAndExtent(el, offset, el, offset);
+  }
+
+  insertAt(selection, emoj, offset) {
+    if (offset === 0) {
+      selection.before(emoj);
+    } else {
+      selection.after(emoj);
+    }
+    this.moveSelection(emoj[0].firstChild, 1);
   }
 }
 

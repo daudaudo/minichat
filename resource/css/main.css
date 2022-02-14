@@ -288,13 +288,36 @@ header {
 }
 
 .content-editable p {
-  word-break: break-all; 
+  word-break: break-all;
   max-height: 120px;
+  min-height: 24px;
   overflow-y: auto;
 }
 
 [contenteditable]:focus {
   outline: none;
+}
+
+.content-editable span {
+  user-select: text;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+span.emoj {
+  background-position: center;
+  background-size: 20px 20px;
+  font-size: 1rem;
+  background-repeat: no-repeat;
+  text-align: center;
+  color: transparent;
+  pointer-events: none;
+  user-select: text;
+  overflow-wrap: break-word;
+  margin-right: 1px;
+  margin-left: 1px;
+  cursor: default;
+  caret-color: #050505;;
 }
 
 /* Dialog */
