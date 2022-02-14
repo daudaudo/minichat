@@ -154,14 +154,14 @@ class Editor {
    * @param {String} id 
    * @param {Function} submit 
    */
-  constructor(id, submit, emojListId) {
+  constructor(id, submit, emojDialogId) {
     this.editable = $(id);
     this.submit = submit;
     this.content = $('<p dir="ltr" class="input"><br></p>');
     this.editable.append(this.content);
 
-    if (emojListId) {
-      this.emojable = $(emojListId);
+    if (emojDialogId) {
+      this.emojable = $(emojDialogId);
       this.renderEmojList();
     }
     this.registerEvent();
@@ -214,14 +214,24 @@ class Editor {
   }
 
   renderEmojList() {
+    this.emojable.append(`
+      <div class="mb-2">
+        <h3 class="text-sky-700 font-semibold uppercase">Emoji</h3>
+      </div>
+    `);
+
+    this.emojsList = $('<div id="emojList" class="flex flex-wrap -mx-2"></div>').appendTo(this.emojable);
+
     emojs.forEach(emoj => {
-      this.emojable.append(`
+      this.emojsList.append(`
       <div emoj emoj-name="${emoj.name}" class="p-2">
         <button class="flex items-center justify-center"><img class="w-6 h-6 object-contain" src="${emoj.img}" alt=""></button>
       </div>
     `);
     });
+
     this.emojable.find('[emoj][emoj-name]').on('click', e => {
+      this.emojable.addClass('hidden');
       var srcIcon = $(e.currentTarget).find('img').attr('src');
       var emojAppend = this.renderEmojElement(srcIcon);
       var offset = window.getSelection().anchorOffset;

@@ -1,7 +1,7 @@
 const $ = require('./animation');
 const {openFullscreen, closeFullscreen} = require('./fullscreen');
 const Editor = require('./editor');
-const edittor = new Editor('#messageTextInput', submitMessage, '#emojList');
+const edittor = new Editor('#messageTextInput', submitMessage, '#emojDialog');
 /**
  * 
  * @param {String} text 

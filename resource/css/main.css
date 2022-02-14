@@ -306,8 +306,8 @@ header {
 
 span.emoj {
   background-position: center;
-  background-size: 20px 20px;
-  font-size: 1rem;
+  background-size: contain;
+  font-size: 1.25rem;
   background-repeat: no-repeat;
   text-align: center;
   color: transparent;
@@ -317,7 +317,7 @@ span.emoj {
   margin-right: 1px;
   margin-left: 1px;
   cursor: default;
-  caret-color: #050505;;
+  caret-color: #050505;
 }
 
 /* Dialog */
