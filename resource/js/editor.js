@@ -245,13 +245,6 @@ class Editor {
       }
 
       switch (window.getSelection().anchorNode.nodeName) {
-        case "P":
-          if (window.getSelection().anchorNode === this.content[0]) {
-            this.content.empty();
-            this.content.append(emojAppend);
-            this.moveSelection(emojAppend[0].firstChild, 1);
-          }
-          break;
         case "#text":
           if (window.getSelection().anchorNode.parentElement.parentElement === this.content[0]) {
             var selection = $(window.getSelection().anchorNode.parentElement);
@@ -274,6 +267,10 @@ class Editor {
           this.insertAt(selection, emojAppend, offset);
           break;
         default:
+          if (this.content.text().length == 0)
+            this.content.empty();
+          this.content.append(emojAppend);
+          this.moveSelection(emojAppend[0].firstChild, 1);
           break;
       }
 
