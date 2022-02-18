@@ -209,6 +209,8 @@ class Editor {
 
   submitData() {
     if (!this.submit) return;
+    var text = this.content.text().trim();
+    if(!text.length) return this.clear();
     this.submit(this.content[0].innerHTML);
     this.clear();
   }
@@ -260,17 +262,20 @@ class Editor {
               selection.after(`<span>${text.substring(offset, text.length)}</span>`);
               this.insertAt(selection, emojAppend, 1);
             }
+          } else {
+            this.appendEmoj(emojAppend);
           }
           break;
         case "SPAN":
           var selection = $(window.getSelection().anchorNode.parentElement);
-          this.insertAt(selection, emojAppend, offset);
+          if(selection[0].parentElement === this.content[0]) {
+            this.insertAt(selection, emojAppend, offset);
+          } else {
+            this.appendEmoj(emojAppend);
+          }
           break;
         default:
-          if (this.content.text().length == 0)
-            this.content.empty();
-          this.content.append(emojAppend);
-          this.moveSelection(emojAppend[0].firstChild, 1);
+          this.appendEmoj(emojAppend);
           break;
       }
 
@@ -298,6 +303,13 @@ class Editor {
     } else {
       selection.after(emoj);
     }
+    this.moveSelection(emoj[0].firstChild, 1);
+  }
+
+  appendEmoj(emoj) {
+    if (this.content.text().length == 0)
+      this.content.empty();
+    this.content.append(emoj);
     this.moveSelection(emoj[0].firstChild, 1);
   }
 }
