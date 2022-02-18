@@ -192,7 +192,7 @@ header {
   max-height: 210px;
   top: 100%;
   left: 0;
-  z-index: 1000;
+  z-index: -1;
   right: 0;
   overflow-x: hidden;
   overflow-y: auto;
@@ -241,6 +241,7 @@ header {
   visibility: visible;
   transform: scale(1);
   transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s cubic-bezier(0.4, 0.6, 0.5, 1.32);
+  z-index: 1000;
 }
 
 .dropdown.show ul li {

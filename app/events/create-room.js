@@ -9,7 +9,7 @@ const uuid = require('uuid');
  */
 function handle(io, socket) {
   return async room => {
-    if (!socket.auth.auth)
+    if (!socket.auth.auth || !room.name.length)
       return;
     room.primary_user = socket.auth.user._id;
     room.id = uuid.v4();

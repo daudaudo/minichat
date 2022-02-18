@@ -92,8 +92,13 @@ $('.dropdown').each(function() {
   $(this).append($('<span>').text(defaultText));
 });
 
-$('.dropdown > span').on('click touch', e => {
-  e.target.parentElement.classList.toggle('show');
+$('.dropdown > span').on('click touch', function(e) {
+  if ($(this.parentElement).hasClass('show')) {
+    $('.dropdown').removeClass('show');
+  } else {
+    $('.dropdown').removeClass('show');
+    $(this.parentElement).addClass('show');
+  }
 });
 
 $('.dropdown > ul > li').on('click touch', function(e) {
