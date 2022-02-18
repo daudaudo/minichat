@@ -141,6 +141,7 @@ function renderUserInRoom(user) {
 const roomId = $('meta[name="chat-room-id"]').attr('content');
 const currentUserId = $('meta[name="user-id"]').attr('content');
 const peers = {};
+const streams = {};
 const SimplePeer = require('simple-peer');
 var lastSenderId = null;
 
@@ -183,6 +184,9 @@ const callbacks = {
           $('#videoContainer').append(renderUserInRoom(user));
         });
         break;
+      case 'share_screen':
+        console.log(evt);
+        break;
       default:
         break;
     }
@@ -207,7 +211,8 @@ function createPeer(initiator, peerId, user) {
   peer.on('signal', signal => socket.emit('signal', {signal: signal, roomId: roomId, peerId: peerId}));
   peer.on('error', err => console.error(err));
   peer.on('stream', stream => {
-    openSharingScreenStream(stream, peerId);
+    //openSharingScreenStream(stream, peerId);
+    streams[stream.id] = stream;
   });
   if(window.isSharingScreen) peer.addStream(window.shareScreenStream);
   peers[peerId] = user;
@@ -231,7 +236,7 @@ $('#shareScreenBtn').on('click', function(e) {
     video: {
       cursor: "always",
     },
-    audio: false
+    audio: true
   }).then(gotShareScreenStream);
 });
 
@@ -242,11 +247,13 @@ $('#shareScreenBtn').on('click', function(e) {
 function gotShareScreenStream(stream) {
   window.isSharingScreen = true;
   window.shareScreenStream = stream;
+  streams[stream.id] = stream;
   for(var name in peers) {
     var peer = peers[name].peer;
     if(peer && !peer.destroyed) peer.addStream(stream);
   }
   openSharingScreenStream(stream, socket.id);
+  socket.emit('share_screen', {streamId: stream.id, roomId: roomId});
 }
 
 /**
