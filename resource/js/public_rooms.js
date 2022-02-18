@@ -100,6 +100,7 @@ $('#createRoomBtn').on('click touch', function(e) {
     maximum_people: maximumPeople,
     level: level,
   });
+  $('#createRoomModal').closeModal();
 });
 
 module.exports = $;

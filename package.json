@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/serve -e js,ejs,css,scss",
+    "start": "nodemon ./bin/serve -e js,ejs,css,scss > ./storage/logs/app.log",
     "build:css": "postcss resource/css/main.css -o public/stylesheets/style.css",
     "storage:link": "node ./bin/storage-link.js",
     "resource:complie": "node ./bin/resource-complie.js"

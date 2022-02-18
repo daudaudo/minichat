@@ -37,14 +37,20 @@ $('[modal-target]').on('click', function(e) {
   var id = $(this).attr('modal-target');
   var modalElement = $(`#${id}`);
   modalElement.addClass('show');
+  modalElement.find('.modal-close').on('click', () => modalElement.closeModal());
   createBackDropElement(id);
 });
 
 $('.modal').on('click', function(e) {
   if (e.target !== this) return;
-  this.classList.remove('show');
-  $(`.backdrop[data-target=${this.id}`).remove();
+  $(this).closeModal();
 });
+
+$.fn.closeModal = function () {
+  this.removeClass('show');
+  $(`.backdrop[data-target=${this[0].id}`).remove();
+  return this;
+}
 
 function createBackDropElement(id) {
   var attr = {
