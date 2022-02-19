@@ -22,6 +22,7 @@ function socket(io) {
     socket.on('private', require('../app/events/private')(io, socket));
     socket.on('public', require('../app/events/public')(io, socket));
     socket.on('share_screen', require('../app/events/share-screen')(io, socket));
+    socket.on('stop_share_screen', require('../app/events/stop-share-screen')(io, socket));
     socket.on('disconnecting', require('../app/events/disconnecting')(io, socket));
   });
 }
