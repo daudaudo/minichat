@@ -1,151 +1,56 @@
 const $ = require('jquery');
 
-const emojs = [{
-    name: 'angry',
-    img: '/images/emoj/angry.png',
-    symbol: '😡',
-  },
-  {
-    name: 'confused',
-    img: '/images/emoj/confused.png',
-    symbol: '😡',
-  },
-  {
-    name: 'confusing',
-    img: '/images/emoj/confusing.png'
-  },
-  {
-    name: 'confusing_1',
-    img: '/images/emoj/confusing_1.png'
-  },
-  {
-    name: 'confusion',
-    img: '/images/emoj/confusion.png'
-  },
-  {
-    name: 'crying',
-    img: '/images/emoj/crying.png'
-  },
-  {
-    name: 'dead-skin',
-    img: '/images/emoj/dead-skin.png'
-  },
-  {
-    name: 'dead',
-    img: '/images/emoj/dead.png'
-  },
-  {
-    name: 'detective',
-    img: '/images/emoj/detective.png'
-  },
-  {
-    name: 'eye-care',
-    img: '/images/emoj/eye-care.png'
-  },
-  {
-    name: 'eye',
-    img: '/images/emoj/eye.png'
-  },
-  {
-    name: 'eyeem',
-    img: '/images/emoj/eyeem.png'
-  },
-  {
-    name: 'find',
-    img: '/images/emoj/find.png'
-  },
-  {
-    name: 'flip',
-    img: '/images/emoj/flip.png'
-  },
-  {
-    name: 'haha',
-    img: '/images/emoj/haha.png'
-  },
-  {
-    name: 'handsome',
-    img: '/images/emoj/handsome.png'
-  },
-  {
-    name: 'hug',
-    img: '/images/emoj/hug.png'
-  },
-  {
-    name: 'kid',
-    img: '/images/emoj/kid.png'
-  },
-  {
-    name: 'laugh',
-    img: '/images/emoj/laugh.png'
-  },
-  {
-    name: 'laughing',
-    img: '/images/emoj/laughing.png'
-  },
-  {
-    name: 'laughter',
-    img: '/images/emoj/laughter.png'
-  },
-  {
-    name: 'love-and-romance',
-    img: '/images/emoj/love-and-romance.png'
-  },
-  {
-    name: 'nervous',
-    img: '/images/emoj/nervous.png'
-  },
-  {
-    name: 'romance-and-love',
-    img: '/images/emoj/romance-and-love.png'
-  },
-  {
-    name: 'romance',
-    img: '/images/emoj/romance.png'
-  },
-  {
-    name: 'sad-face',
-    img: '/images/emoj/sad-face.png'
-  },
-  {
-    name: 'sad',
-    img: '/images/emoj/sad.png'
-  },
-  {
-    name: 'smiles',
-    img: '/images/emoj/smiles.png'
-  },
-  {
-    name: 'spooky',
-    img: '/images/emoj/spooky.png'
-  },
-  {
-    name: 'star',
-    img: '/images/emoj/star.png'
-  },
-  {
-    name: 'superstar',
-    img: '/images/emoj/superstar.png'
-  },
-  {
-    name: 'tongue-out',
-    img: '/images/emoj/tongue-out.png'
-  },
-  {
-    name: 'tongue',
-    img: '/images/emoj/tongue.png'
-  },
-  {
-    name: 'toxic',
-    img: '/images/emoj/toxic.png'
-  },
-  {
-    name: 'wow',
-    img: '/images/emoj/wow.png'
-  },
-  {
-    name: 'yelling',
-    img: '/images/emoj/yelling.png'
-  }
+const emojs = [
+  { name: 'alien', img: '/images/emoj/alien.png' },
+  { name: 'angel', img: '/images/emoj/angel.png' },
+  { name: 'angry (1)', img: '/images/emoj/angry (1).png' },
+  { name: 'angry (2)', img: '/images/emoj/angry (2).png' },
+  { name: 'angry (3)', img: '/images/emoj/angry (3).png' },
+  { name: 'angry', img: '/images/emoj/angry.png' },
+  { name: 'calm', img: '/images/emoj/calm.png' },
+  { name: 'cat (1)', img: '/images/emoj/cat (1).png' },
+  { name: 'cat', img: '/images/emoj/cat.png' },
+  { name: 'cool', img: '/images/emoj/cool.png' },
+  { name: 'cowboy', img: '/images/emoj/cowboy.png' },
+  { name: 'crying', img: '/images/emoj/crying.png' },
+  { name: 'dead', img: '/images/emoj/dead.png' },
+  { name: 'demon', img: '/images/emoj/demon.png' },
+  { name: 'devil', img: '/images/emoj/devil.png' },
+  { name: 'disappointed', img: '/images/emoj/disappointed.png' },
+  { name: 'embarrassed', img: '/images/emoj/embarrassed.png' },
+  { name: 'happy (1)', img: '/images/emoj/happy (1).png' },
+  { name: 'happy (2)', img: '/images/emoj/happy (2).png' },
+  { name: 'happy (3)', img: '/images/emoj/happy (3).png' },
+  { name: 'happy', img: '/images/emoj/happy.png' },
+  { name: 'in-love', img: '/images/emoj/in-love.png' },
+  { name: 'injured', img: '/images/emoj/injured.png' },
+  { name: 'kiss', img: '/images/emoj/kiss.png' },
+  { name: 'laughing (1)', img: '/images/emoj/laughing (1).png' },
+  { name: 'laughing', img: '/images/emoj/laughing.png' },
+  { name: 'nerd', img: '/images/emoj/nerd.png' },
+  { name: 'poo', img: '/images/emoj/poo.png' },
+  { name: 'rich', img: '/images/emoj/rich.png' },
+  { name: 'robot', img: '/images/emoj/robot.png' },
+  { name: 'sad (1)', img: '/images/emoj/sad (1).png' },
+  { name: 'sad', img: '/images/emoj/sad.png' },
+  { name: 'secret', img: '/images/emoj/secret.png' },
+  { name: 'shocked (1)', img: '/images/emoj/shocked (1).png' },
+  { name: 'shocked (2)', img: '/images/emoj/shocked (2).png' },
+  { name: 'shocked', img: '/images/emoj/shocked.png' },
+  { name: 'sick (1)', img: '/images/emoj/sick (1).png' },
+  { name: 'sick', img: '/images/emoj/sick.png' },
+  { name: 'silent', img: '/images/emoj/silent.png' },
+  { name: 'skull', img: '/images/emoj/skull.png' },
+  { name: 'sleeping', img: '/images/emoj/sleeping.png' },
+  { name: 'smart', img: '/images/emoj/smart.png' },
+  { name: 'surprised (1)', img: '/images/emoj/surprised (1).png' },
+  { name: 'surprised (2)', img: '/images/emoj/surprised (2).png' },
+  { name: 'surprised', img: '/images/emoj/surprised.png' },
+  { name: 'thinking (1)', img: '/images/emoj/thinking (1).png' },
+  { name: 'thinking', img: '/images/emoj/thinking.png' },
+  { name: 'tongue (1)', img: '/images/emoj/tongue (1).png' },
+  { name: 'tongue', img: '/images/emoj/tongue.png' },
+  { name: 'wink', img: '/images/emoj/wink.png' }
 ];
 
 class Editor {

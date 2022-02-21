@@ -333,6 +333,11 @@ span.emoj {
   margin-left: 1px;
   cursor: default;
   caret-color: #050505;
+  filter: saturate(1.5) hue-rotate(355deg);
+}
+
+#emojList img {
+  filter: saturate(1.5) hue-rotate(350deg);
 }
 
 /* Dialog */
