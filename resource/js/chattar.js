@@ -78,6 +78,13 @@ function notifyHavingMessage() {
   }
 }
 
+$('#turnOnCameraBtn').on('click touch', e => {
+  navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: true,
+  }).then(gotUserVideoStream);
+});
+
 /**
  * Renderer
  */
@@ -125,13 +132,18 @@ function renderMessage(message, sender) {
 function renderUserInRoom(user) {
   var socketId = user.socket_id;
   return `
-    <div socket-id="${socketId}" class="user-room">
+    <div user-room socket-id="${socketId}" class="user-room">
       <div class="user-room-inner">
-        <div class="flex justify-center mb-2"><button><img class="rounded-full w-20 h-20 object-cover" src="/storage/${user.picture}" alt="" srcset=""></button></div>
-        <p class="text-base font-medium text-slate-700 text-center">${user.username}</p>
+        <div class="user-room-info transition-all z-20 w-full h-full flex flex-col items-center justify-center">
+          <div class="flex justify-center mb-2"><button><img class="rounded-full w-20 h-20 object-cover" src="/storage/${user.picture}" alt="" srcset=""></button></div>
+          <p class="text-base font-medium text-slate-700 text-center">${user.username}</p>
+        </div>
+        <div class="absolute left-0 top-0 bottom-0 right-0 p-2 z-10">
+          <video class="w-full h-full rounded-xl"></video>
+        </div
       </div>
     </div>
-  `
+  `;
 }
 
 /**
@@ -320,4 +332,14 @@ function openSharingScreenStream(stream, socketId) {
     if($('#videoFullScreen').prop('srcObject').id === stream.id) 
       closeViewLargeVideo();
   };
+}
+
+/**
+ * 
+ * @param {MediaStream} stream 
+ */
+function gotUserVideoStream(stream) {
+  var userRoom = $(`[user-room][socket-id="${socket.id}"]`);
+  userRoom.find('video').prop('srcObject', stream).trigger('play');
+  userRoom.addClass('opening-video');
 }
