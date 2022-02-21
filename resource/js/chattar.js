@@ -269,6 +269,7 @@ $('#shareScreenBtn').on('click', function(e) {
  * @param {MediaStream} stream 
  */
 function gotShareScreenStream(stream) {
+  $(`#shareScreenBtn`).addClass('bg-sky-700').addClass('text-white');
   isSharingScreen = true;
   window.shareScreenStream = stream;
   for(var name in peers) {
@@ -277,9 +278,9 @@ function gotShareScreenStream(stream) {
   }
 
   stream.getVideoTracks()[0].onended = () => {
+    $(`#shareScreenBtn`).removeClass('bg-sky-700').removeClass('text-white');
     isSharingScreen = false;
     $(`[stream-id="${stream.id}"]`).remove();
-    console.log(`[stream-id="${stream.id}"]`);
     socket.emit('stop_share_screen', {streamId: stream.id, roomId: roomId});
     for(var name in peers) {
       var peer = peers[name].peer;
