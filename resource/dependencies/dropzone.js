@@ -29,6 +29,7 @@ class Dropzone {
     }, false);
 
     this.dropable.on('dragenter', e => {
+      e.preventDefault();
       this.dropable.addClass('active');
     });
 

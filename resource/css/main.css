@@ -392,8 +392,13 @@ span.emoj {
 }
 
 .dropzone.active .dragenter {
+  z-index: 10;
   opacity: 1;
   visibility: visible;
+}
+
+.dropzone.active .dragenter * {
+  pointer-events: none;
 }
 
 /* Tailwind */
