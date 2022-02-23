@@ -378,6 +378,24 @@ span.emoj {
   box-shadow: -1px 1px 1px rgba(255, 255, 255, .5);
 }
 
+/* Dropzone */
+
+.dropzone .dragenter {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  opacity: 0;
+  visibility: hidden;
+  @apply bg-white bg-opacity-80 border-4 border-dashed border-sky-700 transition-all rounded;
+}
+
+.dropzone.active .dragenter {
+  opacity: 1;
+  visibility: visible;
+}
+
 /* Tailwind */
 @tailwind base;
 @tailwind components;

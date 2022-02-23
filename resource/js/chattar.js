@@ -343,3 +343,6 @@ function gotUserVideoStream(stream) {
   userRoom.find('video').prop('srcObject', stream).trigger('play');
   userRoom.addClass('opening-video');
 }
+
+const Dropzone = require('../dependencies/dropzone');
+var dropable = new Dropzone('#messageContainer > div');
