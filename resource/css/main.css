@@ -401,6 +401,19 @@ span.emoj {
   pointer-events: none;
 }
 
+.preview-item {
+  @apply relative rounded shadow-sm overflow-hidden;
+}
+
+.preview-item::before {
+  content: '';
+  @apply absolute left-0 right-0 bottom-0 h-1 bg-sky-700;
+}
+
+.preview-item img {
+  @apply w-24 h-24 object-cover;
+}
+
 /* Tailwind */
 @tailwind base;
 @tailwind components;

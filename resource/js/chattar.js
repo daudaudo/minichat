@@ -345,4 +345,6 @@ function gotUserVideoStream(stream) {
 }
 
 const Dropzone = require('../dependencies/dropzone');
-var dropable = new Dropzone('#messageContainer > div');
+var dropable = new Dropzone('#messageContainer > div', {
+  preview: '#previewFileMessage',
+});

@@ -9,6 +9,10 @@ class Dropzone {
   constructor(target, options) {
     this.dropable = $(target);
     this.init();
+    this.files = [];
+    if(options.preview) {
+      this.previewable = $(options.preview);
+    }
   }
 
   init() {
@@ -40,6 +44,32 @@ class Dropzone {
     this.dropable.on('drop', e => {
       e.preventDefault();
       this.dropable.removeClass('active');
+      if (e.originalEvent.dataTransfer.items) {
+        for (let i = 0; i < e.originalEvent.dataTransfer.items.length; i++) {
+          if (e.originalEvent.dataTransfer.items[i].kind === 'file') {
+            var file = e.originalEvent.dataTransfer.items[i].getAsFile();
+            if(file) {
+              this.files.push(file);
+              let type = file.type;
+              if(type.includes('image')) {
+                this.previewable.append(`
+                  <div class="p-2">
+                    <div class="preview-item">
+                      <img dragable="false" class="" src="${URL.createObjectURL(file)}">
+                    </div> 
+                  </div>
+                `);
+              }
+            }
+          }
+        }
+      } else {
+        for (let i = 0; i < e.originalEvent.dataTransfer.files.length; i++) {
+          var file = e.originalEvent.dataTransfer.items[i].getAsFile();
+          if(file) this.files.push(file);
+        }
+      }
+      console.log(this.files);
     });
   }
 }
