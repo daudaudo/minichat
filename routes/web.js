@@ -18,6 +18,7 @@ router.all('*', webMiddleware);
 router.get('/', homecontroller.home);
 router.get('/chat', chatcontroller.index);
 router.get('/room/:id', chatcontroller.room);
+router.post('/room/files', chatcontroller.files);
 
 // Oauth Router
 router.get('/google/oauth', oauthcontroller.oauthGoogle);

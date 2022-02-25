@@ -146,9 +146,32 @@ class Dropzone {
     this.previewable.empty();
   }
 
+  existFiles() {
+    return Object.keys(this.files).length !== 0;
+  }
+
+  formdata() {
+    var formdata = new FormData();
+    for(let fileId in this.files) {
+      formdata.set(fileId, this.files[fileId].file);
+    }
+    return formdata; 
+  }
+
   upload() {
     if(this.options.uploadUrl) {
-      
+      $.ajax({
+        url: this.options.uploadUrl,
+        method: 'POST',
+        data: this.formdata(),
+        contentType: false,
+        processData: false,
+        dataType: 'json',
+        success: response => {
+          this.clear();
+          console.log(response)
+        }
+      });
     }
   }
 }

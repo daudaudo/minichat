@@ -1,4 +1,5 @@
 const Room = require('../models/Room');
+const Storage = require('../global/storage');
 
 /**
  * 
@@ -7,7 +8,6 @@ const Room = require('../models/Room');
  */
 
 async function index(req, res) {
-  var rooms = await Room.find();
   res.render('chat');
 }
 
@@ -25,7 +25,22 @@ async function room(req, res) {
   res.render('room', {roomId: roomId});
 }
 
+/**
+ * 
+ * @param {import("express").Request} req 
+ * @param {import("express").Response} res 
+ */
+
+async function files(req, res) {
+  var files = {};
+  for(let field in req.files) {
+    files[field] = Storage.url(Storage.fromFolder('public/room').upload(req.files[field]));
+  }
+  res.send(files);
+}
+
 module.exports = {
   index,
-  room
+  room,
+  files
 };

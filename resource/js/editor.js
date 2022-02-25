@@ -59,16 +59,19 @@ class Editor {
    * @param {String} id 
    * @param {Function} submit 
    */
-  constructor(id, submit, emojDialogId) {
+  constructor(id, option) {
     this.editable = $(id);
-    this.submit = submit;
     this.content = $('<p dir="ltr" class="input"><br></p>');
     this.editable.append(this.content);
 
-    if (emojDialogId) {
-      this.emojable = $(emojDialogId);
+    this.submit = option.submit;
+    this.submitFiles = option.submitFiles;
+
+    if (option.emojDialogId) {
+      this.emojable = $(option.emojDialogId);
       this.renderEmojList();
     }
+
     this.registerEvent();
   }
 
@@ -113,6 +116,7 @@ class Editor {
   }
 
   submitData() {
+    if (this.submitFiles) this.submitFiles();
     if (!this.submit) return;
     var text = this.content.text().trim();
     if(!text.length) return this.clear();

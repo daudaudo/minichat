@@ -1,7 +1,19 @@
 const $ = require('./animation');
 const {openFullscreen, closeFullscreen} = require('./fullscreen');
 const Editor = require('./editor');
-const edittor = new Editor('#messageTextInput', submitMessage, '#emojDialog');
+const Dropzone = require('../dependencies/dropzone');
+
+const dropable = new Dropzone('#messageContainer > div', {
+  preview: '#previewFileMessage',
+  uploadUrl: '/room/files'
+});
+
+const edittor = new Editor('#messageTextInput', {
+  submit: submitMessage,
+  emojDialogId: '#emojDialog',
+  submitFiles: submitFiles
+});
+
 /**
  * 
  * @param {String} text 
@@ -16,6 +28,12 @@ function submitMessage(text) {
       text: text,
     }
   });
+}
+
+function submitFiles() {
+  if (dropable.existFiles()) {
+    dropable.upload();
+  }
 }
 
 /**
@@ -343,8 +361,3 @@ function gotUserVideoStream(stream) {
   userRoom.find('video').prop('srcObject', stream).trigger('play');
   userRoom.addClass('opening-video');
 }
-
-const Dropzone = require('../dependencies/dropzone');
-var dropable = new Dropzone('#messageContainer > div', {
-  preview: '#previewFileMessage',
-});

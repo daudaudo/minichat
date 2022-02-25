@@ -29,17 +29,6 @@ class Storage {
     return path.join(this.folder, filename);
   }
 
-  saveSync(src, filename) {
-    if(!filename) filename = uuid.v4();
-    try {
-      fs.cpSync(src, this.storagePath(filename));
-      fs.unlinkSync(src);
-      return this.storageRelativePath(filename);
-    } catch (err) {
-      throw err;
-    }
-  }
-
   /**
    * 
    * @param {String} content 
@@ -95,6 +84,23 @@ class Storage {
       return relativePath.replace('public', '/storage');
 
     return null;
+  }
+
+  /**
+   * 
+   * @param {Object} file 
+   */
+  upload(file) {
+    var ext = mime.extension(file.type);
+    var filename = `${uuid.v4()}.${ext}`;
+    try {
+      fs.cpSync(file.path, this.storagePath(filename));
+      fs.unlinkSync(file.path);
+      return this.storageRelativePath(filename);
+    } catch(err) {
+      console.log(err);
+      return false;
+    }
   }
 }
 
