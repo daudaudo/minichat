@@ -1,7 +1,7 @@
 var User = require('../models/User');
 var {google, oauth2Client} = require('../global/oauth');
 var dayjs = require('dayjs');
-var storage = require('../global/storage');
+const Storage = require('../global/storage');
 var {login} = require('../global/auth');
 
 const homeUrl = '/';
@@ -42,7 +42,7 @@ async function callbackGoogle(req, res) {
         username: user.name,
         email: user.email,
         created_at: dayjs().format(''),
-        picture: await storage.putFromUrl(user.picture),
+        picture: Storage.url(await Storage.fromFolder('public/avatar').putFromUrl(user.picture)),
       });
       await login(user, req);
     }
@@ -50,7 +50,6 @@ async function callbackGoogle(req, res) {
   } catch (err) {
     res.status(500).send(err);
   }
-
 }
 
 module.exports = {
