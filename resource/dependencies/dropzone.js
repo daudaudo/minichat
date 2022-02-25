@@ -13,6 +13,7 @@ class Dropzone {
     this.dropable = $(target);
     this.files = {};
     this.options = options;
+    this.uploaded = options.uploaded;
     this.init();
   }
 
@@ -61,7 +62,6 @@ class Dropzone {
           this.addFile(file);
         }
       }
-      console.log(this.files);
     });
   }
 
@@ -168,10 +168,11 @@ class Dropzone {
         processData: false,
         dataType: 'json',
         success: response => {
-          this.clear();
-          console.log(response)
+          if(this.uploaded)
+            this.uploaded(response);
         }
       });
+      this.clear();
     }
   }
 }

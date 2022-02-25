@@ -5,7 +5,15 @@ const Dropzone = require('../dependencies/dropzone');
 
 const dropable = new Dropzone('#messageContainer > div', {
   preview: '#previewFileMessage',
-  uploadUrl: '/room/files'
+  uploadUrl: '/room/files',
+  uploaded: (data) => {
+    socket.emit('private', {
+      room: roomId,
+      message: {
+        files: data,
+      }
+    });
+  }
 });
 
 const edittor = new Editor('#messageTextInput', {
@@ -183,15 +191,11 @@ const callbacks = {
     console.log(data);
   },
   private: (data) => {
-    var htmlMessage = renderMessage(data.message, data.sender);
-    if (lastSenderId != data.sender._id) {
-      $('#messageBox').append(htmlMessage);
-    } else {
-      $('#messageBox .message:last-child .message-text').append(htmlMessage);
-    }
-    lastSenderId = data.sender._id;
+    if(data.message.text)
+      appendTextMessage(data);
+    if(data.message.files)
+      appendFilesMessage(data);
     notifyHavingMessage();
-    $('#messageBox').scrollTop($('#messageBox').prop('scrollHeight'));
   },
   room: (evt) => {
     switch (evt.type) {
@@ -242,6 +246,25 @@ const callbacks = {
     }
     peers[data.peerId].peer.signal(data.signal);
   }
+}
+
+/**
+ * 
+ * @param {Object} data 
+ */
+function appendTextMessage(data) {
+  var htmlMessage = renderMessage(data.message, data.sender);
+  if (lastSenderId != data.sender._id) {
+    $('#messageBox').append(htmlMessage);
+  } else {
+    $('#messageBox .message:last-child .message-text').append(htmlMessage);
+  }
+  lastSenderId = data.sender._id;
+  $('#messageBox').scrollTop($('#messageBox').prop('scrollHeight'));
+}
+
+function appendFilesMessage(data) {
+  console.log(data);
 }
 
 /**
