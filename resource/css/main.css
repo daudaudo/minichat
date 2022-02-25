@@ -2,8 +2,17 @@
 
 /* Default */
 
-input:focus, input:focus-visible {
+input:focus,
+input:focus-visible {
   outline: none;
+}
+
+/* Truncate */
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Scrollbar */
@@ -64,17 +73,17 @@ input:focus, input:focus-visible {
 }
 
 .modal .modal-close {
-    position: absolute;
-    top: -12.5px;
-    right: -12.5px;
-    display: block;
-    width: 30px;
-    height: 30px;
-    text-indent: -9999px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAAAXNSR0IArs4c6QAAA3hJREFUaAXlm8+K00Acx7MiCIJH/yw+gA9g25O49SL4AO3Bp1jw5NvktC+wF88qevK4BU97EmzxUBCEolK/n5gp3W6TTJPfpNPNF37MNsl85/vN/DaTmU6PknC4K+pniqeKJ3k8UnkvDxXJzzy+q/yaxxeVHxW/FNHjgRSeKt4rFoplzaAuHHDBGR2eS9G54reirsmienDCTRt7xwsp+KAoEmt9nLaGitZxrBbPFNaGfPloGw2t4JVamSt8xYW6Dg1oCYo3Yv+rCGViV160oMkcd8SYKnYV1Nb1aEOjCe6L5ZOiLfF120EjWhuBu3YIZt1NQmujnk5F4MgOpURzLfAwOBSTmzp3fpDxuI/pabxpqOoz2r2HLAb0GMbZKlNV5/Hg9XJypguryA7lPF5KMdTZQzHjqxNPhWhzIuAruOl1eNqKEx1tSh5rfbxdw7mOxCq4qS68ZTjKS1YVvilu559vWvFHhh4rZrdyZ69Vmpgdj8fJbDZLJpNJ0uv1cnr/gjrUhQMuI+ANjyuwftQ0bbL6Erp0mM/ny8Fg4M3LtdRxgMtKl3jwmIHVxYXChFy94/Rmpa/pTbNUhstKV+4Rr8lLQ9KlUvJKLyG8yvQ2s9SBy1Jb7jV5a0yapfF6apaZLjLLcWtd4sNrmJUMHyM+1xibTjH82Zh01TNlhsrOhdKTe00uAzZQmN6+KW+sDa/JD2PSVQ873m29yf+1Q9VDzfEYlHi1G5LKBBWZbtEsHbFwb1oYDwr1ZiF/2bnCSg1OBE/pfr9/bWx26UxJL3ONPISOLKUvQza0LZUxSKyjpdTGa/vDEr25rddbMM0Q3O6Lx3rqFvU+x6UrRKQY7tyrZecmD9FODy8uLizTmilwNj0kraNcAJhOp5aGVwsAGD5VmJBrWWbJSgWT9zrzWepQF47RaGSiKfeGx6Szi3gzmX/HHbihwBser4B9UJYpFBNX4R6vTn3VQnez0SymnrHQMsRYGTr1dSk34ljRqS/EMd2pLQ8YBp3a1PLfcqCpo8gtHkZFHKkTX6fs3MY0blKnth66rKCnU0VRGu37ONrQaA4eZDFtWAu2fXj9zjFkxTBOo8F7t926gTp/83Kyzzcy2kZD6xiqxTYnHLRFm3vHiRSwNSjkz3hoIzo8lCKWUlg/YtGs7tObunDAZfpDLbfEI15zsEIY3U/x/gHHc/G1zltnAgAAAABJRU5ErkJggg==);
+  position: absolute;
+  top: -12.5px;
+  right: -12.5px;
+  display: block;
+  width: 30px;
+  height: 30px;
+  text-indent: -9999px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAAAAXNSR0IArs4c6QAAA3hJREFUaAXlm8+K00Acx7MiCIJH/yw+gA9g25O49SL4AO3Bp1jw5NvktC+wF88qevK4BU97EmzxUBCEolK/n5gp3W6TTJPfpNPNF37MNsl85/vN/DaTmU6PknC4K+pniqeKJ3k8UnkvDxXJzzy+q/yaxxeVHxW/FNHjgRSeKt4rFoplzaAuHHDBGR2eS9G54reirsmienDCTRt7xwsp+KAoEmt9nLaGitZxrBbPFNaGfPloGw2t4JVamSt8xYW6Dg1oCYo3Yv+rCGViV160oMkcd8SYKnYV1Nb1aEOjCe6L5ZOiLfF120EjWhuBu3YIZt1NQmujnk5F4MgOpURzLfAwOBSTmzp3fpDxuI/pabxpqOoz2r2HLAb0GMbZKlNV5/Hg9XJypguryA7lPF5KMdTZQzHjqxNPhWhzIuAruOl1eNqKEx1tSh5rfbxdw7mOxCq4qS68ZTjKS1YVvilu559vWvFHhh4rZrdyZ69Vmpgdj8fJbDZLJpNJ0uv1cnr/gjrUhQMuI+ANjyuwftQ0bbL6Erp0mM/ny8Fg4M3LtdRxgMtKl3jwmIHVxYXChFy94/Rmpa/pTbNUhstKV+4Rr8lLQ9KlUvJKLyG8yvQ2s9SBy1Jb7jV5a0yapfF6apaZLjLLcWtd4sNrmJUMHyM+1xibTjH82Zh01TNlhsrOhdKTe00uAzZQmN6+KW+sDa/JD2PSVQ873m29yf+1Q9VDzfEYlHi1G5LKBBWZbtEsHbFwb1oYDwr1ZiF/2bnCSg1OBE/pfr9/bWx26UxJL3ONPISOLKUvQza0LZUxSKyjpdTGa/vDEr25rddbMM0Q3O6Lx3rqFvU+x6UrRKQY7tyrZecmD9FODy8uLizTmilwNj0kraNcAJhOp5aGVwsAGD5VmJBrWWbJSgWT9zrzWepQF47RaGSiKfeGx6Szi3gzmX/HHbihwBser4B9UJYpFBNX4R6vTn3VQnez0SymnrHQMsRYGTr1dSk34ljRqS/EMd2pLQ8YBp3a1PLfcqCpo8gtHkZFHKkTX6fs3MY0blKnth66rKCnU0VRGu37ONrQaA4eZDFtWAu2fXj9zjFkxTBOo8F7t926gTp/83Kyzzcy2kZD6xiqxTYnHLRFm3vHiRSwNSjkz3hoIzo8lCKWUlg/YtGs7tObunDAZfpDLbfEI15zsEIY3U/x/gHHc/G1zltnAgAAAABJRU5ErkJggg==);
 }
 
 /* Header */
@@ -251,19 +260,25 @@ header {
 
 /* User in room */
 
-.user-room, .user-share-screen, .user-video {
+.user-room,
+.user-share-screen,
+.user-video {
   @apply lg:w-1/3 md:w-1/2 w-full p-4 relative;
 }
 
-.user-room-inner, .user-share-screen-inner, .user-video-inner {
+.user-room-inner,
+.user-share-screen-inner,
+.user-video-inner {
   @apply p-2 shadow rounded-xl flex items-center justify-center cursor-pointer bg-white max-h-72 h-72 w-full relative;
 }
 
-.user-room-inner video, .user-share-screen-inner video, .user-video-inner video {
+.user-room-inner video,
+.user-share-screen-inner video,
+.user-video-inner video {
   object-fit: cover;
 }
 
-.user-room.opening-video .user-room-info{
+.user-room.opening-video .user-room-info {
   @apply opacity-0 transition-all bg-slate-900 bg-opacity-80 rounded-xl;
 }
 
@@ -279,8 +294,8 @@ header {
 
 .has-message-animation {
   animation: has-message .1s linear alternate infinite;
-  background-color: rgb(3 105 161)!important;
-  color: white!important;
+  background-color: rgb(3 105 161) !important;
+  color: white !important;
 }
 
 @keyframes has-message {
@@ -309,7 +324,7 @@ header {
 /* ContentEditable */
 
 .content-editable {
-  user-select: text; 
+  user-select: text;
   outline: none;
   @apply font-medium text-slate-700;
 }
@@ -345,18 +360,13 @@ span.emoj {
   margin-left: 1px;
   cursor: default;
   caret-color: #050505;
-  filter: saturate(1.5) hue-rotate(355deg);
-}
-
-#emojList img {
-  filter: saturate(1.5) hue-rotate(350deg);
 }
 
 /* Dialog */
 
 .dialog {
   position: absolute;
-  @apply rounded shadow-xl p-2 bg-white;
+  @apply rounded shadow-xl p-2 bg-white z-30;
 }
 
 .dialog.dialog-lt {
@@ -402,16 +412,40 @@ span.emoj {
 }
 
 .preview-item {
-  @apply relative rounded shadow-sm overflow-hidden;
+  @apply relative rounded cursor-pointer border border-slate-200;
+  user-select: none;
 }
 
 .preview-item::before {
   content: '';
-  @apply absolute left-0 right-0 bottom-0 h-1 bg-sky-700;
+  @apply absolute left-0 right-0 bottom-0 h-1 bg-sky-700 rounded-b;
 }
 
-.preview-item img {
-  @apply w-24 h-24 object-cover;
+.preview-item .preview-close {
+  position: absolute;
+  top: -9.5px;
+  right: -9.5px;
+  display: block;
+  width: 20px;
+  height: 20px;
+  text-indent: -9999px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23fff' class='bi bi-x' viewBox='0 0 16 16'%3E%3Cpath d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+  @apply p-2 rounded-full bg-slate-700 bg-opacity-90 z-20;
+}
+
+.preview-item .preview-content {
+  @apply w-16 h-16 flex items-center justify-center rounded p-1;
+}
+
+.preview-item .preview-info {
+  @apply absolute left-0 top-0 bottom-0 right-0 bg-slate-700 bg-opacity-60 opacity-0 transition-all rounded;
+}
+
+.preview-item:hover .preview-info {
+  @apply opacity-100;
 }
 
 /* Tailwind */
