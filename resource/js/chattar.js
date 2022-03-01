@@ -133,28 +133,6 @@ function renderNotification(notify) {
   }
 }
 
-/**
- * 
- * @param {Object} message
- * @returns {String} 
- */
-function renderMessage(message, sender) {
-  var isMyMessage = sender._id === currentUserId;
-  if (lastSenderId != sender._id)
-    return `
-      <div class="message w-full flex items-end space-x-4 ${isMyMessage ? 'justify-end' : ''}">
-        ${isMyMessage ? '' : `<button><img class="rounded-full w-8 h-8 object-cover" src="/storage/${sender.picture}" alt="" srcset=""></button>`}
-        <div class="message-text space-y-2 flex flex-col ${isMyMessage ? 'items-end' : 'items-start'}">
-          <p class="block p-2 px-4 font-medium ${isMyMessage ? 'text-white bg-sky-700' : 'text-slate-600 bg-slate-100 '}">${message.text}</p>
-        </div>
-      </div>
-    `;
-  else
-    return `
-      <p class="block p-2 px-4 font-medium ${isMyMessage ? 'text-white bg-sky-700' : 'text-slate-600 bg-slate-100 '}">${message.text}</p>
-    `;
-}
-
 function renderUserInRoom(user) {
   var socketId = user.socket_id;
   return `
@@ -250,13 +228,27 @@ const callbacks = {
 
 /**
  * 
+ * Render messages and append it
+ */
+
+/**
+ * 
  * @param {Object} data 
  */
 function appendTextMessage(data) {
-  var htmlMessage = renderMessage(data.message, data.sender);
+  var isMyMessage = data.sender._id === currentUserId;
   if (lastSenderId != data.sender._id) {
+    var htmlMessage = `
+      <div class="message w-full flex items-end space-x-4 ${isMyMessage ? 'justify-end' : ''}">
+        ${isMyMessage ? '' : `<button><img class="rounded-full w-8 h-8 object-cover" src="/storage/${data.sender.picture}" alt="" srcset=""></button>`}
+        <div class="message-text space-y-2 flex flex-col ${isMyMessage ? 'items-end' : 'items-start'}">
+          <p class="block p-2 px-4 font-medium ${isMyMessage ? 'text-white bg-sky-700' : 'text-slate-600 bg-slate-100 '}">${data.message.text}</p>
+        </div>
+      </div>
+    `;
     $('#messageBox').append(htmlMessage);
   } else {
+    var htmlMessage = `<p class="block p-2 px-4 font-medium ${isMyMessage ? 'text-white bg-sky-700' : 'text-slate-600 bg-slate-100 '}">${data.message.text}</p>`;
     $('#messageBox .message:last-child .message-text').append(htmlMessage);
   }
   lastSenderId = data.sender._id;
@@ -264,7 +256,50 @@ function appendTextMessage(data) {
 }
 
 function appendFilesMessage(data) {
-  console.log(data);
+  var isMyMessage = data.sender._id === currentUserId;
+  for(var fileId of Object.keys(data.message.files)) {
+    var file = data.message.files[fileId];
+    if (lastSenderId != data.sender._id) {
+      var htmlMessage = `
+        <div class="message w-full flex items-end space-x-4 ${isMyMessage ? 'justify-end' : ''}">
+          ${isMyMessage ? '' : `<button><img class="rounded-full w-8 h-8 object-cover" src="/storage/${data.sender.picture}" alt="" srcset=""></button>`}
+          <div class="message-text space-y-2 flex flex-col ${isMyMessage ? 'items-end' : 'items-start'}">
+            <a href="${file.url}" target="_blank" class="block">
+              ${renderFileMessage(file)}
+            </a>
+          </div>
+        </div>
+      `;
+      $('#messageBox').append(htmlMessage);
+    } else {
+      var htmlMessage = ``;
+    }
+  }
+  lastSenderId = data.sender._id;
+  $('#messageBox').scrollTop($('#messageBox').prop('scrollHeight'));
+}
+
+function renderFileMessage(file) {
+  var html = null;
+  switch(file.ext) {
+    case "png":
+    case "jpeg":
+    case "jpg":
+      html = `<img src="${file.url}" class="object-contain"/>`;
+      break;
+    default:
+      html = `
+        <div class="flex items-center space-x-2 p-2">
+          <img src="/images/filetypes/file.png" class="object-contain w-8 h-8"/>
+          <div>
+            <p class="font-semibold text-sm text-slate-700 block">${file.name}</p>
+            <p class="font-semibold text-sm text-slate-700">${file.size}</p>
+          </div>
+        </div>
+      `;
+      break;
+  }
+  return html;
 }
 
 /**
@@ -363,7 +398,7 @@ function openSharingScreenStream(stream, socketId) {
       $('#videoFullScreen').prop('srcObject', stream);
       $('#videoFullScreenContainer').removeClass('hidden');
       $('#videoFullScreenContainer').addClass('flex');
-      $('#videoFullScreenInfo img').prop('src', `/storage/${peers[socketId].picture}`);
+      $('#videoFullScreenInfo img').prop('src', `${peers[socketId].picture}`);
       $('#videoFullScreenInfo p').text(`${peers[socketId].username} is sharing screen.`);
     });
 

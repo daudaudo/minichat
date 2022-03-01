@@ -1,6 +1,7 @@
 const Room = require('../models/Room');
 const Storage = require('../global/storage');
 const mime = require('mime-types');
+const filesize = require('filesize');
 
 /**
  * 
@@ -40,6 +41,7 @@ async function files(req, res) {
       name: req.files[field].name,
       ext: mime.extension(req.files[field].type),
       type: req.files[field].type,
+      size: filesize(req.files[field].size)
     };
   }
   res.send(files);

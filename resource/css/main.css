@@ -308,17 +308,25 @@ header {
   max-width: 80%;
 }
 
-.message-text p {
+.message-text > * {
   @apply rounded-md transition-all;
   word-break: break-all;
 }
 
-.message-text p:first-child {
+.message-text > *:first-child {
   @apply rounded-tr-2xl;
 }
 
-.message-text p:last-child {
+.message-text > *:last-child {
   @apply rounded-bl-2xl;
+}
+
+.message-text a {
+  @apply overflow-hidden border border-slate-100;
+}
+
+.message-text img {
+  max-width: 100%;
 }
 
 /* ContentEditable */
