@@ -21,8 +21,8 @@ function socket(io) {
     socket.on('join_room', require('../app/events/join-room')(io, socket));
     socket.on('private', require('../app/events/private')(io, socket));
     socket.on('public', require('../app/events/public')(io, socket));
-    socket.on('share_screen', require('../app/events/share-screen')(io, socket));
-    socket.on('stop_share_screen', require('../app/events/stop-share-screen')(io, socket));
+    socket.on('start_stream', require('../app/events/start-stream')(io, socket));
+    socket.on('stop_stream', require('../app/events/stop-stream')(io, socket));
     socket.on('disconnecting', require('../app/events/disconnecting')(io, socket));
   });
 }

@@ -272,7 +272,12 @@ function appendFilesMessage(data) {
       `;
       $('#messageBox').append(htmlMessage);
     } else {
-      var htmlMessage = ``;
+      var htmlMessage = `
+        <a href="${file.url}" target="_blank" class="block">
+          ${renderFileMessage(file)}
+        </a>
+      `;
+      $('#messageBox .message:last-child .message-text').append(htmlMessage);
     }
   }
   lastSenderId = data.sender._id;
@@ -369,7 +374,7 @@ function gotShareScreenStream(stream) {
     $(`#shareScreenBtn`).removeClass('bg-sky-700').removeClass('text-white');
     isSharingScreen = false;
     $(`[stream-id="${stream.id}"]`).remove();
-    socket.emit('stop_share_screen', {streamId: stream.id, roomId: roomId});
+    socket.emit('stop_stream', {streamId: stream.id, roomId: roomId, type: SHARE_SCREEN_STREAM});
     for(var name in peers) {
       var peer = peers[name].peer;
       if(peer && !peer.destroyed) peer.removeStream(stream);
@@ -380,7 +385,7 @@ function gotShareScreenStream(stream) {
   };
 
   openSharingScreenStream(stream, socket.id);
-  socket.emit('share_screen', {streamId: stream.id, roomId: roomId});
+  socket.emit('start_stream', {streamId: stream.id, roomId: roomId, type: SHARE_SCREEN_STREAM});
 }
 
 /**
