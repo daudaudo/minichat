@@ -86,7 +86,7 @@ function renderUserHtml(user) {
   return html;
 }
 
-const socket = require('./pusher')(callbacks);
+const socket = require('../dependencies/pusher')(callbacks);
 
 $('#createRoomBtn').on('click touch', function(e) {
   e.preventDefault();
