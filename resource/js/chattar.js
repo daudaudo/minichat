@@ -59,7 +59,59 @@ function closeViewLargeVideo() {
   $('#videoFullScreenContainer').removeClass('flex');
   $('#videoFullScreenInfo img').prop('src', '');
   $('#videoFullScreenInfo p').text('');
+  $('#videoFullScreen').removeClass('video-flip');
   window.streamLargeScreenId = null;
+}
+
+/**
+ * 
+ * @param {Object} options 
+ */
+ function openLargeScreenStream(options) {
+  $('#videoFullScreen').prop('srcObject', options.stream);
+  $('#videoFullScreenContainer').removeClass('hidden');
+  $('#videoFullScreenContainer').addClass('flex');
+  $('#videoFullScreenInfo img').prop('src', options.img);
+  $('#videoFullScreenInfo p').text(options.text);
+  if(options.flip)
+    $('#videoFullScreen').addClass('video-flip');
+}
+
+/**
+ * 
+ * @param {String} socketId 
+ */
+
+function hideUserCamera(socketId) {
+  $(`[user-room][socket-id="${socketId}"]`)
+    .removeClass('opening-video')
+    .find('video')
+    .trigger('stop')
+    .prop('srcObject', undefined);
+}
+
+/**
+ * 
+ * @param {MediaStream} stream 
+ */
+
+function removeStreamAllPeers(stream) {
+  for(var name in peers) {
+    var peer = peers[name].peer;
+    if(peer && !peer.destroyed) peer.removeStream(stream);
+  }
+}
+
+/**
+ * 
+ * @param {MediaStream} stream 
+ */
+
+ function addStreamAllPeers(stream) {
+  for(var name in peers) {
+    var peer = peers[name].peer;
+    if(peer && !peer.destroyed) peer.addStream(stream);
+  }
 }
 
 /**
@@ -135,7 +187,7 @@ function renderNotification(notify) {
 
 function renderUserInRoom(user) {
   var socketId = user.socket_id;
-  return `
+  var userInRoom = $(`
     <div user-room socket-id="${socketId}" class="user-room">
       <div class="user-room-inner">
         <div class="user-room-info transition-all z-20 w-full h-full flex flex-col items-center justify-center">
@@ -143,11 +195,22 @@ function renderUserInRoom(user) {
           <p class="text-base font-medium text-slate-700 text-center">${user.username}</p>
         </div>
         <div class="absolute left-0 top-0 bottom-0 right-0 p-2 z-10">
-          <video class="w-full h-full rounded-xl"></video>
+          <video muted class="w-full h-full rounded-xl"></video>
         </div
       </div>
     </div>
-  `;
+  `);
+  userInRoom.on('click touch', e => {
+    var stream = userInRoom.find('video').prop('srcObject');
+    if(!stream) return;
+    openLargeScreenStream({
+      img: peers[socketId].picture,
+      text: peers[socketId].username,
+      stream: stream,
+      flip: true
+    });
+  });
+  return userInRoom;
 }
 
 /**
@@ -161,6 +224,7 @@ const VIDEO_STREAM = 1;
 const peers = {};
 var streams = {};
 var isSharingScreen = false;
+var isOpenningCamera = false;
 const SimplePeer = require('simple-peer');
 var lastSenderId = null;
 
@@ -183,35 +247,32 @@ const callbacks = {
         notifyHavingMessage();
         break;
       case 'join_room':
+        $('#videoContainer').append(renderUserInRoom(evt.data.user));
         if(socket.id === evt.data.user.socket_id) {
           return peers[socket.id] = evt.data.user;
         }
         createPeer(true, evt.data.user.socket_id, evt.data.user);
-        $('#videoContainer').append(renderUserInRoom(evt.data.user));
         break;
       case 'leave_room':
         delete peers[evt.data.socketId];
         $(`#videoContainer [socket-id="${evt.data.socketId}"]`).remove();
         break;
-      case 'users':
-        Object.keys(evt.data.users).forEach(socketId => {
-          var user = evt.data.users[socketId];
-          $('#videoContainer').append(renderUserInRoom(user));
-        });
-        break;
-      case 'share_screen':
+      case 'start_stream':
         if (streams[evt.data.streamId]) {
-          streams[evt.data.streamId].type = SHARE_SCREEN_STREAM;
+          streams[evt.data.streamId].type = evt.data.type;
           streams[evt.data.streamId].peerId = evt.data.user.socket_id;
-          openSharingScreenStream(streams[evt.data.streamId].stream, evt.data.user.socket_id)
+          if(evt.data.type === SHARE_SCREEN_STREAM)
+            openSharingScreenStream(streams[evt.data.streamId].stream, evt.data.user.socket_id);
+          else if (evt.data.type === VIDEO_STREAM)
+            openCameraStream(streams[evt.data.streamId].stream, evt.data.user.socket_id)
         } else {
           streams[evt.data.streamId] = {
-            type: SHARE_SCREEN_STREAM,
+            type: evt.data.type,
             peerId: evt.data.user.socket_id
           }
         }
         break;
-      case 'stop_share_screen':
+      case 'stop_stream':
         delete streams[evt.data.streamId];
         break;
       default:
@@ -220,6 +281,7 @@ const callbacks = {
   },
   signal: (data) => {
     if(!peers[data.peerId]) {
+      $('#videoContainer').append(renderUserInRoom(data.user));
       createPeer(false, data.peerId, data.user);
     }
     peers[data.peerId].peer.signal(data.signal);
@@ -325,6 +387,9 @@ function createPeer(initiator, peerId, user) {
       if(streams[stream.id].type === SHARE_SCREEN_STREAM) {
         openSharingScreenStream(stream, peerId);
       }
+      if(streams[stream.id].type === VIDEO_STREAM) {
+        openCameraStream(stream, peerId);
+      }
     } else {
       streams[stream.id] = {
         stream: stream,
@@ -332,6 +397,7 @@ function createPeer(initiator, peerId, user) {
     }
   });
   if(isSharingScreen) peer.addStream(window.shareScreenStream);
+  if(isOpenningCamera) peer.addStream(window.cameraStream);
   peers[peerId] = user;
   peers[peerId].peer = peer;
   return peer;
@@ -341,7 +407,7 @@ const socket = require('./pusher')(callbacks);
 socket.emit('join_room', roomId);
 
 /**
- * Open ShareScreen Stream
+ * Open Stream
  */
 
 isSharingScreen = false;
@@ -365,20 +431,14 @@ function gotShareScreenStream(stream) {
   $(`#shareScreenBtn`).addClass('bg-sky-700').addClass('text-white');
   isSharingScreen = true;
   window.shareScreenStream = stream;
-  for(var name in peers) {
-    var peer = peers[name].peer;
-    if(peer && !peer.destroyed) peer.addStream(stream);
-  }
+  addStreamAllPeers(stream);
 
   stream.getVideoTracks()[0].onended = () => {
     $(`#shareScreenBtn`).removeClass('bg-sky-700').removeClass('text-white');
     isSharingScreen = false;
     $(`[stream-id="${stream.id}"]`).remove();
     socket.emit('stop_stream', {streamId: stream.id, roomId: roomId, type: SHARE_SCREEN_STREAM});
-    for(var name in peers) {
-      var peer = peers[name].peer;
-      if(peer && !peer.destroyed) peer.removeStream(stream);
-    }
+    removeStreamAllPeers(stream);
     if (!$('#videoFullScreen').prop('srcObject')) return;
     if($('#videoFullScreen').prop('srcObject').id === stream.id) 
       closeViewLargeVideo();
@@ -400,11 +460,11 @@ function openSharingScreenStream(stream, socketId) {
     )
     .appendTo('#videoContainer')
     .on('click touch', function(e) {
-      $('#videoFullScreen').prop('srcObject', stream);
-      $('#videoFullScreenContainer').removeClass('hidden');
-      $('#videoFullScreenContainer').addClass('flex');
-      $('#videoFullScreenInfo img').prop('src', `${peers[socketId].picture}`);
-      $('#videoFullScreenInfo p').text(`${peers[socketId].username} is sharing screen.`);
+      openLargeScreenStream({
+        img: peers[socketId].picture,
+        text: `${peers[socketId].username} is sharing screen.`,
+        stream: stream,
+      });
     });
 
   stream.onremovetrack = () => {
@@ -420,7 +480,35 @@ function openSharingScreenStream(stream, socketId) {
  * @param {MediaStream} stream 
  */
 function gotUserVideoStream(stream) {
-  var userRoom = $(`[user-room][socket-id="${socket.id}"]`);
+  addStreamAllPeers(stream);
+  socket.emit('start_stream', {streamId: stream.id, roomId: roomId, type: VIDEO_STREAM});
+  openCameraStream(stream, socket.id);
+  window.cameraStream = stream;
+  isOpenningCamera = true;
+  
+  stream.getVideoTracks()[0].onended = () => {
+    hideUserCamera(socket.id);
+    socket.emit('stop_stream', {streamId: stream.id, roomId: roomId, type: VIDEO_STREAM});
+    removeStreamAllPeers(stream);
+  };
+}
+
+/**
+ * 
+ * @param {MediaStream} stream 
+ * @param {String} socketId 
+ */
+
+function openCameraStream(stream, socketId) {
+  console.log('Stream');
+  var userRoom = $(`[user-room][socket-id="${socketId}"]`);
   userRoom.find('video').prop('srcObject', stream).trigger('play');
-  userRoom.addClass('opening-video');
+  userRoom.addClass('opening-video video-flip');
+
+  stream.onremovetrack = () => {
+    hideUserCamera(socketId);
+    if (!$('#videoFullScreen').prop('srcObject')) return;
+    if($('#videoFullScreen').prop('srcObject').id === stream.id) 
+      closeViewLargeVideo();
+  };
 }

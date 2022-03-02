@@ -15,10 +15,11 @@ function handle(io, socket) {
       peerId: socket.id,
     };
     socket.broadcast.to(data.roomId).emit('room', {
-      type: data.type === VIDEO_STREAM ? 'open_camera' : 'share_screen',
+      type: 'start_stream',
       data: {
         streamId: data.streamId,
-        user: socket.auth.user
+        user: socket.auth.user,
+        type: data.type
       }
     });
   }

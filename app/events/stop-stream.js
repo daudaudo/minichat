@@ -11,7 +11,7 @@ function handle(io, socket) {
   return async data => {
     delete socket.auth.user.streams[data.streamId];
     socket.broadcast.to(data.roomId).emit('room', {
-      type: 'stop_share_screen',
+      type: 'stop_stream',
       data: {
         streamId: data.streamId,
         user: socket.auth.user

@@ -15,6 +15,12 @@ input:focus-visible {
   text-overflow: ellipsis;
 }
 
+/* Video Flip */
+
+video.video-flip{
+  transform: scaleX(-1);
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
@@ -280,6 +286,15 @@ header {
 
 .user-room.opening-video .user-room-info {
   @apply opacity-0 transition-all bg-slate-900 bg-opacity-80 rounded-xl;
+}
+
+.user-room video {
+  transform: scaleX(-1);
+  opacity: 0;
+}
+
+.user-room.opening-video video {
+  opacity: 1;
 }
 
 .user-room.opening-video:hover .user-room-info {
