@@ -1,6 +1,6 @@
 const $ = require('./animation');
-const {openFullscreen, closeFullscreen} = require('./fullscreen');
-const Editor = require('./editor');
+const {openFullscreen, closeFullscreen} = require('../dependencies/fullscreen');
+const Editor = require('../dependencies/editor');
 const Dropzone = require('../dependencies/dropzone');
 
 const dropable = new Dropzone('#messageContainer > div', {
@@ -403,7 +403,7 @@ function createPeer(initiator, peerId, user) {
   return peer;
 }
 
-const socket = require('./pusher')(callbacks);
+const socket = require('../dependencies/pusher')(callbacks);
 socket.emit('join_room', roomId);
 
 /**
