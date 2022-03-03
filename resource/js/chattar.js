@@ -176,7 +176,23 @@ $('#turnOnCameraBtn').on('click touch', e => {
 });
 
 $('#turnOnMicBtn').on('click touch', e => {
-  $('#turnOnMicBtn').toggleClass('active');
+  if(statusGlobal.userStream) {
+    var statusAudioTrack = getStatusTrack(statusGlobal.userStream, AUDIO_TRACK);
+    switch (statusAudioTrack) {
+      case true:
+        if (toggleTrack(statusGlobal.userStream, AUDIO_TRACK, false)) {
+          $(`#turnOnMicBtn`).removeClass('active');
+        }
+        break;
+      case false:
+        if (toggleTrack(statusGlobal.userStream, AUDIO_TRACK, true)) {
+          $(`#turnOnMicBtn`).addClass('active');
+        }
+        break;
+      default:
+        break;
+    }
+  }
 });
 
 /**
@@ -277,6 +293,8 @@ function renderUserInRoom(user) {
       </div>
     </div>
   `);
+  if (socketId === socket.id)
+    userInRoom.find('video').prop('muted', true);
   userInRoom.on('click touch', e => {
     var stream = userInRoom.find('video').prop('srcObject');
     if(!stream) return;
@@ -529,6 +547,7 @@ $('#shareScreenBtn').on('click', function(e) {
 function gotShareScreenStream(stream) {
   $(`#shareScreenBtn`).addClass('bg-sky-700').addClass('text-white');
   statusGlobal.displayStream = stream;
+  streams[stream.id] = {stream: stream, };
   addStreamAllPeers(stream);
 
   stream.getVideoTracks()[0].onended = () => {
@@ -542,7 +561,6 @@ function gotShareScreenStream(stream) {
       closeViewLargeVideo();
   };
 
-  openSharingScreenStream(stream, socket.id);
   socket.emit('start_stream', {streamId: stream.id, roomId: roomId, type: SHARE_SCREEN_STREAM});
 }
 
@@ -578,21 +596,15 @@ function openSharingScreenStream(stream, socketId) {
  * @param {MediaStream} stream 
  */
 function gotUserVideoStream(stream) {
-  addStreamAllPeers(stream);
+  statusGlobal.userStream = stream;
+  streams[stream.id] = {stream: stream, };
   socket.emit('start_stream', {streamId: stream.id, roomId: roomId, type: VIDEO_STREAM, videoTrack: false});
+  addStreamAllPeers(stream);
   toggleTrack(stream, VIDEO_TRACK, false);
   toggleTrack(stream, AUDIO_TRACK, false);
-  openUserMediaStream(stream, socket.id);
-  statusGlobal.userStream = stream;
-  streams[stream.id] = {
-    stream: stream,
-    peerId: socket.id,
-    type: VIDEO_STREAM,
-  }
   
   stream.getVideoTracks()[0].onended = () => {
     delete statusGlobal.userStream;
-    delete streams[stream.id];
     $(`#turnOnCameraBtn`).removeClass('active');
     hideUserStream(socket.id);
     socket.emit('stop_stream', {streamId: stream.id, roomId: roomId, type: VIDEO_STREAM});

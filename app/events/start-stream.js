@@ -16,7 +16,7 @@ function handle(io, socket) {
       videoTrack: data.videoTrack,
     };
 
-    socket.broadcast.to(data.roomId).emit('start_stream', {
+    io.to(data.roomId).emit('start_stream', {
       streamId: data.streamId,
       user: socket.auth.user,
       type: data.type,

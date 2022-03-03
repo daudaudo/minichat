@@ -10,7 +10,7 @@ const SHARE_SCREEN_STREAM = 0;
 function handle(io, socket) {
   return async data => {
     delete socket.auth.user.streams[data.streamId];
-    socket.broadcast.to(data.roomId).emit('stop_stream', {
+    io.to(data.roomId).emit('stop_stream', {
       streamId: data.streamId,
       user: socket.auth.user
     });
