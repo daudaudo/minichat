@@ -1,7 +1,9 @@
 const Server = require("socket.io").Server;
 const Socket = require("socket.io").Socket;
 const Room = require('../models/Room');
-const SHARE_SCREEN_STREAM = 0;
+const VIDEO_TRACK = 0;
+const AUDIO_TRACK = 1;
+
 /**
  * 
  * @param {Server} io 
@@ -9,10 +11,12 @@ const SHARE_SCREEN_STREAM = 0;
  */
 function handle(io, socket) {
   return async data => {
-    delete socket.auth.user.streams[data.streamId];
-    socket.broadcast.to(data.roomId).emit('stop_stream', {
+    socket.auth.user.streams[data.streamId].videoTrack = data.enabled;
+    io.to(data.roomId).emit('toggle_track', {
+      socketId: socket.id,
+      enabled: data.enabled,
       streamId: data.streamId,
-      user: socket.auth.user
+      typeTrack: data.typeTrack
     });
   }
 }

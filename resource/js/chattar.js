@@ -60,7 +60,6 @@ function closeViewLargeVideo() {
   $('#videoFullScreenInfo img').prop('src', '');
   $('#videoFullScreenInfo p').text('');
   $('#videoFullScreen').removeClass('video-flip');
-  window.streamLargeScreenId = null;
 }
 
 /**
@@ -82,9 +81,9 @@ function closeViewLargeVideo() {
  * @param {String} socketId 
  */
 
-function hideUserCamera(socketId) {
+function hideUserStream(socketId) {
   $(`[user-room][socket-id="${socketId}"]`)
-    .removeClass('opening-video')
+    .removeClass('active')
     .find('video')
     .trigger('stop')
     .prop('srcObject', undefined);
@@ -157,11 +156,89 @@ function notifyHavingMessage() {
 }
 
 $('#turnOnCameraBtn').on('click touch', e => {
-  navigator.mediaDevices.getUserMedia({
-    video: true,
-    audio: true,
-  }).then(gotUserVideoStream);
+  if(statusGlobal.userStream) {
+    var statusVideoTrack = getStatusTrack(statusGlobal.userStream, VIDEO_TRACK);
+    switch (statusVideoTrack) {
+      case true:
+        if (toggleTrack(statusGlobal.userStream, VIDEO_TRACK, false)) {
+          $(`#turnOnCameraBtn`).removeClass('active');
+        }
+        break;
+      case false:
+        if (toggleTrack(statusGlobal.userStream, VIDEO_TRACK, true)) {
+          $(`#turnOnCameraBtn`).addClass('active');
+        }
+        break;
+      default:
+        break;
+    }
+  }
 });
+
+$('#turnOnMicBtn').on('click touch', e => {
+  $('#turnOnMicBtn').toggleClass('active');
+});
+
+/**
+ * 
+ * @param {MediaStream} stream 
+ * @param {BigInteger} type 
+ * @param {Boolean} enabled 
+ */
+function toggleTrack(stream, type , enabled) {
+  if (type === VIDEO_TRACK) {
+    var videoTrack = stream.getVideoTracks()[0];
+
+    if (videoTrack) {
+      socket.emit('toggle_track', {
+        roomId: roomId,
+        typeTrack: VIDEO_TRACK,
+        streamId: stream.id,
+        enabled: enabled,
+      });
+      videoTrack.enabled = enabled;
+      return true;
+    }
+
+  } else if (type === AUDIO_TRACK) {
+    var audioTrack = stream.getAudioTracks()[0];
+
+    if (audioTrack) {
+      socket.emit('toggle_track', {
+        roomId: roomId,
+        typeTrack: AUDIO_TRACK,
+        streamId: stream.id,
+        enabled: enabled,
+      });
+      audioTrack.enabled = enabled;
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * 
+ * @param {MediaStream} stream 
+ * @param {BigInteger} type 
+ */
+function getStatusTrack(stream, type) {
+  if(!stream) return;
+  if(type === VIDEO_TRACK) {
+    var videoTrack = stream.getVideoTracks()[0];
+    if(videoTrack) return videoTrack.enabled;
+  } else if(type === AUDIO_TRACK) {
+    var audioTrack = stream.getAudioTracks()[0];
+    if(audioTrack) return audioTrack.enabled;
+  }
+}
+
+function getIdStreamViewLarge() {
+  var stream = $('#videoFullScreen').prop('srcObject');
+  if (stream) 
+    return stream.id;
+  return null;
+}
 
 /**
  * Renderer
@@ -195,7 +272,7 @@ function renderUserInRoom(user) {
           <p class="text-base font-medium text-slate-700 text-center">${user.username}</p>
         </div>
         <div class="absolute left-0 top-0 bottom-0 right-0 p-2 z-10">
-          <video muted class="w-full h-full rounded-xl"></video>
+          <video class="w-full h-full rounded-xl"></video>
         </div
       </div>
     </div>
@@ -203,6 +280,7 @@ function renderUserInRoom(user) {
   userInRoom.on('click touch', e => {
     var stream = userInRoom.find('video').prop('srcObject');
     if(!stream) return;
+    if (!streams[stream.id].videoTrack) return;
     openLargeScreenStream({
       img: peers[socketId].picture,
       text: peers[socketId].username,
@@ -220,11 +298,12 @@ function renderUserInRoom(user) {
 const roomId = $('meta[name="chat-room-id"]').attr('content');
 const currentUserId = $('meta[name="user-id"]').attr('content');
 const SHARE_SCREEN_STREAM = 0;
+const VIDEO_TRACK = 0;
 const VIDEO_STREAM = 1;
+const AUDIO_TRACK = 1;
 const peers = {};
 var streams = {};
-var isSharingScreen = false;
-var isOpenningCamera = false;
+const statusGlobal = {};
 const SimplePeer = require('simple-peer');
 var lastSenderId = null;
 
@@ -257,24 +336,6 @@ const callbacks = {
         delete peers[evt.data.socketId];
         $(`#videoContainer [socket-id="${evt.data.socketId}"]`).remove();
         break;
-      case 'start_stream':
-        if (streams[evt.data.streamId]) {
-          streams[evt.data.streamId].type = evt.data.type;
-          streams[evt.data.streamId].peerId = evt.data.user.socket_id;
-          if(evt.data.type === SHARE_SCREEN_STREAM)
-            openSharingScreenStream(streams[evt.data.streamId].stream, evt.data.user.socket_id);
-          else if (evt.data.type === VIDEO_STREAM)
-            openCameraStream(streams[evt.data.streamId].stream, evt.data.user.socket_id)
-        } else {
-          streams[evt.data.streamId] = {
-            type: evt.data.type,
-            peerId: evt.data.user.socket_id
-          }
-        }
-        break;
-      case 'stop_stream':
-        delete streams[evt.data.streamId];
-        break;
       default:
         break;
     }
@@ -285,6 +346,39 @@ const callbacks = {
       createPeer(false, data.peerId, data.user);
     }
     peers[data.peerId].peer.signal(data.signal);
+  },
+  toggle_track: (data) => {
+    if(data.typeTrack === VIDEO_TRACK) {
+      if (streams[data.streamId])
+        streams[data.streamId].videoTrack = data.enabled;
+      if(data.enabled)
+        $(`[user-room][socket-id="${data.socketId}"]`).addClass('active');
+      else {
+        $(`[user-room][socket-id="${data.socketId}"]`).removeClass('active');
+        if(getIdStreamViewLarge() === data.streamId) 
+          closeViewLargeVideo();
+      }
+    }
+  },
+  start_stream: (data) => {
+    if (streams[data.streamId]) {
+      streams[data.streamId].type = data.type;
+      streams[data.streamId].peerId = data.user.socket_id;
+      streams[data.streamId].videoTrack = data.videoTrack;
+      if(data.type === SHARE_SCREEN_STREAM)
+        openSharingScreenStream(streams[data.streamId].stream, data.user.socket_id);
+      else if (data.type === VIDEO_STREAM)
+        openUserMediaStream(streams[data.streamId].stream, data.user.socket_id, data.videoTrack)
+    } else {
+      streams[data.streamId] = {
+        type: data.type,
+        peerId: data.user.socket_id,
+        videoTrack: data.videoTrack
+      }
+    }
+  },
+  stop_stream: (data) => {
+    delete streams[data.streamId];
   }
 }
 
@@ -388,7 +482,7 @@ function createPeer(initiator, peerId, user) {
         openSharingScreenStream(stream, peerId);
       }
       if(streams[stream.id].type === VIDEO_STREAM) {
-        openCameraStream(stream, peerId);
+        openUserMediaStream(stream, peerId, streams[stream.id].videoTrack);
       }
     } else {
       streams[stream.id] = {
@@ -396,25 +490,30 @@ function createPeer(initiator, peerId, user) {
       };
     }
   });
-  if(isSharingScreen) peer.addStream(window.shareScreenStream);
-  if(isOpenningCamera) peer.addStream(window.cameraStream);
+  if(statusGlobal.displayStream) peer.addStream(statusGlobal.displayStream);
+  if(statusGlobal.userStream) peer.addStream(statusGlobal.userStream);
   peers[peerId] = user;
   peers[peerId].peer = peer;
   return peer;
 }
 
 const socket = require('../dependencies/pusher')(callbacks);
-socket.emit('join_room', roomId);
+$('#enterRoomBtn').on('click touch', () => {
+  socket.emit('join_room', roomId);
+  $('#chatroomContainer').removeClass('hidden');
+  $('#preloadRoom').remove();
+  navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: true,
+  }).then(gotUserVideoStream);
+});
 
 /**
  * Open Stream
  */
 
-isSharingScreen = false;
-window.streamLargeScreenId = null;
-
 $('#shareScreenBtn').on('click', function(e) {
-  if (isSharingScreen) return;
+  if (statusGlobal.displayStream) return;
   navigator.mediaDevices.getDisplayMedia({
     video: {
       cursor: "always",
@@ -429,18 +528,17 @@ $('#shareScreenBtn').on('click', function(e) {
  */
 function gotShareScreenStream(stream) {
   $(`#shareScreenBtn`).addClass('bg-sky-700').addClass('text-white');
-  isSharingScreen = true;
-  window.shareScreenStream = stream;
+  statusGlobal.displayStream = stream;
   addStreamAllPeers(stream);
 
   stream.getVideoTracks()[0].onended = () => {
     $(`#shareScreenBtn`).removeClass('bg-sky-700').removeClass('text-white');
-    isSharingScreen = false;
+    delete statusGlobal.displayStream;
     $(`[stream-id="${stream.id}"]`).remove();
     socket.emit('stop_stream', {streamId: stream.id, roomId: roomId, type: SHARE_SCREEN_STREAM});
     removeStreamAllPeers(stream);
     if (!$('#videoFullScreen').prop('srcObject')) return;
-    if($('#videoFullScreen').prop('srcObject').id === stream.id) 
+    if(getIdStreamViewLarge() === stream.id) 
       closeViewLargeVideo();
   };
 
@@ -470,7 +568,7 @@ function openSharingScreenStream(stream, socketId) {
   stream.onremovetrack = () => {
     $(`[stream-id="${stream.id}"]`).remove();
     if (!$('#videoFullScreen').prop('srcObject')) return;
-    if($('#videoFullScreen').prop('srcObject').id === stream.id) 
+    if(getIdStreamViewLarge() === stream.id) 
       closeViewLargeVideo();
   };
 }
@@ -481,13 +579,22 @@ function openSharingScreenStream(stream, socketId) {
  */
 function gotUserVideoStream(stream) {
   addStreamAllPeers(stream);
-  socket.emit('start_stream', {streamId: stream.id, roomId: roomId, type: VIDEO_STREAM});
-  openCameraStream(stream, socket.id);
-  window.cameraStream = stream;
-  isOpenningCamera = true;
+  socket.emit('start_stream', {streamId: stream.id, roomId: roomId, type: VIDEO_STREAM, videoTrack: false});
+  toggleTrack(stream, VIDEO_TRACK, false);
+  toggleTrack(stream, AUDIO_TRACK, false);
+  openUserMediaStream(stream, socket.id);
+  statusGlobal.userStream = stream;
+  streams[stream.id] = {
+    stream: stream,
+    peerId: socket.id,
+    type: VIDEO_STREAM,
+  }
   
   stream.getVideoTracks()[0].onended = () => {
-    hideUserCamera(socket.id);
+    delete statusGlobal.userStream;
+    delete streams[stream.id];
+    $(`#turnOnCameraBtn`).removeClass('active');
+    hideUserStream(socket.id);
     socket.emit('stop_stream', {streamId: stream.id, roomId: roomId, type: VIDEO_STREAM});
     removeStreamAllPeers(stream);
   };
@@ -497,18 +604,20 @@ function gotUserVideoStream(stream) {
  * 
  * @param {MediaStream} stream 
  * @param {String} socketId 
+ * @param {Boolean} active 
  */
 
-function openCameraStream(stream, socketId) {
-  console.log('Stream');
-  var userRoom = $(`[user-room][socket-id="${socketId}"]`);
-  userRoom.find('video').prop('srcObject', stream).trigger('play');
-  userRoom.addClass('opening-video video-flip');
+function openUserMediaStream(stream, socketId, active) {
+  var userInRoom = $(`[user-room][socket-id="${socketId}"]`);
+  userInRoom.find('video').prop('srcObject', stream).trigger('play');
+
+  if(active)
+    userInRoom.addClass('active');
 
   stream.onremovetrack = () => {
-    hideUserCamera(socketId);
+    hideUserStream(socketId);
     if (!$('#videoFullScreen').prop('srcObject')) return;
-    if($('#videoFullScreen').prop('srcObject').id === stream.id) 
+    if(getIdStreamViewLarge() === stream.id) 
       closeViewLargeVideo();
   };
 }

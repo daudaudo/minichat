@@ -18,10 +18,17 @@ async function complie() {
     });
   fs.mkdirSync(publicPath);
 
+  var env = process.env.ENV;
+
   for(let file of fs.readdirSync(resourcePath)) {
     var filePath = path.join(resourcePath, file);
     var fileStream = fs.createWriteStream(path.join(publicPath, file));
-    browserify(filePath).bundle().pipe(minifyStream({ sourceMap: false })).pipe(fileStream);
+    if(env.toLowerCase() === 'local') {
+      browserify(filePath).bundle().pipe(fileStream);
+    } else {
+      browserify(filePath).bundle().pipe(minifyStream({ sourceMap: false })).pipe(fileStream);
+    }
+    
     await pipeline(fileStream);
   }
 

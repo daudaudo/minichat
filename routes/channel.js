@@ -23,6 +23,7 @@ function socket(io) {
     socket.on('public', require('../app/events/public')(io, socket));
     socket.on('start_stream', require('../app/events/start-stream')(io, socket));
     socket.on('stop_stream', require('../app/events/stop-stream')(io, socket));
+    socket.on('toggle_track', require('../app/events/toggle-track')(io, socket));
     socket.on('disconnecting', require('../app/events/disconnecting')(io, socket));
   });
 }

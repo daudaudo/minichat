@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="chat-room-id" content="<%= roomId %>">
+  <meta name="chat-room-id" content="<%= room.id %>">
   <meta name="user-id" content="<%= auth.user._id %>">
   <link rel="stylesheet" href="/stylesheets/style.css">
   <title>Minichat | Chat Room</title>
@@ -13,7 +13,30 @@
 </head>
 
 <body class="bg-slate-50">
-  <div id="chatroomContainer" class="fixed left-0 top-0 bottom-0 right-0 bg-slate-50 z-10 flex">
+  <div id="preloadRoom" class="fixed left-0 top-0 bottom-0 right-0 bg-slate-50 flex items-center justify-center">
+    <div class="p-4 absolute left-0 right-0 top-0">
+      <a class="block mb-4" href="/">
+        <img class="sm:h-8 h-6 object-contain" src="/images/minichat.svg" alt="" srcset="">
+      </a>
+    </div>
+    <div class="p-4">
+      <div class="w-full text-lg text-slate-600 flex space-x-4 items-center justify-center mb-4">
+        <span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-12 h-12" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z" />
+          </svg>
+        </span>
+        <div>
+          <p class="text-2xl capitalize font-semibold"><%= room.name %></p>
+          <p class="text-base font-semibold"><%= room.language %> - <%= room.level %></p>
+        </div>
+      </div>
+      <div class="w-full flex items-center justify-center">
+        <button id="enterRoomBtn" class="box-border block font-medium text-white text-lg p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded-full border-2 border-sky-700 transition-all mr-4">Enter now</button>
+      </div>
+    </div>
+  </div>
+  <div id="chatroomContainer" class="fixed left-0 top-0 bottom-0 right-0 bg-slate-50 flex hidden">
     <%- include('../components/chat-toolbar')  %>
     <div class="flex-1 relative flex flex-col">
       <%- include('../components/header-chat-page')  %>

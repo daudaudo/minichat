@@ -13,15 +13,15 @@ function handle(io, socket) {
     socket.auth.user.streams[data.streamId] = {
       type: data.type,
       peerId: socket.id,
+      videoTrack: data.videoTrack,
     };
-    socket.broadcast.to(data.roomId).emit('room', {
-      type: 'start_stream',
-      data: {
-        streamId: data.streamId,
-        user: socket.auth.user,
-        type: data.type
-      }
-    });
+
+    socket.broadcast.to(data.roomId).emit('start_stream', {
+      streamId: data.streamId,
+      user: socket.auth.user,
+      type: data.type,
+      videoTrack: data.videoTrack,
+  });
   }
 }
 
