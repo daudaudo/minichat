@@ -8,7 +8,7 @@ const callbacks = {
     console.log(data);
   },
   public: (evt) => {
-    switch(evt.type) {
+    switch (evt.type) {
       case 'create_room':
         $('#roomsList').append(renderRoomView(evt.data));
         console.log(evt.data);
@@ -16,17 +16,23 @@ const callbacks = {
       case 'join_room':
         var user = evt.data.user;
         $(`[room][room-id="${evt.data.roomId}"]`).find('[room-users]').append(renderUserHtml(user));
-        break;  
+        break;
       case 'leave_room':
         $(`[room][room-id="${evt.data.roomId}"]`).find(`[socket-id="${evt.data.user.socket_id}"]`).remove();
-        break;  
+        break;
       case 'delete_room':
         $(`[room][room-id="${evt.data.id}"]`).remove();
+        break;
+      case 'rooms':
+        evt.data.rooms.forEach(room => $('#roomsList').append(renderRoomView(room)));
         break;
       default:
         console.log(evt);
         break;
     }
+  },
+  connect: () => {
+    $('#roomsList').empty();
   }
 }
 
@@ -60,14 +66,13 @@ function renderRoomView(room) {
   `
 }
 
-function renderUsers(room)
-{
+function renderUsers(room) {
   var html = '';
   Object.keys(room.users).forEach(userId => {
     var user = room.users[userId];
     html += renderUserHtml(user);
   });
-  
+
   return html;
 }
 
@@ -76,12 +81,12 @@ function renderUserHtml(user) {
   if (user.username == 'guest')
     html += `<div socket-id="${user.socket_id}" class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest</button></div>`;
   else
-    html += `<div socket-id="${user.socket_id}" class="p-2"><button><img class="rounded-full w-20 h-20 object-cover" src="/storage/${user.picture}" alt="" srcset=""></button></div>`;
+    html += `<div socket-id="${user.socket_id}" class="p-2"><button><img class="rounded-full w-20 h-20 object-cover" src="${user.picture}" alt="" srcset=""></button></div>`;
 
   return html;
 }
 
-const socket = require('./pusher')(callbacks);
+const socket = require('../dependencies/pusher')(callbacks);
 
 $('#createRoomBtn').on('click touch', function(e) {
   e.preventDefault();
@@ -95,6 +100,7 @@ $('#createRoomBtn').on('click touch', function(e) {
     maximum_people: maximumPeople,
     level: level,
   });
+  $('#createRoomModal').closeModal();
 });
 
 module.exports = $;

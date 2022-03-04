@@ -4,7 +4,7 @@ var path = require('path');
 var basePath = path.dirname(__dirname);
 
 try {
-  fs.symlinkSync(path.join(basePath, 'storage/app'), path.join(basePath, 'public/storage'), 'dir');
+  fs.symlinkSync(path.join(basePath, 'storage/app/public'), path.join(basePath, 'public/storage'), 'dir');
   process.exit(0);
 } catch(err) {
   console.error(err);

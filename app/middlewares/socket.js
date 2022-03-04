@@ -19,6 +19,7 @@ async function handle(socket, next) {
 
   socket.auth = await promiseResolveUser;
   socket.auth.user.socket_id = socket.id;
+  socket.auth.user.streams = {};
   next();
 }
 

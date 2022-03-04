@@ -14,8 +14,8 @@ setTimeout(() => {
  * Collapse
  */
 
-$('[collapse-target]').on('click', (e) => {
-  var id = e.currentTarget.getAttribute('collapse-target');
+$('[collapse-target]').on('click', function(e) {
+  var id = $(this).attr('collapse-target');
   var collapseElement = $(`#${id}`);
   clearTimeout(timeout);
 
@@ -33,18 +33,24 @@ $('[collapse-target]').on('click', (e) => {
  * Modal
  */
 
-$('[modal-target]').on('click', (e) => {
-  var id = e.currentTarget.getAttribute('modal-target');
+$('[modal-target]').on('click', function(e) {
+  var id = $(this).attr('modal-target');
   var modalElement = $(`#${id}`);
   modalElement.addClass('show');
+  modalElement.find('.modal-close').on('click', () => modalElement.closeModal());
   createBackDropElement(id);
 });
 
 $('.modal').on('click', function(e) {
   if (e.target !== this) return;
-  this.classList.remove('show');
-  $(`.backdrop[data-target=${this.id}`).remove();
+  $(this).closeModal();
 });
+
+$.fn.closeModal = function () {
+  this.removeClass('show');
+  $(`.backdrop[data-target=${this[0].id}`).remove();
+  return this;
+}
 
 function createBackDropElement(id) {
   var attr = {
@@ -86,8 +92,13 @@ $('.dropdown').each(function() {
   $(this).append($('<span>').text(defaultText));
 });
 
-$('.dropdown > span').on('click touch', e => {
-  e.target.parentElement.classList.toggle('show');
+$('.dropdown > span').on('click touch', function(e) {
+  if ($(this.parentElement).hasClass('show')) {
+    $('.dropdown').removeClass('show');
+  } else {
+    $('.dropdown').removeClass('show');
+    $(this.parentElement).addClass('show');
+  }
 });
 
 $('.dropdown > ul > li').on('click touch', function(e) {
@@ -96,6 +107,16 @@ $('.dropdown > ul > li').on('click touch', function(e) {
   dropdownElement.removeClass('show');
   dropdownElement.children('span').text(e.currentTarget.innerText);
   dropdownElement.attr('data-value', $(this).attr('data-value'));
+});
+
+/**
+ * Dialog
+ */
+
+$('[dialog-target]').on('click', function(e) {
+  var id = $(this).attr('dialog-target');
+  var dialog = $(`#${id}`);
+  dialog.toggleClass('hidden');
 });
 
 module.exports = $;

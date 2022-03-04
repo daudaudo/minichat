@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/serve -e js,ejs,css,scss",
-    "build:css": "postcss public/stylesheets/build.css -o public/stylesheets/style.css",
+    "start": "nodemon ./bin/serve -e js,ejs,css,scss > ./storage/logs/app.log",
+    "build:css": "postcss resource/css/main.css -o public/stylesheets/style.css",
     "storage:link": "node ./bin/storage-link.js",
     "resource:complie": "node ./bin/resource-complie.js"
   },
@@ -25,6 +25,7 @@
     "express": "~4.16.1",
     "express-session": "^1.17.2",
     "express-validator": "^6.14.0",
+    "filesize": "^8.0.7",
     "googleapis": "^92.0.0",
     "http-errors": "~1.6.3",
     "ioredis": "^4.28.2",

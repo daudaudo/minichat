@@ -17,10 +17,6 @@
       <button modal-target="createRoomModal" class="box-border text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all font-medium">Create your own room</button>
     </div>
     <div id="roomsList" class="flex flex-wrap min-h-96">
-      <% rooms.forEach(room => { %>
-       <%- include('../components/room', {room: room})  %> 
-      <% }) %>
-      <!-- Room Item -->
     </div>
     <%- include('../components/modal-create-room') %>
   </main>

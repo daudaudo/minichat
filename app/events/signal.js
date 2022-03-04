@@ -7,7 +7,7 @@ const Socket = require("socket.io").Socket;
  */
 function handle(io, socket) {
   return data => {
-    io.sockets.sockets.get(data.peerId).emit('signal', {peerId: socket.id, signal: data.signal});
+    io.sockets.sockets.get(data.peerId).emit('signal', {peerId: socket.id, signal: data.signal, user: socket.auth.user});
   };
 }
 

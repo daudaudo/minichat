@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const uuid = require('uuid');
 
 const roomSchema = new mongoose.Schema({
   'id': {
@@ -7,7 +6,6 @@ const roomSchema = new mongoose.Schema({
     index: true,
     required: true,
     unique: true,
-    default: uuid.v4(),
   },
   'name': {
     type: String,

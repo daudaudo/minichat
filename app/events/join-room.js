@@ -10,18 +10,16 @@ function handle(io, socket) {
   return async roomId => {
     var filter = {id: roomId};
     var room = await Room.findOne(filter);
+    if(!room) return;
     var user = socket.auth.user;
-    if(room.users.has(user._id)) {
-      return;
-    } else {
-      room.users.set(socket.id, user);
-      await Room.updateOne(filter, {users: room.users});
-      io.sockets.emit('public', {type: 'join_room', data: {roomId: roomId, user: user}});
-    }
+    room.users.set(socket.id, user);
+    await Room.updateOne(filter, {users: room.users});
+    io.sockets.emit('public', {type: 'join_room', data: {roomId: roomId, user: user}});
 
     await socket.join(roomId);
-    io.to(roomId).emit('room', {type: 'notification', data: {type: 'primary', text: `User ${socket.auth.user.username} has joined this room.`}});
-    socket.broadcast.to(roomId).emit('room', {type: 'join_room', data: {user: socket.auth.user, peerId: socket.id}});
+    socket.broadcast.to(roomId).emit('room', {type: 'notification', data: {type: 'primary', text: `User ${socket.auth.user.username} has joined this room.`}});
+    io.to(roomId).emit('room', {type: 'join_room', data: {user: socket.auth.user}});
+    socket.emit('room', {type: 'users', data: {users: room.users}});
   }
 }
 

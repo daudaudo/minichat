@@ -3,6 +3,6 @@ module.exports = {
     script: 'npm start',
     autorestart: true,
   }, {
-    script: 'npx tailwindcss -i public/stylesheets/build.css -o public/stylesheets/style.css --watch',
+    script: 'npx tailwindcss -i resource/css/main.css -o public/stylesheets/style.css --watch',
   }],
 };
