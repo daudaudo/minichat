@@ -43,9 +43,8 @@
       </div>
     </div>
   </div>
-  <div id="chatroomContainer" class="fixed left-0 top-0 bottom-0 right-0 bg-slate-50 flex hidden">
-    <%- include('../components/chat-toolbar')  %>
-    <div class="flex-1 relative flex flex-col">
+  <div id="chatroomContainer" class="fixed left-0 top-0 bottom-0 right-0 bg-slate-50 flex flex-col hidden">
+    <div class="flex-auto h-0 relative flex flex-col">
       <%- include('../components/header-chat-page')  %>
       <!-- Video Container -->
       <main class="relative flex-auto h-0 overflow-auto">
@@ -76,10 +75,15 @@
         </div>
       </div>
       <!-- Message container -->
-      <div id="messageContainer" class="fixed top-0 bottom-0 right-0 p-8 z-50 hidden transition-all transform translate-x-full">
-        <div class="flex flex-col rounded bg-white z-50 w-96 shadow-xl h-full relative">
-          <div class="p-4 rounded-md rounded-b-none border-b border-slate-200">
+      <div id="messageContainer" class="fixed top-0 bottom-0 right-0 md:left-auto left-0 md:p-8 p-4 z-50 hidden transition-all transform translate-x-full">
+        <div class="flex flex-col rounded bg-white z-50 md:w-96 w-full shadow-xl h-full relative">
+          <div class="p-4 rounded-md rounded-b-none border-b border-slate-200 flex justify-between items-center">
             <h3 class="font-semibold text-slate-700 text-xl">Messages Box</h3>
+            <button id="closeMessageBoxBtn" class="p-1 text-slate-700 rounded-full hover:bg-slate-100 transition-all">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-8 h-8" viewBox="0 0 16 16">
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+              </svg>
+            </button>
           </div>
           <div id="messageBox" class="p-4 rounded-md space-y-2 overflow-auto h-0 flex-auto">
 
@@ -94,7 +98,7 @@
                   </div>
                 </div>
               </div>
-              <div class="flex">
+              <div class="flex relative">
                 <div id="fileInputForm" class="flex items-center">
                   <button>
                     <label for="fileInputMessage" class="block p-2 text-sky-700 cursor-pointer">
@@ -113,7 +117,7 @@
                       <path d="M4.285 9.567a.5.5 0 0 1 .683.183A3.498 3.498 0 0 0 8 11.5a3.498 3.498 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.498 4.498 0 0 1 8 12.5a4.498 4.498 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5z" />
                     </svg>
                   </button>
-                  <div id="emojDialog" class="dialog dialog-lt hidden w-60 max-w-60">
+                  <div id="emojDialog" class="dialog dialog-lt hidden w-64 max-w-64">
 
                   </div>
                 </div>
@@ -128,6 +132,7 @@
         </div>
       </div>
     </div>
+    <%- include('../components/chat-toolbar')  %>
   </div>
 </body>
 

@@ -139,6 +139,18 @@ $('#openMessageBoxBtn').on('click touch', function(e) {
   }
 });
 
+$('#closeMessageBoxBtn').on('click touch', e => {
+  if(openingMessageBox) {
+    openingMessageBox = false;
+    $('#messageContainer').addClass('translate-x-full');
+    setTimeout(() => {
+      $('#messageContainer').addClass('hidden');
+      $('#messageContainer').removeClass('flex');
+    }, 150);
+    $('#openMessageBoxBtn').removeClass('bg-sky-700 text-white');
+  }
+});
+
 $('#fullscreenBtn').on('click', function() {
   $(this).toggleClass('bg-sky-700 text-white');
   var element = document.getElementById('chatroomContainer');
