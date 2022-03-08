@@ -284,7 +284,7 @@ function renderUserInRoom(user) {
     <div user-room socket-id="${socketId}" class="user-room">
       <div class="user-room-inner">
         <div class="user-room-info transition-all z-20 w-full h-full flex flex-col items-center justify-center">
-          <div class="flex justify-center mb-2"><button><img class="rounded-full w-20 h-20 object-cover" src="${user.picture}" alt="" srcset=""></button></div>
+          ${user.role == 'guest' ? `<div class="flex justify-center mb-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest ?</button></div>` : `<div class="flex justify-center mb-2"><button><img class="rounded-full w-20 h-20 object-cover" src="${user.picture}" alt="" srcset=""></button></div>`}
           <p class="text-base font-medium text-slate-700 text-center">${user.username}</p>
         </div>
         <div class="absolute left-0 top-0 bottom-0 right-0 p-2 z-10">

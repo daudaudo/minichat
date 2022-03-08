@@ -2,7 +2,7 @@ var uuid = require('uuid');
 var guest = {
   token: null,
   user: {
-    username: 'guest',
+    username: 'Guest',
     email: null,
     _id: uuid.v4(),
     role: 'guest',
