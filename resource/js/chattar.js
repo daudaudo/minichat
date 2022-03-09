@@ -1,8 +1,17 @@
 const $ = require('./animation');
-const {openFullscreen, closeFullscreen} = require('../dependencies/fullscreen');
+const FullScreen = require('../dependencies/fullscreen');
 const Editor = require('../dependencies/editor');
 const Dropzone = require('../dependencies/dropzone');
 const Streamer = require('../dependencies/streamer');
+
+const fullscreen = new FullScreen(document.getElementById('chatroomContainer'), {
+  enter: () => {
+    $('#fullscreenBtn').addClass('active');
+  },
+  exit: () => {
+    $('#fullscreenBtn').removeClass('active');
+  }
+});
 
 const dropable = new Dropzone('#messageContainer > div', {
   preview: '#previewFileMessage',
@@ -173,7 +182,7 @@ function addStreamAllPeers(stream) {
 var openingMessageBox = false;
 
 $('#openMessageBoxBtn').on('click touch', function(e) {
-  $(this).toggleClass('bg-sky-700 text-white');
+  $(this).toggleClass('active');
   $(this).removeClass('has-message-animation');
   if(openingMessageBox) {
     openingMessageBox = false;
@@ -200,18 +209,12 @@ $('#closeMessageBoxBtn').on('click touch', e => {
       $('#messageContainer').addClass('hidden');
       $('#messageContainer').removeClass('flex');
     }, 150);
-    $('#openMessageBoxBtn').removeClass('bg-sky-700 text-white');
+    $('#openMessageBoxBtn').removeClass('active');
   }
 });
 
 $('#fullscreenBtn').on('click', function() {
-  $(this).toggleClass('bg-sky-700 text-white');
-  var element = document.getElementById('chatroomContainer');
-  if (window.innerHeight == screen.height) {
-    closeFullscreen();
-  } else {
-    openFullscreen(element);
-  }
+  fullscreen.toggleScreen();
 });
 
 function notifyHavingMessage() {
@@ -519,13 +522,13 @@ $('#shareScreenBtn').on('click', function(e) {
  * @param {MediaStream} stream 
  */
 function gotShareScreenStream(stream) {
-  $(`#shareScreenBtn`).addClass('bg-sky-700').addClass('text-white');
+  $(`#shareScreenBtn`).addClass('active');
   statusGlobal.displayStream = stream;
   streams[stream.id] = {stream: stream, };
   addStreamAllPeers(stream);
 
   stream.getVideoTracks()[0].onended = () => {
-    $(`#shareScreenBtn`).removeClass('bg-sky-700').removeClass('text-white');
+    $(`#shareScreenBtn`).removeClass('active');
     delete statusGlobal.displayStream;
     $(`[stream-id="${stream.id}"]`).remove();
     socket.emit('stop_stream', {streamId: stream.id, roomId: roomId, type: SHARE_SCREEN_STREAM});
