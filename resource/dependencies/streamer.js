@@ -20,18 +20,18 @@ class Streamer {
     if (this.hasVideo()) {
       var videoTrack = this.videoStream.getVideoTracks()[0];
       videoTrack.onended = () => {
-        this.videoStream = null;
         if (this.options.onVideoEnded)
-          this.options.onVideoEnded();
+          this.options.onVideoEnded(this.videoStream);
+        this.videoStream = null;
       };
     }
 
     if(this.hasAudio()) {
       var audioTrack = this.audioStream.getAudioTracks()[0];
       audioTrack.onended = () => {
-        this.audioStream = null;
         if (this.options.onAudioEnded)
-          this.options.onAudioEnded();
+          this.options.onAudioEnded(this.audioStream);
+        this.audioStream = null;
       };
     }
   }

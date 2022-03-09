@@ -642,6 +642,8 @@ async function startUserVideoStream() {
       hideUserStream(socket.id);
       socket.emit('stop_stream', {streamId: stream.id, roomId: roomId, type: VIDEO_STREAM});
       removeStreamAllPeers(stream);
+      if(getIdStreamViewLarge() === stream.id) 
+        closeViewLargeVideo();
     },
     onAudioEnded: (stream) => {
       $(`#turnOnMicBtn`).removeClass('active');
