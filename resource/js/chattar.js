@@ -57,8 +57,8 @@ async function preloadRoom() {
       $('#preloadPreviewVideoOff').addClass('bg-slate-900');
       $('#preloadCameraBtn').removeClass('active');
     },
-    onLoad: (stream) => {
-      $('#preloadRoom video').prop('srcObject', stream).trigger('play');
+    onLoad: (videoStream, audioStream) => {
+      $('#preloadRoom video').prop('srcObject', videoStream).trigger('play');
     },
     videoInit: false,
     audioInit: false,
@@ -224,13 +224,13 @@ function notifyHavingMessage() {
 }
 
 $('#turnOnCameraBtn').on('click touch', e => {
-  if(statusGlobal.userStreamer.stream) {
+  if(statusGlobal.userStreamer) {
     statusGlobal.userStreamer.toggleVideoTrack();
   }
 });
 
 $('#turnOnMicBtn').on('click touch', e => {
-  if(statusGlobal.userStreamer.stream) {
+  if(statusGlobal.userStreamer) {
     statusGlobal.userStreamer.toggleAudioTrack();
   }
 });
@@ -275,13 +275,18 @@ function renderUserInRoom(user) {
         </div>
         <div class="absolute left-0 top-0 bottom-0 right-0 p-2 z-10">
           <video class="w-full h-full rounded-xl"></video>
+          <audio></audio>
         </div
       </div>
     </div>
   `);
-  if (socketId === socket.id)
+  
+  if (socketId === socket.id) {
     userInRoom.find('video').prop('muted', true);
-    userInRoom.on('click touch', e => {
+    userInRoom.find('audio').prop('muted', true);
+  }
+
+  userInRoom.on('click touch', e => {
     var stream = userInRoom.find('video').prop('srcObject');
     if(!stream) return;
     if (!streams[stream.id].videoTrack) return;
@@ -304,6 +309,7 @@ const currentUserId = $('meta[name="user-id"]').attr('content');
 const SHARE_SCREEN_STREAM = 0;
 const VIDEO_TRACK = 0;
 const VIDEO_STREAM = 1;
+const AUDIO_STREAM = 2;
 const AUDIO_TRACK = 1;
 const peers = {};
 var streams = {};
@@ -372,7 +378,10 @@ const callbacks = {
       if(data.type === SHARE_SCREEN_STREAM)
         openSharingScreenStream(streams[data.streamId].stream, data.user.socket_id);
       else if (data.type === VIDEO_STREAM)
-        openUserMediaStream(streams[data.streamId].stream, data.user.socket_id, data.videoTrack)
+        openVideoStream(streams[data.streamId].stream, data.user.socket_id, data.videoTrack);
+      else if (data.type === AUDIO_STREAM) {
+        openAudioStream(streams[data.streamId].stream, data.user.socket_id);
+      }
     } else {
       streams[data.streamId] = {
         type: data.type,
@@ -486,7 +495,10 @@ function createPeer(initiator, peerId, user) {
         openSharingScreenStream(stream, peerId);
       }
       if(streams[stream.id].type === VIDEO_STREAM) {
-        openUserMediaStream(stream, peerId, streams[stream.id].videoTrack);
+        openVideoStream(stream, peerId, streams[stream.id].videoTrack);
+      }
+      if(streams[stream.id].type === AUDIO_STREAM) {
+        openAudioStream(stream, peerId);
       }
     } else {
       streams[stream.id] = {
@@ -495,7 +507,13 @@ function createPeer(initiator, peerId, user) {
     }
   });
   if(statusGlobal.displayStream) peer.addStream(statusGlobal.displayStream);
-  if(statusGlobal.userStreamer) peer.addStream(statusGlobal.userStreamer.stream);
+  if(statusGlobal.userStreamer) {
+    if (statusGlobal.userStreamer.getVideoStream())
+      peer.addStream(statusGlobal.userStreamer.getVideoStream());
+
+    if (statusGlobal.userStreamer.getAudioStream())
+      peer.addStream(statusGlobal.userStreamer.getAudioStream());
+  }
   peers[peerId] = user;
   peers[peerId].peer = peer;
   return peer;
@@ -570,10 +588,18 @@ function openSharingScreenStream(stream, socketId) {
 
 async function startUserVideoStream() {
   statusGlobal.userStreamer = await Streamer.fromUserMedia({
-    onLoad: (stream) => {
-      streams[stream.id] = {stream: stream, };
-      socket.emit('start_stream', {streamId: stream.id, roomId: roomId, type: VIDEO_STREAM, videoTrack: false});
-      addStreamAllPeers(stream);
+    onLoad: (videoStream, audioStream) => {
+      if (videoStream) {
+        streams[videoStream.id] = {stream: videoStream, };
+        socket.emit('start_stream', {streamId: videoStream.id, roomId: roomId, type: VIDEO_STREAM, videoTrack: false});
+        addStreamAllPeers(videoStream);
+      }
+
+      if (audioStream) {
+        streams[audioStream.id] = {stream: audioStream, };
+        socket.emit('start_stream', {streamId: audioStream.id, roomId: roomId, type: AUDIO_STREAM});
+        addStreamAllPeers(audioStream);
+      }
     },
     onAudioTrackEnable: (stream) => {
       socket.emit('toggle_track', {
@@ -589,7 +615,7 @@ async function startUserVideoStream() {
         roomId: roomId,
         typeTrack: AUDIO_TRACK,
         streamId: stream.id,
-        enabled: true,
+        enabled: false,
       });
       $(`#turnOnMicBtn`).removeClass('active');
     },
@@ -611,12 +637,15 @@ async function startUserVideoStream() {
       });
       $(`#turnOnCameraBtn`).removeClass('active');
     },
-    onEnded: (stream) => {
-      delete statusGlobal.userStreamer.stream;
+    onVideoEnded: (stream) => {
       $(`#turnOnCameraBtn`).removeClass('active');
-      $(`#turnOnMicBtn`).removeClass('active');
       hideUserStream(socket.id);
       socket.emit('stop_stream', {streamId: stream.id, roomId: roomId, type: VIDEO_STREAM});
+      removeStreamAllPeers(stream);
+    },
+    onAudioEnded: (stream) => {
+      $(`#turnOnMicBtn`).removeClass('active');
+      socket.emit('stop_stream', {streamId: stream.id, roomId: roomId, type: AUDIO_STREAM});
       removeStreamAllPeers(stream);
     },
     videoInit: statusGlobal.preloadCamera,
@@ -631,7 +660,7 @@ async function startUserVideoStream() {
  * @param {Boolean} active 
  */
 
-function openUserMediaStream(stream, socketId, active) {
+function openVideoStream(stream, socketId, active) {
   var userInRoom = $(`[user-room][socket-id="${socketId}"]`);
   userInRoom.find('video').prop('srcObject', stream).trigger('play');
 
@@ -643,5 +672,15 @@ function openUserMediaStream(stream, socketId, active) {
     if (!$('#videoFullScreen').prop('srcObject')) return;
     if(getIdStreamViewLarge() === stream.id) 
       closeViewLargeVideo();
+  };
+}
+
+function openAudioStream(stream, socketId) {
+  var audio = $(`[user-room][socket-id="${socketId}"] audio`)
+              .prop('srcObject', stream)
+              .trigger('play');
+
+  stream.onremovetrack = () => {
+    audio.prop('srcObject', null);
   };
 }
