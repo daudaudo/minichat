@@ -9,7 +9,7 @@
 
 <body class="bg-slate-50">
   <div class="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center rounded-md">
-    <form class="min-w-sm p-4 px-8 font-medium rounded-xl border border-slate-200" action="/login" method="post">
+    <form class="lg:w-3/5 md:w-2/3 w-full p-4 px-8 font-medium rounded-xl border border-slate-200" action="/login" method="post">
       <h1 class="mb-8 text-slate-700 text-2xl font-semibold">Log in</h1>
       <% if (errors.auth) { %>
         <div class="text-sm bg-red-400 text-white font-medium mb-2 p-2 rounded w-full"><%= errors.auth.msg %></div>
