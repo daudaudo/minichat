@@ -5,6 +5,7 @@ var homecontroller = require('../app/controllers/home');
 var oauthcontroller = require('../app/controllers/oauth');
 var authcontroller = require('../app/controllers/auth');
 var chatcontroller = require('../app/controllers/chat');
+var usercontroller = require('../app/controllers/user');
 
 var registerValidator = require('../app/validators/register');
 var loginValidator = require('../app/validators/login');
@@ -28,8 +29,13 @@ router.get('/google/oauth/callback', oauthcontroller.callbackGoogle);
 router.get('/register', authcontroller.showRegisterForm);
 router.post('/register', registerValidator, validateWithRedirect(), authcontroller.register);
 router.get('/login', authcontroller.showLoginForm);
-router.post('/login',loginValidator, validateWithRedirect(), authcontroller.login);
-router.get('/user',auth , authcontroller.user);
-router.get('/logout',auth , authcontroller.logout);
+router.post('/login', loginValidator, validateWithRedirect(), authcontroller.login);
+router.get('/user', auth, authcontroller.user);
+router.get('/logout', auth, authcontroller.logout);
+
+//User Router
+
+router.get('/profile', auth, usercontroller.showUpdateProfilesForm);
+router.post('/profile', auth, require('../app/validators/update-profile'), validateWithRedirect('/profile'), usercontroller.postProfile);
 
 module.exports = router;

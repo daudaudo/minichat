@@ -19,7 +19,6 @@ var guest = {
 module.exports = function(req, res, next) {
   if (!req.session.auth) req.session.auth = guest;
   res.locals.auth = req.session.auth;
-  res.locals.errors = req.flash('errors') ?? [];
-  res.locals.success = req.flash('success') ?? [];
+  res.locals.errors = req.flash('errors')[0] ?? {};
   next();
 }

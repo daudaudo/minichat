@@ -3,6 +3,7 @@ var {google, oauth2Client} = require('../global/oauth');
 var dayjs = require('dayjs');
 const Storage = require('../global/storage');
 var {login} = require('../global/auth');
+var uuid = require('uuid');
 
 const homeUrl = '/';
 
@@ -43,6 +44,7 @@ async function callbackGoogle(req, res) {
         email: user.email,
         created_at: dayjs().format(''),
         picture: Storage.url(await Storage.fromFolder('public/avatar').putFromUrl(user.picture)),
+        password: uuid.v4(),
       });
       await login(user, req);
     }
