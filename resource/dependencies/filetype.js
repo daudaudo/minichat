@@ -36,6 +36,15 @@ function render(ext, classes) {
     case 'txt':
       template = `<img draggable="false" class="${classes}" src="/images/filetypes/txt.png">`;
       break;
+    case 'mp3':
+      template = `<img draggable="false" class="${classes}" src="/images/filetypes/mp3.png">`;
+      break;
+    case 'mp4':
+      template = `<img draggable="false" class="${classes}" src="/images/filetypes/mp4.png">`;
+      break;
+    case 'avi':
+      template = `<img draggable="false" class="${classes}" src="/images/filetypes/avi.png">`;
+      break;
     default:
       template = `<img draggable="false" class="${classes}" src="/images/filetypes/file.png">`;
       break;
