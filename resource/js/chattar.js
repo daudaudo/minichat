@@ -3,6 +3,7 @@ const FullScreen = require('../dependencies/fullscreen');
 const Editor = require('../dependencies/editor');
 const Dropzone = require('../dependencies/dropzone');
 const Streamer = require('../dependencies/streamer');
+const filetype = require('../dependencies/filetype');
 
 const fullscreen = new FullScreen(document.getElementById('chatroomContainer'), {
   enter: () => {
@@ -23,7 +24,8 @@ const dropable = new Dropzone('#messageContainer > div', {
         files: data,
       }
     });
-  }
+  },
+  input: '#fileInputMessage',
 });
 
 const edittor = new Editor('#messageTextInput', {
@@ -459,12 +461,13 @@ function renderFileMessage(file) {
     case "png":
     case "jpeg":
     case "jpg":
-      html = `<img src="${file.url}" class="object-contain"/>`;
+    case "webp":
+      html = `<img draggable="false" src="${file.url}" class="object-contain"/>`;
       break;
     default:
       html = `
         <div class="flex items-center space-x-2 p-2">
-          <img src="/images/filetypes/file.png" class="object-contain w-8 h-8"/>
+          ${filetype(file.ext, 'object-contain w-8 h-8')}
           <div>
             <p class="font-semibold text-sm text-slate-700 block">${file.name}</p>
             <p class="font-semibold text-sm text-slate-700">${file.size}</p>

@@ -2,6 +2,8 @@ const $ = require('jquery');
 const filesize = require('filesize');
 const mimetype = require('mime-types');
 const uuid = require('uuid');
+const FileInput = require('./fileinput');
+const filetype = require('./filetype');
 
 class Dropzone {
   /**
@@ -20,6 +22,14 @@ class Dropzone {
   init() {
     if(this.options.preview) {
       this.previewable = $(this.options.preview);
+    }
+    if (this.options.input) {
+      this.fileinput = new FileInput(this.options.input, {
+        change: (files) => {
+          files.forEach(file => this.addFile(file));
+        },
+        multiple: true,
+      });
     }
     this.dropable.addClass('dropzone');
     this.dragenter = $(`
@@ -129,13 +139,11 @@ class Dropzone {
       case 'png':
       case 'jpg':
       case 'jpeg':
-        template = `<img draggable="false" class="w-full h-full object-cover" src="${URL.createObjectURL(file)}">`;
-        break;
-      case 'json':
-        template = `<img draggable="false" class="w-full h-full object-cover" src="/images/filetypes/json-file.png">`;
+      case 'webp':
+        template = `<img draggable="false" class="w-full h-full object-cover rounded-lg" src="${URL.createObjectURL(file)}">`;
         break;
       default:
-        template = `<img draggable="false" class="w-full h-full object-contain" src="/images/filetypes/file.png">`;
+        template = filetype(ext, 'w-full h-full object-cover rounded-lg');
         break;
     }
     return template;

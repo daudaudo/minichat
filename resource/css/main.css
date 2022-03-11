@@ -439,13 +439,13 @@ span.emoj {
 }
 
 .preview-item {
-  @apply relative rounded cursor-pointer border border-slate-200;
+  @apply relative rounded-lg cursor-pointer border border-slate-200;
   user-select: none;
 }
 
 .preview-item::before {
   content: '';
-  @apply absolute left-0 right-0 bottom-0 h-1 bg-sky-700 rounded-b;
+  @apply absolute left-0 right-0 bottom-0 h-1 bg-sky-700 rounded-b-lg;
 }
 
 .preview-item .preview-close {
@@ -464,11 +464,11 @@ span.emoj {
 }
 
 .preview-item .preview-content {
-  @apply w-16 h-16 flex items-center justify-center rounded p-1;
+  @apply w-16 h-16 flex items-center justify-center rounded-lg;
 }
 
 .preview-item .preview-info {
-  @apply absolute left-0 top-0 bottom-0 right-0 bg-slate-700 bg-opacity-60 opacity-0 transition-all rounded;
+  @apply absolute left-0 top-0 bottom-0 right-0 bg-slate-700 bg-opacity-60 opacity-0 transition-all rounded-lg;
 }
 
 .preview-item:hover .preview-info {
