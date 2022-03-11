@@ -12,6 +12,9 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  'introducton': {
+    type: String,
+  },
   'password': {
     type: String,
   },

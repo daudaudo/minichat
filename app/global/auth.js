@@ -9,16 +9,35 @@ var uuid = require('uuid');
  */
 async function login(user, req)
 {
-  var users = await User.find({email: user.email});
-  if(!users.length) return false;
+  var user = await User.findOne({email: user.email});
+  if(!user) return false;
   req.session.auth = {
-    user: users[0],
+    user: user,
     token: uuid.v4(),
     auth: true,
   };
   return true;
 }
 
+/**
+ * 
+ * @param {import('express').Request} req 
+ */
+function user(req) {
+  return req.session.auth.user;
+}
+
+/**
+ * 
+ * @param {import('express').Request} req 
+ * @param {Object} user 
+ */
+function setUser(req, user) {
+  return req.session.auth.user = user;
+}
+
 module.exports = {
-  login
+  login,
+  user,
+  setUser
 }

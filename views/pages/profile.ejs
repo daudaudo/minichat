@@ -22,15 +22,18 @@
           <input name="picture" id="pictureInput" type="file" accept="image/*" class="hidden" />
         </label>
       </div>
+      <% if (errors.picture) { %>
+        <p class="text-sm text-red-400 font-medium mt-1"><%= errors.picture.msg %></p>
+      <% } %>
 
       <label class="block">
         <span class="after:content-['*'] after:ml-0.5 after:text-red-500 block font-medium text-slate-700 capitalize">
           Email
         </span>
-        <input disabled name="email" type="text" value="<%= auth.user.email %>" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-200 rounded-md text-sm font-medium text-slate-700 placeholder-slate-400
-          focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-          invalid:border-pink-500 invalid:text-pink-600
-          focus:invalid:border-pink-500 focus:invalid:ring-pink-500" />
+        <input disabled name="email" type="text" value="<%= auth.user.email %>" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-200 rounded-md text-sm font-medium text-slate-700 placeholder-slate-400 disabled:bg-slate-200" />
+        <% if (errors.email) { %>
+          <p class="text-sm text-red-400 font-medium mt-1"><%= errors.email.msg %></p>
+        <% } %>
       </label>
 
       <label class="block">
@@ -42,6 +45,9 @@
           focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
           invalid:border-pink-500 invalid:text-pink-600
           focus:invalid:border-pink-500 focus:invalid:ring-pink-500 resize-none" rows="10"></textarea>
+        <% if (errors.introduction) { %>
+          <p class="text-sm text-red-400 font-medium mt-1"><%= errors.introduction.msg %></p>
+        <% } %>
       </label>
 
       <label class="block">
@@ -52,6 +58,9 @@
           focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
           invalid:border-pink-500 invalid:text-pink-600
           focus:invalid:border-pink-500 focus:invalid:ring-pink-500" />
+        <% if (errors.username) { %>
+          <p class="text-sm text-red-400 font-medium mt-1"><%= errors.username.msg %></p>
+        <% } %>
       </label>
 
       <div>
