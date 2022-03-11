@@ -5,6 +5,7 @@
   <%- include('../components/head') %>
   <meta name="chat-room-id" content="<%= room.id %>">
   <meta name="user-id" content="<%= auth.user._id %>">
+  <meta name="user-auth" content="<%= auth.auth %>">
   <title>Minichat | Chat Room</title>
   <script src="/js/chattar.js" defer></script>
 </head>
@@ -20,11 +21,27 @@
       <div class="md:w-1/2 w-full">
         <div class="relative">
           <video class="video-flip w-full h-80 object-cover bg-slate-900 rounded-md" muted></video>
-          <div id="preloadPreviewVideoOff" class="absolute left-0 top-0 right-0 bottom-0 bg-slate-900 rounded-md transition-all">
+          <div id="preloadPreviewVideoOff" class="absolute left-0 top-0 right-0 bottom-0 bg-slate-900 rounded-md transition-all flex items-center justify-center">
+           <% if (!auth.auth) { %>
+            <div class="p-2">
+              <p class="text-xl text-white font-medium text-center">You need to log in to minichat to share screen, camera, voice and chat with others !</p> 
+            </div>
+           <% } %> 
             <div class="absolute left-0 right-0 bottom-0 p-4 flex flex-wrap items-center justify-center space-x-4">
               <button id="preloadCameraBtn" class="preload-btn"></button>
               <button id="preloadMicBtn" class="preload-btn"></button>
             </div>
+          </div>
+        </div>
+        <div class="mt-2">
+          <div class="flex items-center space-x-2 p-2 rounded-full bg-slate-100">
+            <button class="text-sky-700">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-7 h-7" viewBox="0 0 16 16">
+                <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
+                <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
+              </svg>
+            </button>
+            <p class="font-medium text-sky-700">Please check your camera and microphone before entering the room.</p>
           </div>
         </div>
       </div>

@@ -4,6 +4,19 @@ const Editor = require('../dependencies/editor');
 const Dropzone = require('../dependencies/dropzone');
 const Streamer = require('../dependencies/streamer');
 const filetype = require('../dependencies/filetype');
+const roomId = $('meta[name="chat-room-id"]').attr('content');
+const currentUserId = $('meta[name="user-id"]').attr('content');
+const userAuth = $('meta[name="user-auth"]').attr('content') === "true";
+const SHARE_SCREEN_STREAM = 0;
+const VIDEO_TRACK = 0;
+const VIDEO_STREAM = 1;
+const AUDIO_STREAM = 2;
+const AUDIO_TRACK = 1;
+const peers = {};
+var streams = {};
+const statusGlobal = {preloadCamera: false, preloadMic: false,};
+const SimplePeer = require('simple-peer');
+var lastSenderId = null;
 
 const fullscreen = new FullScreen(document.getElementById('chatroomContainer'), {
   enter: () => {
@@ -39,6 +52,14 @@ const edittor = new Editor('#messageTextInput', {
  * Preload room
  */
 
+$('#enterRoomBtn').on('click touch', () => {
+  socket.emit('join_room', roomId);
+  $('#chatroomContainer').removeClass('hidden');
+  $('#preloadRoom').remove();
+  if (userAuth)
+    startUserVideoStream();
+});
+
 async function preloadRoom() {
   var streamer = await Streamer.fromUserMedia({
     onAudioTrackEnable: () => {
@@ -66,13 +87,6 @@ async function preloadRoom() {
     audioInit: false,
   });
 
-  $('#enterRoomBtn').on('click touch', () => {
-    socket.emit('join_room', roomId);
-    $('#chatroomContainer').removeClass('hidden');
-    $('#preloadRoom').remove();
-    startUserVideoStream();
-  });
-
   $('#preloadCameraBtn').on('click touch', e => {
     if(streamer)
       streamer.toggleVideoTrack();
@@ -84,7 +98,8 @@ async function preloadRoom() {
   });
 }
 
-preloadRoom();
+if(userAuth)
+  preloadRoom();
 
 /**
  * 
@@ -306,19 +321,6 @@ function renderUserInRoom(user) {
  * Callback for socket
  */
 
-const roomId = $('meta[name="chat-room-id"]').attr('content');
-const currentUserId = $('meta[name="user-id"]').attr('content');
-const SHARE_SCREEN_STREAM = 0;
-const VIDEO_TRACK = 0;
-const VIDEO_STREAM = 1;
-const AUDIO_STREAM = 2;
-const AUDIO_TRACK = 1;
-const peers = {};
-var streams = {};
-const statusGlobal = {preloadCamera: false, preloadMic: false,};
-const SimplePeer = require('simple-peer');
-var lastSenderId = null;
-
 const callbacks = {
   connection: (data) => {
     console.log(data);
@@ -411,7 +413,7 @@ function appendTextMessage(data) {
   if (lastSenderId != data.sender._id) {
     var htmlMessage = `
       <div class="message w-full flex items-end space-x-4 ${isMyMessage ? 'justify-end' : ''}">
-        ${isMyMessage ? '' : `<button><img class="rounded-full w-8 h-8 object-cover" src="/storage/${data.sender.picture}" alt="" srcset=""></button>`}
+        ${isMyMessage ? '' : `<button><img class="rounded-full w-8 h-8 object-cover" src="${data.sender.picture}" alt="" srcset=""></button>`}
         <div class="message-text space-y-2 flex flex-col ${isMyMessage ? 'items-end' : 'items-start'}">
           <p class="block p-2 px-4 font-medium ${isMyMessage ? 'text-white bg-sky-700' : 'text-slate-600 bg-slate-100 '}">${data.message.text}</p>
         </div>
@@ -433,7 +435,7 @@ function appendFilesMessage(data) {
     if (lastSenderId != data.sender._id) {
       var htmlMessage = `
         <div class="message w-full flex items-end space-x-4 ${isMyMessage ? 'justify-end' : ''}">
-          ${isMyMessage ? '' : `<button><img class="rounded-full w-8 h-8 object-cover" src="/storage/${data.sender.picture}" alt="" srcset=""></button>`}
+          ${isMyMessage ? '' : `<button><img class="rounded-full w-8 h-8 object-cover" src="${data.sender.picture}" alt="" srcset=""></button>`}
           <div class="message-text space-y-2 flex flex-col ${isMyMessage ? 'items-end' : 'items-start'}">
             <a href="${file.url}" target="_blank" class="block">
               ${renderFileMessage(file)}
