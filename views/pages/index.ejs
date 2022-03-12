@@ -70,7 +70,7 @@
       })  %>
     </div>
 
-    <div class="flex flex-wrap">
+    <div class="flex flex-wrap items-center">
       <div class="lg:w-1/2 w-full p-4 space-y-4">
         <h3 class="bg-slate-200 bg-opacity-50 text-sky-700 p-1 rounded-full font-bold w-fit mb-2 text-center">#OurValues</h3>
         <h2 class="font-semibold text-slate-700 text-4xl max-w-md">The value we instill in our product<span class="text-sky-700">.</span></h2>
@@ -100,13 +100,13 @@
           <div class="flex space-x-4 items-center">
             <button class="text-sky-700">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">
-                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
+                <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
               </svg>
             </button>
             <div>
-              <p class="font-semibold text-slate-600 text-xl">Notifications</p>
+              <p class="font-semibold text-slate-600 text-xl">Share</p>
               <div class="font-medium text-slate-600 text-base collapse hidden" id="collapse2">
-                <div class="mt-2">Receive notifications even when you're offline. You'll never miss any important informations.</div>
+                <div class="mt-2">Share your screen, video and voice call.</div>
               </div>
             </div>
           </div>
@@ -126,9 +126,9 @@
               </svg>
             </button>
             <div>
-              <p class="font-semibold text-slate-600 text-xl">Post</p>
+              <p class="font-semibold text-slate-600 text-xl">Notifications</p>
               <div class="font-medium text-slate-600 text-base collapse hidden" id="collapse3">
-                <div class="mt-2">You can create posts and share great moments for your friends and others.</div>
+                <div class="mt-2">Receive notifications even when you're offline. You'll never miss any important informations.</div>
               </div>
             </div>
           </div>
@@ -162,7 +162,11 @@
         </div>
 
       </div>
-      <div class="lg:w-1/2 w-full"></div>
+      <div class="lg:w-1/2 w-full flex items-start justify-center">
+        <div class="max-w-sm w-full">
+          <img class="w-full object-contain" draggable="false" src="/images/ourvalues.png" alt="ourvalues">
+        </div>
+      </div>
     </div>
   </main>
   <%- include('../components/footer') %> 
