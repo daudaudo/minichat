@@ -11,7 +11,8 @@ var registerValidator = require('../app/validators/register');
 var loginValidator = require('../app/validators/login');
 var {validateWithRedirect} = require('../app/middlewares/validate');
 var auth = require('../app/middlewares/auth');
-var webMiddleware = require('../app/middlewares/web')
+var webMiddleware = require('../app/middlewares/web');
+var csrf = require('../app/middlewares/csrf');
 
 router.all('*', webMiddleware);
 
@@ -36,6 +37,6 @@ router.get('/logout', auth, authcontroller.logout);
 //User Router
 
 router.get('/profile', auth, usercontroller.showUpdateProfilesForm);
-router.post('/profile', auth, require('../app/validators/update-profile'), validateWithRedirect('/profile'), usercontroller.postProfile);
+router.post('/profile', auth, csrf, require('../app/validators/update-profile'), validateWithRedirect('/profile'), usercontroller.postProfile);
 
 module.exports = router;

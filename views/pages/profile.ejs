@@ -9,10 +9,13 @@
 
 <body class="bg-slate-50">
   <%- include('../components/header-page') %>
-  <main class="container max-w-7xl w-full py-2 mx-auto z-50 mb-4">
-
+  <main class="container max-w-7xl w-full py-2 p-4 mx-auto z-50 mb-4">
+    <% if (success.update) { %>
+      <div class="text-sm bg-green-600 text-white font-medium mb-2 p-2 rounded w-full"><%= success.update.msg %></div>
+    <% } %>
     <form action="/profile" method="post" enctype="multipart/form-data" class="space-y-4">
 
+      <%- csrf %> 
       <div class="flex items-center space-x-6">
         <div class="shrink-0">
           <img id="picturePreview" class="h-16 w-16 object-cover rounded-full" src="<%= auth.user.picture %> " alt="Current profile photo" />
@@ -44,7 +47,7 @@
         <textarea name="introduction" placeholder="Write something about your self" class="mt-1 block w-full px-3 py-2 bg-white border border-slate-200 rounded-md text-sm font-medium text-slate-700 placeholder-slate-400
           focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
           invalid:border-pink-500 invalid:text-pink-600
-          focus:invalid:border-pink-500 focus:invalid:ring-pink-500 resize-none" rows="10"></textarea>
+          focus:invalid:border-pink-500 focus:invalid:ring-pink-500 resize-none" rows="10"><%= auth.user.introduction ?? '' %></textarea>
         <% if (errors.introduction) { %>
           <p class="text-sm text-red-400 font-medium mt-1"><%= errors.introduction.msg %></p>
         <% } %>

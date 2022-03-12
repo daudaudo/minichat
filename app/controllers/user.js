@@ -34,6 +34,7 @@ async function postProfile(req, res, next) {
   await User.updateOne(filter, updateData);
   user = await User.findOne(filter);
   auth.setUser(req, user);
+  req.flash('success', {update: {msg: 'Update profife successfully'}});
   res.redirect('/profile');
 }
 
