@@ -12,10 +12,23 @@
 
 <body class="bg-slate-50">
   <div id="preloadRoom" class="fixed left-0 top-0 bottom-0 right-0 bg-slate-50 flex flex-col">
-    <div class="p-4 mb-4">
+    <div class="p-4 mb-4 flex flex-wrap justify-between items-center">
       <a class="block" href="/">
-        <img class="sm:h-8 h-6 object-contain" src="/images/minichat.svg" alt="" srcset="">
+        <img class="h-8 object-contain" src="/images/minichat.svg" alt="" srcset="">
       </a>
+      <div class="md:flex hidden items-center space-x-2">
+        <% if (auth.auth) { %>
+          <div>
+            <p class="font-medium text-slate-700 text-right"><%= auth.user.email %> </p>
+            <p class="font-medium text-slate-700 text-right"><%= auth.user.username %> </p>
+          </div>
+          <div>
+            <img class="w-12 h-12 rounded-full object-cover border border-sky-50" src="<%= auth.user.picture %> " alt="">
+          </div>
+        <% } else { %>
+          <a href="/login" class="box-border block text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all">Login</a>
+        <% } %>  
+      </div>
     </div>
     <div class="p-4 flex flex-wrap items-center h-0 flex-auto md:container mx-auto">
       <div class="md:w-1/2 w-full">
