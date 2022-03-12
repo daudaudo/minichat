@@ -16,9 +16,14 @@ class Storage {
     this.folder = folder ?? '/';
   }
 
+  static basePath() {
+    var basePath = path.dirname(path.dirname(__dirname));
+    basePath = path.join(basePath, 'storage/app');
+    return basePath;
+  }
+
   storagePath(filename) {
-    var target = path.dirname(path.dirname(__dirname));
-    target = path.join(target, 'storage/app');
+    var target = Storage.basePath();
     target = path.join(target, this.folder);
     if(!fs.existsSync(target)) fs.mkdirSync(target);
     target = path.join(target, filename);
@@ -88,9 +93,21 @@ class Storage {
 
   /**
    * 
+   * @param {String} url 
+   */
+  static urlToStorageRelativePath(url) {
+    if(url.search("/storage") === 0) 
+      return url.replace('/storage', 'public');
+
+    return null;
+  }
+
+  /**
+   * 
    * @param {Object} file 
    */
   upload(file) {
+    if (!file || file.size === 0) return false;
     var ext = mime.extension(file.type);
     var filename = `${uuid.v4()}.${ext}`;
     try {
@@ -101,6 +118,29 @@ class Storage {
       console.log(err);
       return false;
     }
+  }
+
+  /**
+   * 
+   * @param {String} target 
+   */
+  static deleteFromRelativePath(target) {
+    try {
+      var target = path.join(this.basePath(), target);
+      fs.unlinkSync(target);
+      return true;
+    } catch(err) {
+      return false;
+    }
+  }
+
+  /**
+   * 
+   * @param {String} url
+   */
+  static deleteFromUrl(url) {
+    var target = this.urlToStorageRelativePath(url);
+    return this.deleteFromRelativePath(target);
   }
 }
 

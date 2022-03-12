@@ -10,6 +10,9 @@ const VIDEO_STREAM = 1;
  */
 function handle(io, socket) {
   return async data => {
+    if (!socket.auth.auth)
+      return;
+      
     socket.auth.user.streams[data.streamId] = {
       type: data.type,
       peerId: socket.id,

@@ -21,26 +21,23 @@ function showLoginForm(req, res) {
  */
 async function login(req, res) {
   try {
-    var user = await User.find({
-      email: req.body.email
-    });
-  } catch (err) {
-    res.send(err);
-  }
-  user = user[0];
-  if (bcrypt.compareSync(req.body.password, user.password)) {
-    req.session.auth = {
-      user: user,
-      token: uuid.v4(),
-      auth: true,
+    var user = await User.findOne({ email: req.body.email});
+    if (user && bcrypt.compareSync(req.body.password, user.password)) {
+      req.session.auth = {
+        user: user,
+        token: uuid.v4(),
+        auth: true,
+      }
+      res.redirect(homeUrl);
+    } else {
+      req.flash('errors', {auth: {msg: 'The email or password is not valid!'}});
+      res.redirect('/login');
     }
-    res.redirect(homeUrl);
-  } else {
-    req.flash('errors', {
-      message: 'The email or password is not valid!'
-    });
+  } catch (err) {
+    req.flash('errors', {auth: {msg: 'The email or password is not valid!'}});
     res.redirect('/login');
   }
+  
 }
 
 /**

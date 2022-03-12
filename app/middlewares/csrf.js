@@ -5,10 +5,10 @@
  * @param {import("express").NextFunction} next 
  */
 module.exports = function(req, res, next) {
-  var token = req.body.token;
-  if(token == req.session.auth.csrf) {
+  var csrf = req.body.csrf;
+  if (csrf === req.session.auth.token) {
     next();
   } else {
-    res.status(419).send('Page expired');
+    res.status(419).render('errors/419');
   }
 }

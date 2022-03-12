@@ -11,6 +11,8 @@ const AUDIO_TRACK = 1;
  */
 function handle(io, socket) {
   return async data => {
+    if (!socket.auth.auth)
+      return;
     if (socket.auth.user.streams[data.streamId]) {
       if(data.typeTrack === VIDEO_TRACK)
         socket.auth.user.streams[data.streamId].videoTrack = data.enabled;

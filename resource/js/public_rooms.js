@@ -78,8 +78,8 @@ function renderUsers(room) {
 
 function renderUserHtml(user) {
   var html = '';
-  if (user.username == 'guest')
-    html += `<div socket-id="${user.socket_id}" class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest</button></div>`;
+  if (user.role == 'guest')
+    html += `<div socket-id="${user.socket_id}" class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest ?</button></div>`;
   else
     html += `<div socket-id="${user.socket_id}" class="p-2"><button><img class="rounded-full w-20 h-20 object-cover" src="${user.picture}" alt="" srcset=""></button></div>`;
 

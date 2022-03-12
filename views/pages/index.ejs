@@ -2,10 +2,7 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/stylesheets/style.css">
+  <%- include('../components/head') %>
   <title>Minichat</title>
   <script src="/js/animation.js" defer></script>
 </head>
@@ -18,15 +15,63 @@
       <h2 class="font-semibold text-slate-700 text-4xl text-center max-w-md">Best and latest features from us<span class="text-sky-700">.</span></h2>
     </div>
 
-    <div class="flex flex-wrap mb-8">
-      <%- include('../components/card-intro-index')  %>
-      <%- include('../components/card-intro-index')  %>
-      <%- include('../components/card-intro-index')  %>
-      <%- include('../components/card-intro-index')  %>
+    <div class="flex flex-wrap items-stretch mb-8">
+      <%- include('../components/card-intro-index', {
+        svg: `
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">
+            <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z" />
+          </svg>
+        `,
+        text: 'You can send text or file messages with emotions easily and fast.',
+        title: 'Send messages and files.',
+        active: false,
+      })  %>
+      <%- include('../components/card-intro-index', {
+        svg: `
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2V5zm11.5 5.175 3.5 1.556V4.269l-3.5 1.556v4.35zM2 4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H2z"/>
+          </svg>
+        `,
+        text: `Share your camera and microphone with others in the room.`,
+        title: 'Voice and video call.',
+        active: true,
+      })  %>
+      <%- include('../components/card-intro-index', {
+        svg: `
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">
+          <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+        </svg>
+        `,
+        text: `Share the entire screen or a specific window in the room. `,
+        title: 'Share screen in the room.',
+        active: false,
+      })  %>
+      <%- include('../components/card-intro-index', {
+        svg: `
+        <svg class="w-6 h-6" version="1.1" id="Layer_1" fill="currentColor" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 383 383" xml:space="preserve">
+          <path d="M0,281.9c1.4-6.5,2.3-13.2,4.2-19.6c5.1-17.7,14.6-33,27.4-46.2c13.9-14.4,28-28.4,42.2-42.5c4.9-4.9,11.3-6,17.2-3.3
+            c5.6,2.6,9,8.4,8.6,14.5c-0.3,4.3-2.4,7.7-5.4,10.8c-13.2,13.2-26.5,26.4-39.6,39.8c-11.4,11.7-19.9,25.3-23.1,41.6
+            c-9.5,48.2,35.4,87.8,82.1,72.6c12.8-4.2,24-11.2,33.5-20.6c19.5-19.3,39-38.6,58.2-58.2c12.3-12.6,21-27.3,23.1-45.1
+            c3.2-26.9-7.7-47.2-29.6-62.2c-1-0.7-2.1-1.3-3.2-2c-6.9-4.7-8.9-13.4-4.6-20.4c4.2-6.8,13-9.3,20-5.1c25.1,14.8,41.4,36.2,46.5,65
+            c5.5,31-3.6,58.5-23.5,82.1c-12.8,15.2-27.5,28.9-41.6,43c-10.6,10.6-21,21.4-32.3,31.2c-16.4,14.2-35.5,22.9-57.3,25.2
+            c-0.6,0.1-1.2,0.4-1.8,0.6c-5.5,0-11,0-16.5,0c-0.7-0.2-1.4-0.6-2.1-0.7c-38.5-4.8-70.2-32.7-79.8-70.5c-1.1-4.4-1.8-9-2.7-13.4
+            C0,292.9,0,287.4,0,281.9z"/>
+          <path d="M124.2,165.2c0.5-26.9,10.3-50.4,28.5-69.7C174.5,72.5,196.8,50,220,28.3c20.7-19.4,45.7-29.5,74.5-28.5
+            c44.3,1.5,83.9,38.7,88.2,82.5c3.1,31.3-7.4,58.1-28,80.9c-14.4,16-30.1,30.9-45.4,46.2c-6.1,6.1-15.3,5.9-21.2,0
+            c-5.9-5.9-6-15,0.1-21.2c12.8-13.1,25.9-26,38.8-39c12.7-12.7,21.8-27.4,25.3-45.4c7.8-40.2-28.2-78.8-68.7-73.7
+            c-18.5,2.3-34,10.6-47,23.4c-19.7,19.2-39.2,38.7-58.5,58.5c-12.4,12.7-20.9,27.7-23.1,45.6c-3.2,26.6,7.8,46.7,29.4,61.6
+            c1,0.7,2.1,1.3,3.2,2c7.1,4.7,9.1,13.3,4.9,20.3c-4.3,7.1-13.2,9.5-20.5,5.1c-21.5-12.7-36.6-30.7-43.7-54.8
+            c-2.5-8.5-3.3-17.5-4.9-26.3C123.6,165.3,123.9,165.3,124.2,165.2z"/>
+        </svg>
+        `,
+        text: `Receive a single shareable link that can be sent to the people you want to invite into the room.`,
+        title: 'Single shareable link.',
+        active: false,
+      })  %>
     </div>
 
-    <div class="flex flex-wrap">
-      <div class="w-1/2 p-4 space-y-4">
+    <div class="flex flex-wrap items-center">
+      <div class="lg:w-1/2 w-full p-4 space-y-4">
         <h3 class="bg-slate-200 bg-opacity-50 text-sky-700 p-1 rounded-full font-bold w-fit mb-2 text-center">#OurValues</h3>
         <h2 class="font-semibold text-slate-700 text-4xl max-w-md">The value we instill in our product<span class="text-sky-700">.</span></h2>
         <p class="font-medium text-slate-600">Make a free language pratice, chat, share community and always will be.</p>
@@ -55,13 +100,13 @@
           <div class="flex space-x-4 items-center">
             <button class="text-sky-700">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">
-                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
+                <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
               </svg>
             </button>
             <div>
-              <p class="font-semibold text-slate-600 text-xl">Notifications</p>
+              <p class="font-semibold text-slate-600 text-xl">Share</p>
               <div class="font-medium text-slate-600 text-base collapse hidden" id="collapse2">
-                <div class="mt-2">Receive notifications even when you're offline. You'll never miss any important informations.</div>
+                <div class="mt-2">Share your screen, video and voice call.</div>
               </div>
             </div>
           </div>
@@ -81,9 +126,9 @@
               </svg>
             </button>
             <div>
-              <p class="font-semibold text-slate-600 text-xl">Post</p>
+              <p class="font-semibold text-slate-600 text-xl">Notifications</p>
               <div class="font-medium text-slate-600 text-base collapse hidden" id="collapse3">
-                <div class="mt-2">You can create posts and share great moments for your friends and others.</div>
+                <div class="mt-2">Receive notifications even when you're offline. You'll never miss any important informations.</div>
               </div>
             </div>
           </div>
@@ -117,7 +162,11 @@
         </div>
 
       </div>
-      <div class="w-1/2"></div>
+      <div class="lg:w-1/2 w-full flex items-start justify-center">
+        <div class="max-w-sm w-full">
+          <img class="w-full object-contain" draggable="false" src="/images/ourvalues.png" alt="ourvalues">
+        </div>
+      </div>
     </div>
   </main>
   <%- include('../components/footer') %> 

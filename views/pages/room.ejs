@@ -2,43 +2,82 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%- include('../components/head') %>
   <meta name="chat-room-id" content="<%= room.id %>">
   <meta name="user-id" content="<%= auth.user._id %>">
-  <link rel="stylesheet" href="/stylesheets/style.css">
+  <meta name="user-auth" content="<%= auth.auth %>">
   <title>Minichat | Chat Room</title>
   <script src="/js/chattar.js" defer></script>
 </head>
 
 <body class="bg-slate-50">
-  <div id="preloadRoom" class="fixed left-0 top-0 bottom-0 right-0 bg-slate-50 flex items-center justify-center">
-    <div class="p-4 absolute left-0 right-0 top-0">
-      <a class="block mb-4" href="/">
-        <img class="sm:h-8 h-6 object-contain" src="/images/minichat.svg" alt="" srcset="">
+  <div id="preloadRoom" class="fixed left-0 top-0 bottom-0 right-0 bg-slate-50 flex flex-col">
+    <div class="p-4 mb-4 flex flex-wrap justify-between items-center">
+      <a class="block" href="/">
+        <img class="h-8 object-contain" src="/images/minichat.svg" alt="" srcset="">
       </a>
+      <div class="md:flex hidden items-center space-x-2">
+        <% if (auth.auth) { %>
+          <div>
+            <p class="font-medium text-slate-700 text-right"><%= auth.user.email %> </p>
+            <p class="font-medium text-slate-700 text-right"><%= auth.user.username %> </p>
+          </div>
+          <div>
+            <img class="w-12 h-12 rounded-full object-cover border border-sky-50" src="<%= auth.user.picture %> " alt="">
+          </div>
+        <% } else { %>
+          <a href="/login" class="box-border block text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all">Login</a>
+        <% } %>  
+      </div>
     </div>
-    <div class="p-4">
-      <div class="w-full text-lg text-slate-600 flex space-x-4 items-center justify-center mb-4">
-        <span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-12 h-12" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z" />
-          </svg>
-        </span>
-        <div>
-          <p class="text-2xl capitalize font-semibold"><%= room.name %></p>
-          <p class="text-base font-semibold"><%= room.language %> - <%= room.level %></p>
+    <div class="p-4 flex flex-wrap items-center h-0 flex-auto md:container mx-auto">
+      <div class="md:w-1/2 w-full">
+        <div class="relative">
+          <video class="video-flip w-full h-80 object-cover bg-slate-900 rounded-md" muted></video>
+          <div id="preloadPreviewVideoOff" class="absolute left-0 top-0 right-0 bottom-0 bg-slate-900 rounded-md transition-all flex items-center justify-center">
+           <% if (!auth.auth) { %>
+            <div class="p-2">
+              <p class="text-xl text-white font-medium text-center">You need to log in to minichat to share screen, camera, voice and chat with others !</p> 
+            </div>
+           <% } %> 
+            <div class="absolute left-0 right-0 bottom-0 p-4 flex flex-wrap items-center justify-center space-x-4">
+              <button id="preloadCameraBtn" class="preload-btn"></button>
+              <button id="preloadMicBtn" class="preload-btn"></button>
+            </div>
+          </div>
+        </div>
+        <div class="mt-2">
+          <div class="flex items-center space-x-2 p-2 rounded-full bg-slate-100">
+            <button class="text-sky-700">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-7 h-7" viewBox="0 0 16 16">
+                <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/>
+                <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/>
+              </svg>
+            </button>
+            <p class="font-medium text-sky-700">Please check your camera and microphone before entering the room.</p>
+          </div>
         </div>
       </div>
-      <div class="w-full flex items-center justify-center">
-        <button id="enterRoomBtn" class="box-border block font-medium text-white text-lg p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded-full border-2 border-sky-700 transition-all mr-4">Enter now</button>
+      <div class="md:w-1/2 w-full">
+        <div class="w-full text-lg text-slate-600 flex flex-wrap space-x-4 mb-4">
+          <span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-12 h-12" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z" />
+            </svg>
+          </span>
+          <div>
+            <p class="text-2xl capitalize font-semibold"><%= room.name %></p>
+            <p class="text-base font-semibold mb-4"><%= room.language %> - <%= room.level %></p>
+          </div>
+          <div class="flex items-center">
+            <button id="enterRoomBtn" class="box-border block font-medium text-white text-lg p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded-full border-2 border-sky-700 transition-all mr-4">Enter now</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div id="chatroomContainer" class="fixed left-0 top-0 bottom-0 right-0 bg-slate-50 flex hidden">
-    <%- include('../components/chat-toolbar')  %>
-    <div class="flex-1 relative flex flex-col">
+  <div id="chatroomContainer" class="fixed left-0 top-0 bottom-0 right-0 bg-slate-50 flex flex-col hidden">
+    <div class="flex-auto h-0 relative flex flex-col">
       <%- include('../components/header-chat-page')  %>
       <!-- Video Container -->
       <main class="relative flex-auto h-0 overflow-auto">
@@ -69,10 +108,15 @@
         </div>
       </div>
       <!-- Message container -->
-      <div id="messageContainer" class="fixed top-0 bottom-0 right-0 p-8 z-50 hidden transition-all transform translate-x-full">
-        <div class="flex flex-col rounded bg-white z-50 w-96 shadow-xl h-full relative">
-          <div class="p-4 rounded-md rounded-b-none border-b border-slate-200">
+      <div id="messageContainer" class="fixed top-0 bottom-0 right-0 md:left-auto left-0 md:p-8 p-4 z-50 hidden transition-all transform translate-x-full">
+        <div class="flex flex-col rounded bg-white z-50 md:w-96 w-full shadow-xl h-full relative">
+          <div class="p-4 rounded-md rounded-b-none border-b border-slate-200 flex justify-between items-center">
             <h3 class="font-semibold text-slate-700 text-xl">Messages Box</h3>
+            <button id="closeMessageBoxBtn" class="p-1 text-slate-700 rounded-full hover:bg-slate-100 transition-all">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-8 h-8" viewBox="0 0 16 16">
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+              </svg>
+            </button>
           </div>
           <div id="messageBox" class="p-4 rounded-md space-y-2 overflow-auto h-0 flex-auto">
 
@@ -87,7 +131,7 @@
                   </div>
                 </div>
               </div>
-              <div class="flex">
+              <div class="flex relative">
                 <div id="fileInputForm" class="flex items-center">
                   <button>
                     <label for="fileInputMessage" class="block p-2 text-sky-700 cursor-pointer">
@@ -106,7 +150,7 @@
                       <path d="M4.285 9.567a.5.5 0 0 1 .683.183A3.498 3.498 0 0 0 8 11.5a3.498 3.498 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.498 4.498 0 0 1 8 12.5a4.498 4.498 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5z" />
                     </svg>
                   </button>
-                  <div id="emojDialog" class="dialog dialog-lt hidden w-60 max-w-60">
+                  <div id="emojDialog" class="dialog dialog-lt hidden w-64 max-w-64">
 
                   </div>
                 </div>
@@ -121,6 +165,7 @@
         </div>
       </div>
     </div>
+    <%- include('../components/chat-toolbar')  %>
   </div>
 </body>
 
