@@ -9,11 +9,11 @@ class Streamer {
     this.videoStream = videoStream;
     this.audioStream = audioStream;
     this.options = options;
-    this.#registerEvents();
-    this.#init();
+    this.registerEvents();
+    this.init();
   }
 
-  #registerEvents() {
+  registerEvents() {
     if(this.options.onLoad)
       this.options.onLoad(this.videoStream, this.audioStream);
 
@@ -36,7 +36,7 @@ class Streamer {
     }
   }
 
-  #init() {
+  init() {
     this.toggleVideoTrack(this.options.videoInit);
     this.toggleAudioTrack(this.options.audioInit);
   }
@@ -120,7 +120,7 @@ class Streamer {
   }
 
   static async fromUserMedia(options) {
-    var constraint = await this.#getConstraint();
+    var constraint = await this.getConstraint();
     var audioStream = null;
     var videoStream = null;
     if (constraint.audio) {
@@ -148,7 +148,7 @@ class Streamer {
     return new Streamer(stream, options);
   }
 
-  static async #getConstraint() {
+  static async getConstraint() {
     try {
       var devices = await navigator.mediaDevices.enumerateDevices();
     } catch(err) {

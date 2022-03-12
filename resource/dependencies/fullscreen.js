@@ -7,10 +7,10 @@ class FullScreen {
   constructor(el, options) {
     this.fullscreenable = el;
     this.options = options;
-    this.#registerEvent();
+    this.registerEvent();
   }
 
-  #registerEvent() {
+  registerEvent() {
     document.addEventListener('fullscreenchange', () => this.fullscreenchangeHandler(), false);
     document.addEventListener('mozfullscreenchange', () => this.fullscreenchangeHandler(), false);
     document.addEventListener('MSFullscreenChange', () => this.fullscreenchangeHandler(), false);
