@@ -531,6 +531,7 @@ const socket = require('../dependencies/pusher')(callbacks);
  */
 
 $('#shareScreenBtn').on('click', function(e) {
+  if (!userAuth) return;
   if (statusGlobal.displayStream) return;
   navigator.mediaDevices.getDisplayMedia({
     video: {
