@@ -9,7 +9,7 @@ var redisStore = require('../global/redis').store;
  */
 async function handle(socket, next) {
   var promiseResolveUser = new Promise((resolve, rejects) => {
-    cookieParser('minichat')(socket.handshake, null, () => {
+    cookieParser(process.env.SESSION_SECRET)(socket.handshake, null, () => {
       redisStore.get(socket.handshake.signedCookies['connect.sid'], (err, session) => {
         if(err) rejects(err);
         resolve(session.auth);

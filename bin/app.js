@@ -46,7 +46,7 @@ app.use(express.static(path.join(path.dirname(__dirname), 'public')));
  */
 app.use(session({
   store: require('./redis').store,
-  secret: 'minichat',
+  secret: process.env.SESSION_SECRET,
   resave: true,
   saveUninitialized: true,
 }));
