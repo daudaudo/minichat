@@ -4,7 +4,7 @@
  */
 var app = require('./app');
 var debug = require('debug')('www:server');
-var http = require('http');
+
 var { createAdapter } = require("@socket.io/redis-adapter");
 
 /**
@@ -18,7 +18,7 @@ app.set('port', port);
  * Create HTTP server and socket.
  */
 
-var server = http.createServer(app);
+var server = process.env.HTTPS ? require('https').createServer(app) : require('http').createServer(app);
 var io = require("socket.io")(server);
 io.adapter(createAdapter(require('./redis').client, require('./redis').client.duplicate()));
 
