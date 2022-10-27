@@ -9,12 +9,6 @@ function socket(io) {
 
   io.on('connection', async function(socket) {
     socket.emit('connection', `Hi ${socket.auth.user.username}. Welcome to minichat rooms!`);
-    socket.emit('public', {
-      type: 'rooms',
-      data: {
-        rooms: await Room.find(),
-      }
-    });
 
     socket.on('signal', require('../app/events/signal')(io, socket));
     socket.on('create_room', require('../app/events/create-room')(io, socket));
@@ -25,6 +19,8 @@ function socket(io) {
     socket.on('stop_stream', require('../app/events/stop-stream')(io, socket));
     socket.on('toggle_track', require('../app/events/toggle-track')(io, socket));
     socket.on('disconnecting', require('../app/events/disconnecting')(io, socket));
+    socket.on('get_rooms_list', require('../app/events/get_rooms_list')(io, socket));
+    socket.on('delete_room', require('../app/events/delete-room')(io, socket));
   });
 }
 

@@ -27,9 +27,6 @@ async function postProfile(req, res, next) {
     introduction: req.body.introduction,
     picture: filename ? Storage.url(filename) : user.picture
   }
-
-  if (filename) 
-    Storage.deleteFromUrl(user.picture);
   
   await User.updateOne(filter, updateData);
   user = await User.findOne(filter);

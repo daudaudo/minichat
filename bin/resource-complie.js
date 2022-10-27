@@ -24,9 +24,9 @@ async function complie() {
     var filePath = path.join(resourcePath, file);
     var fileStream = fs.createWriteStream(path.join(publicPath, file));
     if(env.toLowerCase() === 'local') {
-      browserify(filePath).bundle().pipe(fileStream);
+      browserify(filePath).transform("babelify", {presets: ["@babel/preset-env",]}).bundle().pipe(fileStream);
     } else {
-      browserify(filePath).bundle().pipe(minifyStream({ sourceMap: false })).pipe(fileStream);
+      browserify(filePath).transform("babelify", {presets: ["@babel/preset-env",]}).bundle().pipe(minifyStream({ sourceMap: false })).pipe(fileStream);
     }
     
     await pipeline(fileStream);
