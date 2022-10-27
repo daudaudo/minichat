@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema({
   },
   'password': {
     type: String,
+    select: false,
   },
   'email_verified_at': {
     type: String,

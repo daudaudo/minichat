@@ -73,22 +73,35 @@ function renderRoomView(room) {
     </div>
   `);
 
-  tippy(roomEl.find('button[setting-room]')[0], {
+  var settingPopper = tippy(roomEl.find('button[setting-room]')[0], {
     allowHTML: true,
-    trigger: 'click',
+    trigger: 'mouseenter',
     content: `
       <div class="flex flex-col items-center">
         <p class="text-white font-semibold mb-2">Room Ownner</p>
         <img src="${room.primary_user.picture}" class="w-10 h-10 rounded-full object-cover mb-2">
         <p class="text-gray-100 text-xs font-semibold mb-3">${room.primary_user.username}</p>
+        <button btn-delete-room class="w-100 flex items-center space-x-2 p-2 mb-2 rounded-md -mx-2 bg-red-500 hover:bg-transparent border-2 border-transparent hover:border-red-500">
+          <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" class="w-4 h-4 fill-gray-100" width="512" height="512"><path d="M21,4H17.9A5.009,5.009,0,0,0,13,0H11A5.009,5.009,0,0,0,6.1,4H3A1,1,0,0,0,3,6H4V19a5.006,5.006,0,0,0,5,5h6a5.006,5.006,0,0,0,5-5V6h1a1,1,0,0,0,0-2ZM11,2h2a3.006,3.006,0,0,1,2.829,2H8.171A3.006,3.006,0,0,1,11,2Zm7,17a3,3,0,0,1-3,3H9a3,3,0,0,1-3-3V6H18Z"/><path d="M10,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,10,18Z"/><path d="M14,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,14,18Z"/></svg>
+          <p class="text-gray-100 text-xs font-medium">Delete room</p>
+        </button>
         <p class="text-gray-100 text-xs font-semibold mb-1">Created at</p>
         <p class="text-gray-100 text-xs font-semibold mb-1">${dayjs(room.created_at).format('D/M/YY h:m')}</p>
       </div>
     `,
     maxWidth: 250,
     placement: 'bottom',
+    hideOnClick: false,
+    interactive: true,
   })
-  
+
+  if (authUser.user._id != room.primary_user._id) {
+    $(settingPopper.popper).find('button[btn-delete-room]').remove();
+  }
+
+  $(settingPopper.popper).find('button[btn-delete-room]').on('click touch', function(e) {
+    socket.emit('delete_room', room._id);
+  })
 
   return roomEl;
 }

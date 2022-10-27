@@ -37,7 +37,12 @@ const roomSchema = new mongoose.Schema({
     type: Number,
     default: -1,
     required: true,
-  },
+  }, 
+}, {
+  timestamps: {
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+  }
 });
 
 module.exports = mongoose.model('Room', roomSchema);

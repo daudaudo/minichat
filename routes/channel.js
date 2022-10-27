@@ -20,6 +20,7 @@ function socket(io) {
     socket.on('toggle_track', require('../app/events/toggle-track')(io, socket));
     socket.on('disconnecting', require('../app/events/disconnecting')(io, socket));
     socket.on('get_rooms_list', require('../app/events/get_rooms_list')(io, socket));
+    socket.on('delete_room', require('../app/events/delete-room')(io, socket));
   });
 }
 

@@ -4,7 +4,6 @@
 <head>
   <%- include('../components/head') %>
   <title>Minichat | Chat room</title>
-  <script src="/js/public_rooms.js" defer></script>
 </head>
 
 <body class="bg-slate-50">
@@ -20,6 +19,10 @@
     <%- include('../components/modal-create-room') %>
   </main>
   <%- include('../components/footer') %>
+  <script>
+    var authUser = <%- JSON.stringify(auth) %>;
+  </script>
+  <script src="/js/public_rooms.js" defer></script>
 </body>
 
 </html>
