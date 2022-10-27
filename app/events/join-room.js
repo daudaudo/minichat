@@ -8,12 +8,13 @@ const Room = require('../models/Room');
  */
 function handle(io, socket) {
   return async roomId => {
-    var filter = {id: roomId};
-    var room = await Room.findOne(filter);
+    var room = await Room.findById(roomId);
     if(!room) return;
+
     var user = socket.auth.user;
     room.users.set(socket.id, user);
-    await Room.updateOne(filter, {users: room.users});
+    
+    await Room.findByIdAndUpdate(roomId, {users: room.users});
     io.sockets.emit('public', {type: 'join_room', data: {roomId: roomId, user: user}});
 
     await socket.join(roomId);

@@ -41,7 +41,7 @@ const callbacks = {
 
 function renderRoomView(room) {
   var roomEl = $(`
-    <div room room-id="${room.id}" class="p-4 xl:w-1/3 md:w-1/2 w-full">
+    <div room room-id="${room._id}" class="p-4 xl:w-1/3 md:w-1/2 w-full">
       <div class="p-2 bg-slate-100 rounded rounded-br-lg">
         <div class="w-full p-2 font-semibold text-lg text-slate-600 flex space-x-4 items-center mb-4">
           <span>
@@ -61,7 +61,7 @@ function renderRoomView(room) {
         </div>
         <div room-users class="flex justify-start flex-wrap mb-2">${renderUsers(room)}</div>
         <div class="w-full p-2 flex justify-center">
-          <a href="/room/${room['id']}" target="_blank" class="box-border text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all flex items-center space-x-2">
+          <a href="/room/${room._id}" target="_blank" class="box-border text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all flex items-center space-x-2">
             <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-6 h-6" viewBox="0 0 16 16">
               <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0v-2z"/>
               <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>

@@ -21,7 +21,7 @@ async function index(req, res) {
 
 async function room(req, res) {
   var roomId = req.params.id;
-  var room = await Room.findOne({id: roomId});
+  var room = await Room.findById(roomId);
   if(!room)
     return res.status(404).send('404');
   res.render('room', {room: room});
