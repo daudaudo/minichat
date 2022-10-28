@@ -8,8 +8,16 @@ const User = require('../models/User');
  * @param {Socket} socket 
  */
 function handle(io, socket) {
-    return async () => {
-        var rooms = await Room.find().populate('primary_user');
+    return async (filters) => {
+        var filters = filters ?? {};
+        var rooms = await Room.find({
+            "$or": [
+                { name: new RegExp(filters.searchText ?? '') },
+                { language: new RegExp(filters.searchText ?? '') },
+                { level: new RegExp(filters.searchText ?? '') },
+            ] 
+        })
+        .populate('primary_user');
 
         socket.emit('public', {
             type: 'rooms',

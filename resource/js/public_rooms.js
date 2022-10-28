@@ -34,7 +34,7 @@ const callbacks = {
     }
   },
   connect: () => {
-    $('#roomsList').empty();
+    refreshRoomList();
     socket.emit('get_rooms_list');
   }
 }
@@ -142,5 +142,19 @@ $('#createRoomBtn').on('click touch', function(e) {
   });
   $('#createRoomModal').closeModal();
 });
+
+var timeoutSearchInput = null;
+$('#searchRoomInput').on('input', function(e) {
+  clearTimeout(timeoutSearchInput);
+  timeoutSearchInput = setTimeout(() => {
+    var searchText = $('#searchRoomInput').val();
+    refreshRoomList();
+    socket.emit('get_rooms_list', {searchText: searchText});
+  }, 1200)
+})
+
+function refreshRoomList() {
+  $('#roomsList [room][room-id]').remove();
+}
 
 module.exports = $;

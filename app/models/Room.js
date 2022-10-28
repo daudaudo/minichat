@@ -4,6 +4,7 @@ const roomSchema = new mongoose.Schema({
   'name': {
     type: String,
     required: true,
+    text: true,
   },
   'users': {
     type: mongoose.SchemaTypes.Map,
