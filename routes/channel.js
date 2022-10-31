@@ -21,6 +21,7 @@ function socket(io) {
     socket.on('disconnecting', require('../app/events/disconnecting')(io, socket));
     socket.on('get_rooms_list', require('../app/events/get_rooms_list')(io, socket));
     socket.on('delete_room', require('../app/events/delete-room')(io, socket));
+    socket.on('leave_room', require('../app/events/leave-room')(io, socket));
   });
 }
 

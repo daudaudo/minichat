@@ -119,6 +119,20 @@ class Streamer {
     return this.audioStream;
   }
 
+  closeAll() {
+    this.videoStream?.getTracks().forEach(function(track) {
+      track.enabled = false
+      track.stop();
+    });
+
+    this.audioStream?.getTracks().forEach(function(track) {
+      track.enabled = false
+      track.stop();
+    });
+    this.videoStream = null;
+    this.audioStream = null;
+  }
+
   static async fromUserMedia(options) {
     var constraint = await this.getConstraint();
     var audioStream = null;
