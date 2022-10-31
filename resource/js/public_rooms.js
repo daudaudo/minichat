@@ -41,7 +41,7 @@ const callbacks = {
 
 function renderRoomView(room) {
   var roomEl = $(`
-    <div room room-id="${room._id}" class="p-4 xl:w-1/3 md:w-1/2 w-full">
+    <div room room-id="${room._id}" class="p-4 xl:w-1/3 md:w-1/2 w-full h-fit">
       <div class="p-2 bg-slate-100 rounded rounded-br-lg">
         <div class="w-full p-2 font-semibold text-lg text-slate-600 flex space-x-4 items-center mb-4">
           <span>
