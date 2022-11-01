@@ -1,0 +1,32 @@
+name: Minichat CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Copy file .env
+      run: cp .env.example .env
+    - name: Build the minichat app
+      run: docker-compose build app
+    - name: Run the minichat app
+      run: docker-compose up -d
+    - name: Install dependencies
+      run: docker-compose exec -it app npm install
+    - name: Build resource
+      run: | 
+        docker-compose exec -it app npm run resource:complie
+        docker-compose exec -it app npm run build:css
+        docker-compose exec -it app npm run storage:link
+    - name: Start server
+      run: docker-compose exec -it app node ./bin/serve
+      
