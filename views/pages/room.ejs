@@ -3,7 +3,7 @@
 
 <head>
   <%- include('../components/head') %>
-  <meta name="chat-room-id" content="<%= room.id %>">
+  <meta name="chat-room-id" content="<%= room._id %>">
   <meta name="user-id" content="<%= auth.user._id %>">
   <meta name="user-auth" content="<%= auth.auth %>">
   <title>Minichat | Chat Room</title>
@@ -183,6 +183,10 @@
     </div>
   </div>
 
+  <div id="leavedRoomContainer" class="fixed left-0 top-0 bottom-0 right-0 flex flex-col items-center justify-center" style="display: none;">
+    <h1 class="font-medium text-4xl text-slate-700 mb-2 text-center">You've just leaved this room</h1>
+    <h2 class="font-medium text-3xl text-slate-500 capitalize text-center">Thanks</h2>
+  </div>
 </body>
 
 </html>

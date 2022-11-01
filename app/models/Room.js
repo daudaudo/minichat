@@ -1,15 +1,10 @@
 const mongoose = require('mongoose');
 
 const roomSchema = new mongoose.Schema({
-  'id': {
-    type: String,
-    index: true,
-    required: true,
-    unique: true,
-  },
   'name': {
     type: String,
     required: true,
+    text: true,
   },
   'users': {
     type: mongoose.SchemaTypes.Map,
@@ -37,7 +32,12 @@ const roomSchema = new mongoose.Schema({
     type: Number,
     default: -1,
     required: true,
-  },
+  }, 
+}, {
+  timestamps: {
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+  }
 });
 
 module.exports = mongoose.model('Room', roomSchema);

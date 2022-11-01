@@ -1,7 +1,6 @@
 const Server = require("socket.io").Server;
 const Socket = require("socket.io").Socket;
 const Room = require('../models/Room');
-const uuid = require('uuid');
 /**
  * 
  * @param {Server} io 
@@ -11,12 +10,20 @@ function handle(io, socket) {
   return async room => {
     if (!socket.auth.auth || !room.name.length)
       return;
-    room.primary_user = socket.auth.user._id;
-    room.id = uuid.v4();
-    var room = await Room.create(room);
+
+    let roomObj = new Room();
+    roomObj.primary_user = socket.auth.user._id;
+    roomObj.name = room.name;
+    roomObj.language = room.language;
+    roomObj.level = room.level;
+    roomObj.password = room.password;
+
+    await roomObj.save();
+    await roomObj.populate('primary_user');
+
     io.sockets.emit('public', {
       type: 'create_room',
-      data: room
+      data: roomObj
     });
   };
 }

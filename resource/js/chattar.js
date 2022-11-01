@@ -1,5 +1,4 @@
 const $ = require('./animation');
-const FullScreen = require('../dependencies/fullscreen');
 const Editor = require('../dependencies/editor');
 const Dropzone = require('../dependencies/dropzone');
 const Streamer = require('../dependencies/streamer');
@@ -17,15 +16,11 @@ var streams = {};
 const statusGlobal = {preloadCamera: false, preloadMic: false,};
 const SimplePeer = require('simple-peer');
 var lastSenderId = null;
+var streamerPreload = null;
 
-const fullscreen = new FullScreen(document.getElementById('chatroomContainer'), {
-  enter: () => {
-    $('#fullscreenBtn').addClass('active');
-  },
-  exit: () => {
-    $('#fullscreenBtn').removeClass('active');
-  }
-});
+$('#leaveroomBtn').on('click touch', function(e) {
+  socket.emit('leave_room', roomId);
+})
 
 const dropable = new Dropzone('#messageContainer > div', {
   preview: '#previewFileMessage',
@@ -97,6 +92,8 @@ async function preloadRoom() {
     if(streamer)
       streamer.toggleAudioTrack();
   });
+
+  streamerPreload = streamer;
 }
 
 if(userAuth)
@@ -231,10 +228,6 @@ $('#closeMessageBoxBtn').on('click touch', e => {
   }
 });
 
-$('#fullscreenBtn').on('click', function() {
-  fullscreen.toggleScreen();
-});
-
 function notifyHavingMessage() {
   if(!openingMessageBox) {
     $('#openMessageBoxBtn').addClass('has-message-animation');
@@ -344,6 +337,7 @@ const callbacks = {
       case 'join_room':
         $('#chatroomContainer').removeClass('hidden');
         $('#preloadRoom').remove();
+        streamerPreload?.closeAll();
         if (userAuth)
           startUserVideoStream();
         $('#videoContainer').append(renderUserInRoom(evt.data.user));
@@ -406,6 +400,11 @@ const callbacks = {
   },
   stop_stream: (data) => {
     delete streams[data.streamId];
+  },
+  leaved_room: () => {
+    $('#chatroomContainer').remove();
+    $('#leavedRoomContainer').css('display', '');
+    statusGlobal.userStreamer?.closeAll();
   }
 }
 
