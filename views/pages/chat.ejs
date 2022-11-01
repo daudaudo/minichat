@@ -19,19 +19,21 @@
         </div>
       </div>
     </div>
-    <div id="roomsList" class="flex flex-wrap ">
+    <div class="min-h-96">
+      <div id="roomsList" class="flex flex-wrap ">
 
-      <% if (auth.auth) { %>
-        <div modal-target="createRoomModal" class="p-4 xl:w-1/3 md:w-1/2 w-full min-h-0 justify-self-stretch self-stretch">
-          <div class="p-2 bg-slate-100 rounded rounded-br-lg border border-slate-400 border-dashed group hover:border-sky-700 h-full cursor-pointer flex flex-col items-center justify-center">
-            <button class="mb-3">
-              <svg class="w-6 h-6 fill-slate-400 group-hover:fill-sky-700" xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="512" height="512"><path d="M23,11H13V1a1,1,0,0,0-1-1h0a1,1,0,0,0-1,1V11H1a1,1,0,0,0-1,1H0a1,1,0,0,0,1,1H11V23a1,1,0,0,0,1,1h0a1,1,0,0,0,1-1V13H23a1,1,0,0,0,1-1h0A1,1,0,0,0,23,11Z"/></svg>
-            </button>
-            <p class="text-slate-400 group-hover:text-sky-700 font-semibold text-sm">Create your own room</p>
+        <% if (auth.auth) { %>
+          <div modal-target="createRoomModal" class="p-4 xl:w-1/3 md:w-1/2 w-full min-h-0 justify-self-stretch self-stretch">
+            <div class="p-2 bg-slate-100 rounded rounded-br-lg border border-slate-400 border-dashed group hover:border-sky-700 h-full cursor-pointer flex flex-col items-center justify-center">
+              <button class="mb-3">
+                <svg class="w-6 h-6 fill-slate-400 group-hover:fill-sky-700" xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="512" height="512"><path d="M23,11H13V1a1,1,0,0,0-1-1h0a1,1,0,0,0-1,1V11H1a1,1,0,0,0-1,1H0a1,1,0,0,0,1,1H11V23a1,1,0,0,0,1,1h0a1,1,0,0,0,1-1V13H23a1,1,0,0,0,1-1h0A1,1,0,0,0,23,11Z"/></svg>
+              </button>
+              <p class="text-slate-400 group-hover:text-sky-700 font-semibold text-sm">Create your own room</p>
+            </div>
           </div>
-        </div>
-      <% } %>
+        <% } %>
 
+      </div>
     </div>
     <%- include('../components/modal-create-room') %>
   </main>
