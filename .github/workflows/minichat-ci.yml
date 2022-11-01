@@ -21,12 +21,12 @@ jobs:
     - name: Run the minichat app
       run: docker-compose up -d
     - name: Install dependencies
-      run: docker-compose exec app npm install
+      run: docker-compose exec -it app npm install
     - name: Build resource
       run: | 
-        docker-compose exec app npm run resource:complie
-        docker-compose exec app npm run build:css
-        docker-compose exec app npm run storage:link
+        docker-compose exec -it app npm run resource:complie
+        docker-compose exec -it app npm run build:css
+        docker-compose exec -it app npm run storage:link
     - name: Start server
-      run: docker-compose exec app node ./bin/serve
+      run: docker-compose exec -it app node ./bin/serve
       
