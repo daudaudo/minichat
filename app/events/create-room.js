@@ -16,6 +16,7 @@ function handle(io, socket) {
     roomObj.name = room.name;
     roomObj.language = room.language;
     roomObj.level = room.level;
+    roomObj.password = room.password;
 
     await roomObj.save();
     await roomObj.populate('primary_user');

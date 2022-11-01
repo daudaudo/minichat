@@ -134,11 +134,13 @@ $('#createRoomBtn').on('click touch', function(e) {
   var language = $('#languageSelectInput').val();
   var maximumPeople = $('#maximumPeopleSelectInput').val();
   var level = $('#levelSelectInput').val();
+  var password = $('#passwordTextInput').val();
   socket.emit('create_room', {
     name: topic,
     language: language,
     maximum_people: maximumPeople,
     level: level,
+    password: password,
   });
   $('#createRoomModal').closeModal();
 });
