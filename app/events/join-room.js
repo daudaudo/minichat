@@ -7,19 +7,46 @@ const Room = require('../models/Room');
  * @param {Socket} socket 
  */
 function handle(io, socket) {
-  return async roomId => {
+  return async (roomId, type, password) => {
     var filter = {id: roomId};
     var room = await Room.findOne(filter);
     if(!room) return;
-    var user = socket.auth.user;
-    room.users.set(socket.id, user);
-    await Room.updateOne(filter, {users: room.users});
-    io.sockets.emit('public', {type: 'join_room', data: {roomId: roomId, user: user}});
+    console.log(type);
+    if(type == "enterBtn")
+    {
+      console.log(room.password);
+      if(room.password == "")
+      {
+        var user = socket.auth.user;
+        room.users.set(socket.id, user);
+        await Room.updateOne(filter, {users: room.users});
+        io.sockets.emit('public', {type: 'join_room', data: {roomId: roomId, user: user}});
 
-    await socket.join(roomId);
-    socket.broadcast.to(roomId).emit('room', {type: 'notification', data: {type: 'primary', text: `User ${socket.auth.user.username} has joined this room.`}});
-    io.to(roomId).emit('room', {type: 'join_room', data: {user: socket.auth.user}});
-    socket.emit('room', {type: 'users', data: {users: room.users}});
+        await socket.join(roomId);
+        socket.broadcast.to(roomId).emit('room', {type: 'notification', data: {type: 'primary', text: `User ${socket.auth.user.username} has joined this room.`}});
+        io.to(roomId).emit('room', {type: 'join_room', data: {user: socket.auth.user}});
+        socket.emit('room', {type: 'users', data: {users: room.users}});
+      }else{
+        await socket.join(roomId);
+        console.log('else case');
+        io.to(roomId).emit('room', {type: 'have_password'});
+      }
+    }
+    else
+    {
+      if(password == room.password)
+      {
+        var user = socket.auth.user;
+        room.users.set(socket.id, user);
+        await Room.updateOne(filter, {users: room.users});
+        io.sockets.emit('public', {type: 'join_room', data: {roomId: roomId, user: user}});
+
+        await socket.join(roomId);
+        socket.broadcast.to(roomId).emit('room', {type: 'notification', data: {type: 'primary', text: `User ${socket.auth.user.username} has joined this room.`}});
+        io.to(roomId).emit('room', {type: 'join_room', data: {user: socket.auth.user}});
+        socket.emit('room', {type: 'users', data: {users: room.users}});
+      }
+    }
   }
 }
 

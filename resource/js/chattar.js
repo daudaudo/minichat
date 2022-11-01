@@ -53,11 +53,12 @@ const edittor = new Editor('#messageTextInput', {
  */
 
 $('#enterRoomBtn').on('click touch', () => {
-  socket.emit('join_room', roomId);
-  $('#chatroomContainer').removeClass('hidden');
-  $('#preloadRoom').remove();
-  if (userAuth)
-    startUserVideoStream();
+  socket.emit('join_room', roomId, "enterBtn", "");
+});
+
+$('#passwordValidateBtn').on('click touch', () => {
+  socket.emit('join_room', roomId, "passwordBtn", $('#passwordTextInput').val());
+  $('#passwordModal').removeClass('show');
 });
 
 async function preloadRoom() {
@@ -333,6 +334,7 @@ const callbacks = {
     notifyHavingMessage();
   },
   room: (evt) => {
+    console.log(evt.type);
     switch (evt.type) {
       case 'notification':
         $('#messageBox').append(renderNotification(evt.data));
@@ -340,6 +342,10 @@ const callbacks = {
         notifyHavingMessage();
         break;
       case 'join_room':
+        $('#chatroomContainer').removeClass('hidden');
+        $('#preloadRoom').remove();
+        if (userAuth)
+          startUserVideoStream();
         $('#videoContainer').append(renderUserInRoom(evt.data.user));
         if(socket.id === evt.data.user.socket_id) {
           return peers[socket.id] = evt.data.user;
@@ -349,6 +355,10 @@ const callbacks = {
       case 'leave_room':
         delete peers[evt.data.socketId];
         $(`#videoContainer [socket-id="${evt.data.socketId}"]`).remove();
+        break;
+      case 'have_password':
+        //console.log('have password');
+        $('#passwordModal').addClass('show');
         break;
       default:
         break;
@@ -692,3 +702,11 @@ function openAudioStream(stream, socketId) {
     audio.prop('srcObject', null);
   };
 }
+
+$('#EnterRoomBtn').on('click touch', function(e) {
+  e.preventDefault();
+  var password = $('#passwordTextInput').val();
+  
+  
+  $('#EnterRoomBtn').closeModal();
+});
