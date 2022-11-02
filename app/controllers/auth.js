@@ -21,7 +21,7 @@ function showLoginForm(req, res) {
  */
 async function login(req, res) {
   try {
-    var user = await User.findOne({ email: req.body.email});
+    var user = await User.findOne({ email: req.body.email}).select('+password');
     if (user && bcrypt.compareSync(req.body.password, user.password)) {
       req.session.auth = {
         user: user,
