@@ -9,7 +9,6 @@ const categoryPostSchema = new mongoose.Schema({
   'categoryId':{
     type: Number,
     required: true,
-    autoI
   },
   'desc': {
     type: String,
