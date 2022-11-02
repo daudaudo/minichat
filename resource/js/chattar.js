@@ -53,7 +53,7 @@ $('#enterRoomBtn').on('click touch', () => {
 
 $('#passwordValidateBtn').on('click touch', () => {
   socket.emit('join_room', roomId, "passwordBtn", $('#passwordTextInput').val());
-  $('#passwordModal').removeClass('show');
+  $('#passwordModal').closeModal();
 });
 
 async function preloadRoom() {
@@ -352,7 +352,7 @@ const callbacks = {
         break;
       case 'have_password':
         //console.log('have password');
-        $('#passwordModal').addClass('show');
+        $('#passwordModal').showModal();
         break;
       default:
         break;
