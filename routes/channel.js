@@ -1,5 +1,4 @@
 const Server = require("socket.io").Server;
-const Room = require("../app/models/Room");
 /**
  * 
  * @param {Server} io

@@ -8,6 +8,10 @@ const roomSchema = new mongoose.Schema({
   },
   'users': {
     type: mongoose.SchemaTypes.Map,
+    of: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'User',
+    },
     default: {},
     required: true,
   },
