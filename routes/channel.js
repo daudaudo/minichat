@@ -22,6 +22,8 @@ function socket(io) {
     socket.on('get_rooms_list', require('../app/events/get_rooms_list')(io, socket));
     socket.on('delete_room', require('../app/events/delete-room')(io, socket));
     socket.on('leave_room', require('../app/events/leave-room')(io, socket));
+    socket.on('like_user', require('../app/events/like-user')(io, socket));
+    socket.on('follow_user', require('../app/events/follow-user')(io, socket));
   });
 }
 

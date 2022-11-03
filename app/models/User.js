@@ -31,6 +31,16 @@ const userSchema = new mongoose.Schema({
     default: '/images/user.png',
     required: true
   },
+  'like': {
+    type: [String],
+    default: '',
+    required: true,
+  },
+  'follow': {
+    type: [String],
+    default: '',
+    required: true,
+  },
   'role': {
     type: String,
     required: true,

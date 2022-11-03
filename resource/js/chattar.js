@@ -46,6 +46,18 @@ const edittor = new Editor('#messageTextInput', {
  * 
  * Preload room
  */
+$(document).on('click touch', '#LikeBtn', (e) => {
+  var user_id = $(e.target).attr('user-id');
+  //console.log(user_id);
+  socket.emit('like_user',user_id);
+  //$(e.target).removeClass("")
+});
+
+$(document).on('click touch', '#FollowBtn', (e) => {
+  var user_id = $(e.target).attr('user-id');
+  //console.log(user_id);
+  socket.emit('follow_user',user_id);
+});
 
 $('#enterRoomBtn').on('click touch', () => {
   socket.emit('join_room', roomId, "enterBtn", "");
@@ -283,6 +295,14 @@ function renderUserInRoom(user) {
         <div class="user-room-info transition-all z-20 w-full h-full flex flex-col items-center justify-center">
           ${user.role == 'guest' ? `<div class="flex justify-center mb-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest ?</button></div>` : `<div class="flex justify-center mb-2"><button><img class="rounded-full w-20 h-20 object-cover" src="${user.picture}" alt="" srcset=""></button></div>`}
           <p class="text-base font-medium text-slate-700 text-center">${user.username}</p>
+          <div class="flex flex-wrap">
+            <div class="w-1/2 p-2 ">
+              <button user-id="${user._id}" id="LikeBtn" class="box-border block font-medium text-white text-lg p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded-full border-2 border-sky-700 transition-all mr-4">Like</button>
+            </div>
+            <div class="w-1/2 p-2 ">
+              <button user-id="${user._id}" id="FollowBtn" class="box-border block font-medium text-white text-lg p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded-full border-2 border-sky-700 transition-all mr-4">Follow</button>
+            </div>
+          </div>
         </div>
         <div class="absolute left-0 top-0 bottom-0 right-0 p-2 z-10">
           <video class="w-full h-full rounded-xl"></video>
