@@ -50,13 +50,14 @@ $(document).on('click touch', '#LikeBtn', (e) => {
   var user_id = $(e.target).attr('user-id');
   //console.log(user_id);
   socket.emit('like_user',user_id);
-  //$(e.target).removeClass("")
+  $(e.target).text("Liked"); 
 });
 
 $(document).on('click touch', '#FollowBtn', (e) => {
   var user_id = $(e.target).attr('user-id');
   //console.log(user_id);
   socket.emit('follow_user',user_id);
+  $(e.target).text("Followed"); 
 });
 
 $('#enterRoomBtn').on('click touch', () => {

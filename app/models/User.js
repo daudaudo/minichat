@@ -32,13 +32,13 @@ const userSchema = new mongoose.Schema({
     required: true
   },
   'like': {
-    type: [String],
-    default: '',
+    type: [mongoose.SchemaTypes.ObjectId],
+    ref: 'User',
     required: true,
   },
   'follow': {
-    type: [String],
-    default: '',
+    type: [mongoose.SchemaTypes.ObjectId],
+    ref: 'User',
     required: true,
   },
   'role': {

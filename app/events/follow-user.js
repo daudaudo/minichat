@@ -13,9 +13,12 @@ function handle(io, socket) {
 
     var user = socket.auth.user;
 
-    user.like.push(user_id);
+    if(user_id == user) return;
 
-    await User.findByIdAndUpdate(user, {follow: user.like});
+    var user_ = await User.findById(user);
+    user_.follow.addToSet(user_id);
+
+    await User.findByIdAndUpdate(user, {follow: user_.follow});
 
   };
 }

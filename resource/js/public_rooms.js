@@ -121,7 +121,19 @@ function renderUserHtml(user) {
   if (user.role == 'guest')
     html += `<div socket-id="${user.socket_id}" class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest ?</button></div>`;
   else
-    html += `<div socket-id="${user.socket_id}" class="p-2"><button><img class="rounded-full w-20 h-20 object-cover" src="${user.picture}" alt="" srcset=""></button></div>`;
+    html += `<div socket-id="${user.socket_id}" class="p-2">
+      <button>
+        <img class="rounded-full w-20 h-20 object-cover" src="${user.picture}" alt="" srcset="">
+      </button>
+      <div class="flex flex-wrap">
+        <div class="w-1/2 p-2 ">
+          <img class="w-5 h-5" src="/images/heart.png" alt="" srcset="">
+        </div>
+        <div class="w-1/2 p-2 ">
+          <p class="font-medium text-slate-700 mb-2">${user.like.length}</p>
+        </div>
+      </div>
+    </div>`;
 
   return html;
 }
