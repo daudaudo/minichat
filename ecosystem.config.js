@@ -1,10 +1,8 @@
 module.exports = {
   apps: [{
-    script: 'npm start',
+    script: 'npm start >> storage/logs/app.log 2>&1',
     autorestart: true,
     name: 'minichat:dev',
-    watch: ['app', ],
-    ignore_watch : ["node_modules", "resource"],
   }, {
     script: 'npx tailwindcss -i resource/css/main.css -o public/stylesheets/style.css --watch',
     name: 'minichat:watch-css'
