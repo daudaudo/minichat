@@ -5,10 +5,6 @@ const PostSchema = new mongoose.Schema({
     required: true,
     text: true,
   },
-  'desc': {
-    type: String,
-    required: false,
-  },
   'content':{
     type: String,
     required: false,
@@ -25,15 +21,10 @@ const PostSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  'categoryId': {
-    type: String,
-    required: true,
-  },
 }, {
   timestamps: {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
   }
 });
-categoryPostSchema.plugin(AutoIncrement, {id:'categoryId_seq',inc_field: 'categoryId'});
-module.exports = mongoose.model('CategoryPost', categoryPostSchema);
+module.exports = mongoose.model('Post', PostSchema);

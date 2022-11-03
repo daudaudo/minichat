@@ -42,13 +42,12 @@ router.post('/profile', auth, csrf, require('../app/validators/update-profile'),
 
 
 //Post Router
-router.get('/post',auth,postController.getAllPostByConditions);
-router.get('post-details',auth,postController.getDetailsPost);
-router.post('post',auth,postController.createPost);
+router.get('/post', postController.getAllPostByConditions);
+router.get('post-details',postController.getDetailsPost);
+router.post('post',postController.createPost);
 router.post('post-update',auth,postController.UpdatePost);
 router.post('post-like',auth,postController.likePost);
-router.post('category-post',auth,postController.createCategoryPost);
-router.get('category-post',auth,postController.getCategoryPost);
+router.post('my-post',auth,postController.getMyPost);
 
 
 
