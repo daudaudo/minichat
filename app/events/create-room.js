@@ -19,7 +19,7 @@ function handle(io, socket) {
     roomObj.password = room.password;
 
     await roomObj.save();
-    await roomObj.populate('primary_user');
+    await roomObj.populate('primary_user users.$*');
 
     io.sockets.emit('public', {
       type: 'create_room',
