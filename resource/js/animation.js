@@ -46,9 +46,12 @@ $('.modal').on('click', function(e) {
   $(this).closeModal();
 });
 
+$.fn.modal = function() {
+  this.find('.modal-close').on('click', () => this.closeModal());
+}
+
 $.fn.showModal = function() {
   this.addClass('show');
-  this.find('.modal-close').on('click', () => modalElement.closeModal());
   createBackDropElement(this.attr('id'));
 }
 

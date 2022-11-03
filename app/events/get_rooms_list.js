@@ -17,7 +17,7 @@ function handle(io, socket) {
                 { level: new RegExp(filters.searchText ?? '') },
             ] 
         })
-        .populate('primary_user');
+        .populate('primary_user users.$*');
 
         socket.emit('public', {
             type: 'rooms',

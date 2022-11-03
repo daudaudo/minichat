@@ -48,11 +48,11 @@ const edittor = new Editor('#messageTextInput', {
  */
 
 $('#enterRoomBtn').on('click touch', () => {
-  socket.emit('join_room', roomId, "enterBtn", "");
+  socket.emit('join_room', {roomId});
 });
 
 $('#passwordValidateBtn').on('click touch', () => {
-  socket.emit('join_room', roomId, "passwordBtn", $('#passwordTextInput').val());
+  socket.emit('join_room', {roomId, password: $('#passwordTextInput').val(), });
   $('#passwordModal').closeModal();
 });
 
@@ -92,6 +92,8 @@ async function preloadRoom() {
     if(streamer)
       streamer.toggleAudioTrack();
   });
+
+  $('#passwordModal').modal();
 
   streamerPreload = streamer;
 }
@@ -335,11 +337,6 @@ const callbacks = {
         notifyHavingMessage();
         break;
       case 'join_room':
-        $('#chatroomContainer').removeClass('hidden');
-        $('#preloadRoom').remove();
-        streamerPreload?.closeAll();
-        if (userAuth)
-          startUserVideoStream();
         $('#videoContainer').append(renderUserInRoom(evt.data.user));
         if(socket.id === evt.data.user.socket_id) {
           return peers[socket.id] = evt.data.user;
@@ -350,9 +347,20 @@ const callbacks = {
         delete peers[evt.data.socketId];
         $(`#videoContainer [socket-id="${evt.data.socketId}"]`).remove();
         break;
-      case 'have_password':
-        //console.log('have password');
+      case 'required_password':
         $('#passwordModal').showModal();
+        $('#passwordTextInput').val('');
+        $('#passwordTextInput').parent().next('[error-input]').css('display', 'none').text('');
+        break;
+      case 'wrong_password': 
+        $('#passwordTextInput').parent().next('[error-input]').css('display', '').text('Wrong password!');
+        break;
+      case 'join_room_success':
+        $('#chatroomContainer').removeClass('hidden');
+        $('#preloadRoom').remove();
+        streamerPreload?.closeAll();
+        if (userAuth)
+          startUserVideoStream();
         break;
       default:
         break;
@@ -701,11 +709,3 @@ function openAudioStream(stream, socketId) {
     audio.prop('srcObject', null);
   };
 }
-
-$('#EnterRoomBtn').on('click touch', function(e) {
-  e.preventDefault();
-  var password = $('#passwordTextInput').val();
-  
-  
-  $('#EnterRoomBtn').closeModal();
-});

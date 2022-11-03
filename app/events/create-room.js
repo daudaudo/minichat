@@ -1,6 +1,8 @@
 const Server = require("socket.io").Server;
 const Socket = require("socket.io").Socket;
 const Room = require('../models/Room');
+const bcrypt = require('bcrypt');
+
 /**
  * 
  * @param {Server} io 
@@ -16,7 +18,7 @@ function handle(io, socket) {
     roomObj.name = room.name;
     roomObj.language = room.language;
     roomObj.level = room.level;
-    roomObj.password = room.password;
+    roomObj.password = room.password ? bcrypt.hashSync(room.password, 10) : null;
 
     await roomObj.save();
     await roomObj.populate('primary_user users.$*');
