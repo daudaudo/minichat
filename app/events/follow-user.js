@@ -7,18 +7,17 @@ const User = require('../models/User');
  * @param {Socket} socket 
  */
 function handle(io, socket) {
-  return async user_id => {
-    var user_op = await User.findById(user_id);
-    if(!user_op) return;
+  return async userId => {
+    var currentUser = socket.auth.user;
+    var userCurObj = await User.findById(currentUser);
 
-    var user = socket.auth.user;
+    if(!userCurObj) return;
 
-    if(user_id == user) return;
+    if(userId == currentUser._id.toString()) return;
 
-    var user_ = await User.findById(user);
-    user_.follow.addToSet(user_id);
+    userCurObj.follow.addToSet(currentUser);
 
-    await User.findByIdAndUpdate(user, {follow: user_.follow});
+    await User.findByIdAndUpdate(currentUser, {follow: userCurObj.follow});
 
   };
 }

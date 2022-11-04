@@ -1,4 +1,5 @@
 const $ = require('./animation');
+import tippy from 'tippy.js';
 const Editor = require('../dependencies/editor');
 const Dropzone = require('../dependencies/dropzone');
 const Streamer = require('../dependencies/streamer');
@@ -46,19 +47,6 @@ const edittor = new Editor('#messageTextInput', {
  * 
  * Preload room
  */
-$(document).on('click touch', '#LikeBtn', (e) => {
-  var user_id = $(e.target).attr('user-id');
-  //console.log(user_id);
-  socket.emit('like_user',user_id);
-  $(e.target).text("Liked"); 
-});
-
-$(document).on('click touch', '#FollowBtn', (e) => {
-  var user_id = $(e.target).attr('user-id');
-  //console.log(user_id);
-  socket.emit('follow_user',user_id);
-  $(e.target).text("Followed"); 
-});
 
 $('#enterRoomBtn').on('click touch', () => {
   socket.emit('join_room', {roomId});
@@ -296,16 +284,8 @@ function renderUserInRoom(user) {
     <div user-room socket-id="${socketId}" class="user-room">
       <div class="user-room-inner">
         <div class="user-room-info transition-all z-20 w-full h-full flex flex-col items-center justify-center">
-          ${user.role == 'guest' ? `<div class="flex justify-center mb-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest ?</button></div>` : `<div class="flex justify-center mb-2"><button><img class="rounded-full w-20 h-20 object-cover" src="${user.picture}" alt="" srcset=""></button></div>`}
+          ${user.role == 'guest' ? `<div class="flex justify-center mb-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest ?</button></div>` : `<div class="flex justify-center mb-2"><button setting-user><img class="rounded-full w-20 h-20 object-cover" src="${user.picture}" alt="" srcset=""></button></div>`}
           <p class="text-base font-medium text-slate-700 text-center">${user.username}</p>
-          <div class="flex flex-wrap">
-            <div class="w-1/2 p-2 ">
-              <button user-id="${user._id}" id="LikeBtn" class="box-border block font-medium text-white text-lg p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded-full border-2 border-sky-700 transition-all mr-4">Like</button>
-            </div>
-            <div class="w-1/2 p-2 ">
-              <button user-id="${user._id}" id="FollowBtn" class="box-border block font-medium text-white text-lg p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded-full border-2 border-sky-700 transition-all mr-4">Follow</button>
-            </div>
-          </div>
         </div>
         <div class="absolute left-0 top-0 bottom-0 right-0 p-2 z-10">
           <video class="w-full h-full rounded-xl"></video>
@@ -319,6 +299,56 @@ function renderUserInRoom(user) {
     userInRoom.find('video').prop('muted', true);
     userInRoom.find('audio').prop('muted', true);
   }
+
+  var settingPopper = tippy(userInRoom.find('button[setting-user]')[0], {
+    allowHTML: true,
+    trigger: 'mouseenter',
+    content: `
+      <div class="flex flex-col items-center">
+        <button btn-like user-id="${user._id}" class="w-100 flex items-center space-x-2 p-2 mb-2 rounded-md -mx-2 bg-red-500 hover:bg-transparent border-2 border-transparent hover:border-red-500">
+          <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" class="w-4 h-4 fill-gray-100" width="512" height="512"><path d="M21,4H17.9A5.009,5.009,0,0,0,13,0H11A5.009,5.009,0,0,0,6.1,4H3A1,1,0,0,0,3,6H4V19a5.006,5.006,0,0,0,5,5h6a5.006,5.006,0,0,0,5-5V6h1a1,1,0,0,0,0-2ZM11,2h2a3.006,3.006,0,0,1,2.829,2H8.171A3.006,3.006,0,0,1,11,2Zm7,17a3,3,0,0,1-3,3H9a3,3,0,0,1-3-3V6H18Z"/><path d="M10,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,10,18Z"/><path d="M14,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,14,18Z"/></svg>
+          Like
+        </button>
+        <button btn-follow user-id="${user._id}" class="w-100 flex items-center space-x-2 p-2 mb-2 rounded-md -mx-2 bg-red-500 hover:bg-transparent border-2 border-transparent hover:border-red-500">
+          <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" class="w-4 h-4 fill-gray-100" width="512" height="512"><path d="M21,4H17.9A5.009,5.009,0,0,0,13,0H11A5.009,5.009,0,0,0,6.1,4H3A1,1,0,0,0,3,6H4V19a5.006,5.006,0,0,0,5,5h6a5.006,5.006,0,0,0,5-5V6h1a1,1,0,0,0,0-2ZM11,2h2a3.006,3.006,0,0,1,2.829,2H8.171A3.006,3.006,0,0,1,11,2Zm7,17a3,3,0,0,1-3,3H9a3,3,0,0,1-3-3V6H18Z"/><path d="M10,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,10,18Z"/><path d="M14,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,14,18Z"/></svg>
+          Follow
+        </button>
+      </div>
+    `,
+    maxWidth: 250,
+    placement: 'bottom',
+    hideOnClick: false,
+    interactive: true,
+  })
+/*
+  $(document).on('click touch', '#LikeBtn', (e) => {
+    var user_id = $(e.target).attr('user-id');
+    //console.log(user_id);
+    socket.emit('like_user',user_id);
+    $(e.target).text("Liked"); 
+  });
+  
+  $(document).on('click touch', '#FollowBtn', (e) => {
+    var user_id = $(e.target).attr('user-id');
+    //console.log(user_id);
+    socket.emit('follow_user',user_id);
+    $(e.target).text("Followed"); 
+  });
+*/
+  
+  $(settingPopper.popper).find('button[btn-like]').on('click touch', function(e) {
+    var user_id = $(e.target).attr('user-id');
+    //console.log(user_id);
+    socket.emit('like_user',user_id);
+    $(e.target).text("Liked"); 
+  })
+
+  $(settingPopper.popper).find('button[btn-follow]').on('click touch', function(e) {
+    var user_id = $(e.target).attr('user-id');
+    //console.log(user_id);
+    socket.emit('follow_user',user_id);
+    $(e.target).text("Followed"); 
+  })
 
   userInRoom.on('click touch', e => {
     var stream = userInRoom.find('video').prop('srcObject');

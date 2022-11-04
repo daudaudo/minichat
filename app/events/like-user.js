@@ -15,9 +15,7 @@ function handle(io, socket) {
 
     if(userId == currentUser._id.toString()) return;
 
-    if (!userObj.like.contains(currentUser._id)) {
-      userObj.like.push(currentUser._id);
-    }
+    userObj.like.addToSet(currentUser._id);
 
     await User.findByIdAndUpdate(userId, {like: userObj.like});
   };
