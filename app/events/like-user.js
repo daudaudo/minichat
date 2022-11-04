@@ -7,17 +7,19 @@ const User = require('../models/User');
  * @param {Socket} socket 
  */
 function handle(io, socket) {
-  return async user_id => {
-    var user_op = await User.findById(user_id);
-    if(!user_op) return;
+  return async userId => {
+    var userObj = await User.findById(userId);
+    if(!userObj) return;
 
-    var user = socket.auth.user;
+    var currentUser = socket.auth.user;
 
-    if(user_id == user) return;
+    if(userId == currentUser._id.toString()) return;
 
-    user_op.like.addToSet(user);
+    if (!userObj.like.contains(currentUser._id)) {
+      userObj.like.push(currentUser._id);
+    }
 
-    await User.findByIdAndUpdate(user_id, {like: user_op.like});
+    await User.findByIdAndUpdate(userId, {like: userObj.like});
   };
 }
 
