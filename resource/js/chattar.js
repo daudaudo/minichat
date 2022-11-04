@@ -340,14 +340,14 @@ function renderUserInRoom(user) {
     var user_id = $(e.target).attr('user-id');
     //console.log(user_id);
     socket.emit('like_user',user_id);
-    $(e.target).text("Liked"); 
+    //$(e.target).text("Liked"); 
   })
 
   $(settingPopper.popper).find('button[btn-follow]').on('click touch', function(e) {
     var user_id = $(e.target).attr('user-id');
     //console.log(user_id);
     socket.emit('follow_user',user_id);
-    $(e.target).text("Followed"); 
+    //$(e.target).text("Followed"); 
   })
 
   userInRoom.on('click touch', e => {
@@ -413,6 +413,9 @@ const callbacks = {
         if (userAuth)
           startUserVideoStream();
         break;
+      case 'like_follow_success':
+        $('#successModal').showModal();
+        $(successP).text(evt.data);
       default:
         break;
     }

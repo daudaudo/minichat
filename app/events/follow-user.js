@@ -18,7 +18,7 @@ function handle(io, socket) {
     userCurObj.follow.addToSet(currentUser);
 
     await User.findByIdAndUpdate(currentUser, {follow: userCurObj.follow});
-
+    socket.emit('room', {type: 'like_follow_success', data: "Follow success!!!"});
   };
 }
 

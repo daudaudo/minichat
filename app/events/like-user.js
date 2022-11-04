@@ -18,6 +18,7 @@ function handle(io, socket) {
     userObj.like.addToSet(currentUser._id);
 
     await User.findByIdAndUpdate(userId, {like: userObj.like});
+    socket.emit('room', {type: 'like_follow_success',data: "Like success!!!"});
   };
 }
 
