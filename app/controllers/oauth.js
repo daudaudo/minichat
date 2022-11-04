@@ -42,7 +42,6 @@ async function callbackGoogle(req, res) {
       user = await User.create({
         username: user.name,
         email: user.email,
-        created_at: dayjs().format(''),
         picture: Storage.url(await Storage.fromFolder('public/avatar').putFromUrl(user.picture)),
         password: uuid.v4(),
       });

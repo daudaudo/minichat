@@ -60,7 +60,6 @@ async function register(req, res) {
       username: req.body.username,
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 10),
-      created_at: dayjs().format('')
     })
 
     req.flash('success', {
