@@ -45,9 +45,9 @@ router.post('/profile', auth, csrf, require('../app/validators/update-profile'),
 router.get('/post', postController.getAllPostByConditions);
 router.get('post-details',postController.getDetailsPost);
 router.post('post',postController.createPost);
-router.post('post-update',auth,postController.UpdatePost);
-router.post('post-like',auth,postController.likePost);
-router.post('my-post',auth,postController.getMyPost);
+router.post('post-update',postController.UpdatePost);
+router.post('post-like',postController.likePost);
+router.post('my-post',postController.getMyPost);
 
 
 
