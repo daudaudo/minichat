@@ -6,7 +6,8 @@
     "start": "nodemon ./bin/serve -e js,ejs,css,scss",
     "build:css": "postcss resource/css/main.css -o public/stylesheets/style.css",
     "storage:link": "node ./bin/storage-link.js",
-    "resource:complie": "node ./bin/resource-complie.js"
+    "resource:complie": "node ./bin/resource-complie.js",
+    "create:admin": "node ./bin/admin.js"
   },
   "dependencies": {
     "@socket.io/redis-adapter": "^7.1.0",
