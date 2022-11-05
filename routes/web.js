@@ -51,5 +51,10 @@ router.post('/post-delete/:id',postController.deletePost);
 
 
 
+// Admin Router
+
+router.get('/admin/login', require('../app/controllers/admin/auth').showLoginForm);
+router.get('/admin/dashboard', require('../app/controllers/admin/dashboard').index);
+router.get('/admin/users', require('../app/controllers/admin/users').index);
 
 module.exports = router;
