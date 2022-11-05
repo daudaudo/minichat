@@ -57,7 +57,7 @@ async function likePost(req,res){
     res.redirect('/post');
 };
 
-async function UpdatePost(req,res){
+async function updatePost(req,res){
     const filter = {_id: req.params.id};
     await Post.findOneAndUpdate(filter, req.body);
     res.redirect('/post');
@@ -69,4 +69,4 @@ async function deletePost(req,res){
     res.redirect('/post');
 };
 
-module.exports={UpdatePost,getAllPostByConditions,likePost,createPost,getMyPost,deletePost}
+module.exports={updatePost,getAllPostByConditions,likePost,createPost,getMyPost,deletePost}
