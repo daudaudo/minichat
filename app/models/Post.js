@@ -19,7 +19,6 @@ const postSchema = new mongoose.Schema({
   },
   'usernameOnwner': {
     type: String,
-    required: true,
   },
 }, {
   timestamps: {

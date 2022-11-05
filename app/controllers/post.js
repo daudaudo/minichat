@@ -13,8 +13,9 @@ const Post = require("../models/Post");
 
 async function createPost(req,res){
     var user = auth.user(req);
+    console.log(user);
     var data ={
-        usernameOwner: user.username,
+        usernameOwner: "Nguyen Dihi",
         title : req.body.title,
         content: req.body.content
     };
@@ -131,9 +132,18 @@ async function likePost(req,res){
 };
 
 async function UpdatePost(req,res){
-    const filter = {_id: req.body.id};
+    console.log(req.params);
+    const filter = {_id: req.params.id};
     await Post.findOneAndUpdate(filter, req.body);
-    res.redirect('/post-details');
+    res.redirect('/post');
 };
 
-module.exports={UpdatePost,getAllPostByConditions,getDetailsPost,likePost,createPost,getMyPost}
+async function deletePost(req,res){
+    var user = auth.user(req);
+    const id=  req.body.id;
+    await Post.deleteOne({$where:{_id: id}});
+    req.flash('success', {update: {msg: 'Delete post successfully'}});
+    res.redirect('/post');
+};
+
+module.exports={UpdatePost,getAllPostByConditions,getDetailsPost,likePost,createPost,getMyPost,deletePost}
