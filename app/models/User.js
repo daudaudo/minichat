@@ -29,18 +29,20 @@ const userSchema = new mongoose.Schema({
     required: true
   },
   'like': {
-    type: [{
+    type: mongoose.SchemaTypes.Map,
+    of: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: 'User',
-    }],
-    required: true,
+    },
+    default: {},
   },
   'follow': {
-    type: [{
+    type: mongoose.SchemaTypes.Map,
+    of: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: 'User',
-    }],
-    required: true,
+    },
+    default: {},
   },
   'role': {
     type: String,

@@ -15,10 +15,10 @@ function handle(io, socket) {
 
     if(userId == currentUser._id.toString()) return;
 
-    userCurObj.follow.addToSet(currentUser);
+    userCurObj.follow.set(currentUser._id.toString(), currentUser._id);
 
     await User.findByIdAndUpdate(currentUser, {follow: userCurObj.follow});
-    socket.emit('room', {type: 'like_follow_success', data: "Follow success!!!"});
+    socket.emit('room', {type: 'like_success', data: "Follow success!!!"});
   };
 }
 

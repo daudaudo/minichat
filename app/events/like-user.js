@@ -7,7 +7,8 @@ const User = require('../models/User');
  * @param {Socket} socket 
  */
 function handle(io, socket) {
-  return async userId => {
+  return async data => {
+    var {userId, roomId} = data;
     var userObj = await User.findById(userId);
     if(!userObj) return;
 
@@ -15,10 +16,10 @@ function handle(io, socket) {
 
     if(userId == currentUser._id.toString()) return;
 
-    userObj.like.addToSet(currentUser._id);
+    userObj.like.set(currentUser._id.toString(), currentUser._id);
+    await userObj.save();
 
-    await User.findByIdAndUpdate(userId, {like: userObj.like});
-    socket.emit('room', {type: 'like_follow_success',data: "Like success!!!"});
+    io.to(roomId).emit('room', {type: 'notification', data: {type: 'primary', text: `User ${socket.auth.user.username} has just liked ${userObj.username}.`}});
   };
 }
 

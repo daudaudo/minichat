@@ -78,21 +78,22 @@ function renderRoomView(room) {
     trigger: 'mouseenter',
     content: `
       <div class="flex flex-col items-center">
-        <p class="text-white font-semibold mb-2">Room Ownner</p>
+        <p class="text-slate-700 font-semibold mb-2">Room Ownner</p>
         <img src="${room.primary_user.picture}" class="w-10 h-10 rounded-full object-cover mb-2">
-        <p class="text-gray-100 text-xs font-semibold mb-3">${room.primary_user.username}</p>
-        <button btn-delete-room class="w-100 flex items-center space-x-2 p-2 mb-2 rounded-md -mx-2 bg-red-500 hover:bg-transparent border-2 border-transparent hover:border-red-500">
-          <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" class="w-4 h-4 fill-gray-100" width="512" height="512"><path d="M21,4H17.9A5.009,5.009,0,0,0,13,0H11A5.009,5.009,0,0,0,6.1,4H3A1,1,0,0,0,3,6H4V19a5.006,5.006,0,0,0,5,5h6a5.006,5.006,0,0,0,5-5V6h1a1,1,0,0,0,0-2ZM11,2h2a3.006,3.006,0,0,1,2.829,2H8.171A3.006,3.006,0,0,1,11,2Zm7,17a3,3,0,0,1-3,3H9a3,3,0,0,1-3-3V6H18Z"/><path d="M10,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,10,18Z"/><path d="M14,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,14,18Z"/></svg>
-          <p class="text-gray-100 text-xs font-medium">Delete room</p>
+        <p class="text-slate-700 text-xs font-semibold mb-3">${room.primary_user.username}</p>
+        <button btn-delete-room class="w-100 flex items-center space-x-2 p-2 mb-2 rounded-md -mx-2 bg-red-500 hover:bg-transparent border-2 border-transparent hover:border-red-500 hover:text-slate-700 group">
+          <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" class="w-4 h-4 fill-gray-100 group-hover:fill-slate-700" width="512" height="512"><path d="M21,4H17.9A5.009,5.009,0,0,0,13,0H11A5.009,5.009,0,0,0,6.1,4H3A1,1,0,0,0,3,6H4V19a5.006,5.006,0,0,0,5,5h6a5.006,5.006,0,0,0,5-5V6h1a1,1,0,0,0,0-2ZM11,2h2a3.006,3.006,0,0,1,2.829,2H8.171A3.006,3.006,0,0,1,11,2Zm7,17a3,3,0,0,1-3,3H9a3,3,0,0,1-3-3V6H18Z"/><path d="M10,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,10,18Z"/><path d="M14,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,14,18Z"/></svg>
+          <p class="text-gray-100 text-xs font-medium group-hover:text-slate-700">Delete room</p>
         </button>
-        <p class="text-gray-100 text-xs font-semibold mb-1">Created at</p>
-        <p class="text-gray-100 text-xs font-semibold mb-1">${dayjs(room.created_at).format('D/M/YY h:m')}</p>
+        <p class="text-slate-700 text-xs font-semibold mb-1">Created at</p>
+        <p class="text-slate-700 text-xs font-semibold mb-1">${dayjs(room.created_at).format('D/M/YY h:m')}</p>
       </div>
     `,
     maxWidth: 250,
     placement: 'bottom',
     hideOnClick: false,
     interactive: true,
+    arrow: false,
   })
 
   if (authUser.user._id != room.primary_user._id) {
@@ -121,17 +122,16 @@ function renderUserHtml(user) {
   if (user.role == 'guest')
     html += `<div socket-id="${user.socket_id}" class="p-2"><button class="w-20 h-20 rounded-full border border-slate-500 border-dashed flex justify-center items-center font-medium">Guest ?</button></div>`;
   else
-    html += `<div socket-id="${user.socket_id}" class="p-2">
+    html += `
+    <div socket-id="${user.socket_id}" class="p-2">
       <button>
         <img class="rounded-full w-20 h-20 object-cover" src="${user.picture}" alt="" srcset="">
       </button>
-      <div class="flex flex-wrap">
-        <div class="w-1/2 p-2 ">
-          <img class="w-5 h-5" src="/images/heart.png" alt="" srcset="">
+      <div class="flex flex-wrap justify-center space-x-1">
+        <div class="">
+          <svg class="w-4 h-4 fill-red-400" xmlns="http://www.w3.org/2000/svg" id="Filled" viewBox="0 0 24 24" width="512" height="512"><path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z"/></svg>
         </div>
-        <div class="w-1/2 p-2 ">
-          <p class="font-medium text-slate-700 mb-2">${user.like.length}</p>
-        </div>
+        <p class="font-medium text-slate-700 text-sm">${Object.keys(user.like).length}</p>
       </div>
     </div>`;
 
