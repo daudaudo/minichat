@@ -17,24 +17,33 @@
                 <h2 class="text-2xl lg:text-3xl font-bold text-gray-900">
                     Log in to admin
                 </h2>
-                <form class="mt-8 space-y-6" action="#">
+                <% if (errors.auth) { %>
+                    <div class="text-sm bg-red-400 text-white font-medium mb-2 p-2 rounded w-full"><%= errors.auth.msg %></div>
+                <% } %>
+                <form class="mt-8 space-y-6" method="post" action="/admin/login">
                     <div>
                         <label for="email" class="text-sm font-medium text-gray-900 block mb-2">Your email</label>
                         <input type="email" name="email" id="email"
                             class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full p-2.5"
-                            placeholder="name@company.com" required>
+                            placeholder="name@company.com" >
+                        <% if (errors.email) { %>
+                            <p class="text-sm text-red-400 font-medium mt-1"><%= errors.email.msg %></p>
+                        <% } %>
                     </div>
                     <div>
                         <label for="password" class="text-sm font-medium text-gray-900 block mb-2">Your password</label>
                         <input type="password" name="password" id="password" placeholder="••••••••"
                             class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-sky-600 focus:border-sky-600 block w-full p-2.5"
-                            required>
+                            >
+                        <% if (errors.password) { %>
+                            <p class="text-sm text-red-400 font-medium mt-1"><%= errors.password.msg %></p>
+                        <% } %>
                     </div>
                     <div class="flex items-start">
                         <div class="flex items-center h-5">
                             <input id="remember" aria-describedby="remember" name="remember" type="checkbox"
                                 class="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-sky-200 h-4 w-4 rounded"
-                                required>
+                                >
                         </div>
                         <div class="text-sm ml-3">
                             <label for="remember" class="font-medium text-gray-900">Remember me</label>

@@ -1,18 +1,19 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
-var homecontroller = require('../app/controllers/home');
-var oauthcontroller = require('../app/controllers/oauth');
-var authcontroller = require('../app/controllers/auth');
-var chatcontroller = require('../app/controllers/chat');
-var usercontroller = require('../app/controllers/user');
+var homecontroller = require("../app/controllers/home");
+var oauthcontroller = require("../app/controllers/oauth");
+var authcontroller = require("../app/controllers/auth");
+var chatcontroller = require("../app/controllers/chat");
+var usercontroller = require("../app/controllers/user");
 
-var registerValidator = require('../app/validators/register');
-var loginValidator = require('../app/validators/login');
-var {validateWithRedirect} = require('../app/middlewares/validate');
-var auth = require('../app/middlewares/auth');
-var webMiddleware = require('../app/middlewares/web');
-var csrf = require('../app/middlewares/csrf');
+var registerValidator = require("../app/validators/register");
+var loginValidator = require("../app/validators/login");
+var { validateWithRedirect } = require("../app/middlewares/validate");
+var auth = require("../app/middlewares/auth");
+var adminAuth = require("../app/middlewares/adminauth");
+var webMiddleware = require("../app/middlewares/web");
+var csrf = require("../app/middlewares/csrf");
 
 router.all('*', webMiddleware);
 
@@ -41,8 +42,9 @@ router.post('/profile', auth, csrf, require('../app/validators/update-profile'),
 
 // Admin Router
 
-router.get('/admin/login', require('../app/controllers/admin/auth').showLoginForm);
-router.get('/admin/dashboard', require('../app/controllers/admin/dashboard').index);
-router.get('/admin/users', require('../app/controllers/admin/users').index);
+router.get("/admin/login", require("../app/controllers/admin/auth").showLoginForm);
+router.get("/admin/dashboard", adminAuth, require("../app/controllers/admin/dashboard").index);
+router.get("/admin/users", adminAuth, require("../app/controllers/admin/users").index);
+router.post("/admin/login", loginValidator, validateWithRedirect(), require("../app/controllers/admin/auth").loginAdmin);
 
 module.exports = router;
