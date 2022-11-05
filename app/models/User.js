@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Role = require('./Role');
 
 const userSchema = new mongoose.Schema({
   'username': {
@@ -22,10 +23,6 @@ const userSchema = new mongoose.Schema({
   'email_verified_at': {
     type: String,
   },
-  'created_at': {
-    type: String,
-    required: true,
-  },
   'picture': {
     type: String,
     default: '/images/user.png',
@@ -47,8 +44,13 @@ const userSchema = new mongoose.Schema({
   },
   'role': {
     type: String,
-    required: true,
-    default: 'user'
+    default: Role.NORMAL_ROLES,
+    enum: Role.USER_ROLES,
+  }
+}, {
+  timestamps: {
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
   }
 });
 

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../../components/head') %>
+    <title>Dashboard | Minichat Admin</title>
+</head>
+
+<body>
+    <%- include('../../components/nav-admin') %>
+    <div class="flex overflow-hidden bg-white pt-16">
+        <%- include('../../components/sidebar-admin') %>
+        <div class="bg-gray-900 opacity-50 fixed inset-0 z-10 hidden" id="sidebarBackdrop"></div>
+        <div id="main-content" class="h-full w-full bg-gray-50 relative overflow-y-auto lg:ml-64">
+            <main></main>
+        </div>
+    </div>
+    <script src="/static/js/sidebar.js"></script>
+</body>
+
+</html>

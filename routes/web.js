@@ -39,4 +39,10 @@ router.get('/logout', auth, authcontroller.logout);
 router.get('/profile', auth, usercontroller.showUpdateProfilesForm);
 router.post('/profile', auth, csrf, require('../app/validators/update-profile'), validateWithRedirect('/profile'), usercontroller.postProfile);
 
+// Admin Router
+
+router.get('/admin/login', require('../app/controllers/admin/auth').showLoginForm);
+router.get('/admin/dashboard', require('../app/controllers/admin/dashboard').index);
+router.get('/admin/users', require('../app/controllers/admin/users').index);
+
 module.exports = router;

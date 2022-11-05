@@ -2,7 +2,7 @@
 
 ## Docker
 
-- To start working environment, please run `docker-composer up -d`
+- To start working environment, please run `docker-compose up -d`
 - To access nodejs app, access address `http://localhost:3001`
 
 ## Install
@@ -13,6 +13,7 @@
 - run `npm run build:css`
 - run `npm run resource:complie`
 - run `npm run storage:link`
+- run `npm run create:admin` to create admin account
 - run `pm2 start ecosystem.config.js` on development
 - or run `pm2 start deploy.ecosystem.config.js` on production
 
