@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 const postSchema = new mongoose.Schema({
   'title': {
     type: String,
@@ -7,7 +8,8 @@ const postSchema = new mongoose.Schema({
   },
   'content':{
     type: String,
-    required: false,
+    text: true,
+    required: true,
   },
   'imageUrl':{
     type: String,
@@ -17,9 +19,13 @@ const postSchema = new mongoose.Schema({
     type: Boolean,
     default: false ,
   },
-  'usernameOnwner': {
-    type: String,
+  'owner': {
+    type: mongoose.SchemaTypes.String,
+    ref: 'User',
   },
+  date:{
+    type:String,
+  }
 }, {
   timestamps: {
     createdAt: 'created_at',
