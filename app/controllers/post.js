@@ -51,15 +51,22 @@ async function getMyPost(req,res){
 };
 
 async function likePost(req,res){
-    const filter = {_id: req.body.id};
-    const update ={liked: true};
+    const filter = {_id: req.params.id};
+    const update ={isLiked: true};
     await Post.findOneAndUpdate(filter, update);
     res.redirect('/post');
 };
 
 async function updatePost(req,res){
     const filter = {_id: req.params.id};
-    await Post.findOneAndUpdate(filter, req.body);
+    const post = await Post.findById(filter);
+    let update = {};
+    if(post.isLiked == true){
+        update= {isLiked : false}
+    }else{
+        update= {isLiked : false}
+    }
+    await Post.updateOne(filter,update);
     res.redirect('/post');
 };
 
