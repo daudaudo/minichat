@@ -2,6 +2,7 @@ const auth = require('../global/auth');
 const Post = require("../models/Post");
 const dayjs = require('dayjs');
 const {ObjectId} = require('mongodb')
+const {validationResult}= require('express-validator')
 
 /**
  * 
@@ -11,17 +12,21 @@ const {ObjectId} = require('mongodb')
 
 
 async function createPost(req,res){
-    var user = auth.user(req);
-    user._id = "6366af593c0c88a0552ad3a0";
-    var data = new Post({
-        owner: ObjectId(user._id),
-        title : req.body.title,
-        content: req.body.content,
-        is_liked: false
-    });
-    await Post.create(data);
-    req.flash('success', {update: {msg: 'Create post successfully'}});
-    res.redirect('/post');
+        var user = auth.user(req);
+        var data = new Post({
+            owner: ObjectId(user._id),
+            title : req.body.title,
+            content: req.body.content,
+            is_liked: false
+        });
+        const errors= validationResult(req);
+        if(!errors.isEmpty()){
+            const alert = errors.array();
+            return res.render('/',{data:[], errors:alert});
+        };
+        await Post.create(data);
+        req.flash('success', {msg: 'Create post successfully'});
+        res.redirect('/post');
 };
 
 async function getAllPostByConditions(req,res){
@@ -38,7 +43,6 @@ async function getAllPostByConditions(req,res){
         user : user,
         posts:posts.length>0? posts: [] 
     }
-    // return res.json(data);
     res.render('post',{data: data})
 };
 
@@ -57,20 +61,30 @@ async function likePost(req,res){
     const filter = {_id: req.params.id};
     const post = await Post.findById(filter);
     let update = {};
-    if(post.isLiked == true){
-        update= {isLiked : false}
+
+    if(post.is_liked == true){
+        update= {is_liked : false}
     }else{
-        update= {isLiked : true}
+        update= {is_liked : true}
     }
     await Post.findOneAndUpdate(filter, update);
     res.redirect('/post');
 };
 
 async function updatePost(req,res){
-    const filter = {_id: req.params.id};
-    let update = req.body;
-    await Post.findByIdAndUpdate(filter,update);
-    res.redirect('/post');
+    try{
+        const filter = {_id: req.params.id};
+        let update = req.body;
+        const errors= validationResult(req);
+        if(!errors.isEmpty()){
+            const alert = errors.array();
+            return res.render('/',{data:[], errors:alert});
+        };
+        await Post.findByIdAndUpdate(filter,update);
+        res.redirect('/post');
+    }catch(err){
+        res.send(err)
+    }
 };
 
 async function deletePost(req,res){

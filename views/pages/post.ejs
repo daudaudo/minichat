@@ -169,7 +169,7 @@
               <div class="flex items-center justify-start pl-4 pr-4 pb-2 cursor-pointer">
                 <div onclick="like()">
       
-                  <% if (data.posts[i].isLiked){ %>
+                  <% if (data.posts[i].is_liked){ %>
                     <form action="post-like/<%=data.posts[i]._id%>" method="POST">
                   <div
                     id="likebtn" data-value="1" class="flex justify-center align-center relative items-center px-4 py-2 text-center text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20 gap-1">
@@ -251,11 +251,13 @@
           <div>
             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Title</label>
             <input type="text" name="title" id="title"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
           </div>
           <div>
             <label for="content" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Content</label>
             <textarea name="content" id="content"
+              class="h-56 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"></textarea>
+              <textarea name="content" id="content"
               class="h-56 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"></textarea>
           </div>
           <div>
