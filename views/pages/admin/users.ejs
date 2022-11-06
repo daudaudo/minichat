@@ -127,7 +127,7 @@
                                                 </tr>
                                             </thead>
                                             
-                                            <% for (let user = index; user < index + 20; user++) { %>
+                                            <% for (let user = index; user < index + 10; user++) { %>
                                                 <% if (user > users.length - 1) break; %>
                                             <tbody class="bg-white divide-y divide-gray-200">
                                                 <tr class="hover:bg-gray-100">
@@ -188,32 +188,12 @@
                         <div
                             class="bg-white sticky sm:flex items-center w-full sm:justify-between bottom-0 right-0 border-t border-gray-200 p-4">
                             <div class="flex items-center mb-4 sm:mb-0">
-                                <a href="#"
-                                    class="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center">
-                                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                            clip-rule="evenodd"></path>
-                                    </svg>
-                                </a>
-                                <a href="#"
-                                    class="text-gray-500 hover:text-gray-900 cursor-pointer p-1 hover:bg-gray-100 rounded inline-flex justify-center mr-2">
-                                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd"
-                                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                            clip-rule="evenodd"></path>
-                                    </svg>
-                                </a>
-                                <span class="text-sm font-normal text-gray-500">Showing <span
-                                        class="text-gray-900 font-semibold">1-20</span> of <span
-                                        class="text-gray-900 font-semibold">2290</span></span>
+                                
                             </div>
                             <div class="flex items-center space-x-3">
                                 <a href="#pageindex=<%=index - 1%>"
                                     class="flex-1 text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:ring-sky-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
-                                    <svg class="-ml-1 mr-1 h-5 w-5" "="" fill=" currentColor" viewBox="0 0 20 20"
+                                    <svg class="-ml-1 mr-1 h-5 w-5"  fill=" currentColor" viewBox="0 0 20 20"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd"
                                             d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
@@ -237,21 +217,6 @@
                 </div>
         </div>
         <script src="/static/js/sidebar.js"></script>
-        <script>
-            function GetURLParameter(sParam)
-            {
-                var sPageURL = window.location.search.substring(1);
-                var sURLVariables = sPageURL.split('&');
-                for (var i = 0; i < sURLVariables.length; i++) 
-                {
-                    var sParameterName = sURLVariables[i].split('=');
-                    if (sParameterName[0] == sParam) 
-                    {
-                        return sParameterName[1];
-                    }
-                }
-            }​
-        </script>
 </body>
 
 </html>
