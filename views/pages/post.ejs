@@ -9,7 +9,7 @@
 
 <body class="bg-slate-50">
   <%- include('../components/header-page') %>
-    <main class="container max-w-7xl w-full py-2 mx-auto z-50 mb-4">
+    <main class="container max-w-7xl w-full py-2 mx-auto z-50 mb-4 min-h-96">
 
       <div class="grid grid-cols-8">
         <div class="col-span-2 p-4">
@@ -98,13 +98,13 @@
                               <div>
                                 <label for="email"
                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Title</label>
-                                <input type="text" name="title" id="title" value="<%=data.posts[i].title%>"
+                                <input type="text" required minlength="6" name="title" id="title" value="<%=data.posts[i].title%>"
                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
                               </div>
                               <div>
                                 <label for="content"
                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Content</label>
-                                <textarea name="content" id="content"
+                                <textarea name="content" id="content" minlength="20"
                                   class="h-56 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"><%=data.posts[i].content%></textarea>
                               </div>
                               <div>
@@ -247,15 +247,16 @@
       </div>
       <div class="py-6 px-6 lg:px-8">
         <!-- <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Edit</h3> -->
-        <form class="space-y-6" action="post" method="POST">
+        <form id="createpost" class="space-y-6" action="post" method="POST">
+          <p id="error"></p>
           <div>
             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Title</label>
-            <input type="text" name="title" id="title"
+            <input type="text" name="title" id="title" required minlength=6
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
           </div>
           <div>
             <label for="content" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Content</label>
-            <textarea name="content" id="content"
+            <textarea name="content" id="content" minlength="20"
               class="h-56 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"></textarea>
             </div>
           <div>
@@ -280,11 +281,11 @@
             <form class="space-y-6" action="#">
                 <div>
                     <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Title</label>
-                    <input type="text" name="title" id="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="name@company.com" required>
+                    <input type="text" required minlength=6 name="title" id="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="name@company.com" required>
                 </div>
                 <div>
                     <label for="content" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Content</label>
-                    <input type="text" name="content" id="content" class="h-auto bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+                    <input type="text" minlength="20" name="content" id="content" class="h-auto bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
                 </div>
                 <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Edit Post</button>
             </form>

@@ -19,11 +19,6 @@ async function createPost(req,res){
             content: req.body.content,
             is_liked: false
         });
-        const errors= validationResult(req);
-        if(!errors.isEmpty()){
-            const alert = errors.array();
-            return res.render('/',{data:[], errors:alert});
-        };
         await Post.create(data);
         req.flash('success', {msg: 'Create post successfully'});
         res.redirect('/post');
@@ -75,11 +70,6 @@ async function updatePost(req,res){
     try{
         const filter = {_id: req.params.id};
         let update = req.body;
-        const errors= validationResult(req);
-        if(!errors.isEmpty()){
-            const alert = errors.array();
-            return res.render('/',{data:[], errors:alert});
-        };
         await Post.findByIdAndUpdate(filter,update);
         res.redirect('/post');
     }catch(err){
