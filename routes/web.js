@@ -1,19 +1,21 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
-var homecontroller = require('../app/controllers/home');
-var oauthcontroller = require('../app/controllers/oauth');
-var authcontroller = require('../app/controllers/auth');
-var chatcontroller = require('../app/controllers/chat');
-var usercontroller = require('../app/controllers/user');
-var postController = require('../app/controllers/post');
+var homecontroller = require("../app/controllers/home");
+var oauthcontroller = require("../app/controllers/oauth");
+var authcontroller = require("../app/controllers/auth");
+var chatcontroller = require("../app/controllers/chat");
+var usercontroller = require("../app/controllers/user");
+var postcontroller = require("../app/controllers/post");
 
-var registerValidator = require('../app/validators/register');
-var loginValidator = require('../app/validators/login');
-var {validateWithRedirect} = require('../app/middlewares/validate');
-var auth = require('../app/middlewares/auth');
-var webMiddleware = require('../app/middlewares/web');
-var csrf = require('../app/middlewares/csrf');
+var registerValidator = require("../app/validators/register");
+var loginValidator = require("../app/validators/login");
+var { validateWithRedirect } = require("../app/middlewares/validate");
+var auth = require("../app/middlewares/auth");
+var adminAuth = require("../app/middlewares/adminauth");
+var webMiddleware = require("../app/middlewares/web");
+var csrf = require("../app/middlewares/csrf");
+var validatePost= require('../app/validators/post')
 
 router.all('*', webMiddleware);
 
@@ -42,19 +44,20 @@ router.post('/profile', auth, csrf, require('../app/validators/update-profile'),
 
 
 //Post Router
-router.get('/post', postController.getAllPostByConditions);
-router.post('/post',postController.createPost);
-router.post('/post-update/:id',postController.updatePost);
-router.post('/post-like/:id',postController.likePost);
-router.post('/my-post',postController.getMyPost);
-router.post('/post-delete/:id',postController.deletePost);
+router.get('/post',auth,postcontroller.getAllPostByConditions);
+router.post('/post',auth,validatePost,postcontroller.createPost);
+router.post('/post-update/:id',auth,validatePost,postcontroller.updatePost);
+router.post('/post-like/:id',auth,postcontroller.likePost);
+router.post('/my-post',auth,postcontroller.getMyPost);
+router.post('/post-delete/:id',auth,postcontroller.deletePost);
 
 
 
 // Admin Router
 
-router.get('/admin/login', require('../app/controllers/admin/auth').showLoginForm);
-router.get('/admin/dashboard', require('../app/controllers/admin/dashboard').index);
-router.get('/admin/users', require('../app/controllers/admin/users').index);
+router.get("/admin/login", require("../app/controllers/admin/auth").showLoginForm);
+router.get("/admin/dashboard", adminAuth, require("../app/controllers/admin/dashboard").index);
+router.get("/admin/users", adminAuth, require("../app/controllers/admin/users").index);
+router.post("/admin/login", loginValidator, validateWithRedirect(), require("../app/controllers/admin/auth").loginAdmin);
 
 module.exports = router;

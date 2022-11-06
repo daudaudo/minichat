@@ -1,8 +1,7 @@
 const auth = require('../global/auth');
 const Post = require("../models/Post");
-const moment = require('moment');
-const mongoose = require('mongoose');
-
+const dayjs = require('dayjs');
+const {ObjectId} = require('mongodb')
 
 /**
  * 
@@ -13,10 +12,12 @@ const mongoose = require('mongoose');
 
 async function createPost(req,res){
     var user = auth.user(req);
+    user._id = "6366af593c0c88a0552ad3a0";
     var data = new Post({
-        owner: user.username,
+        owner: ObjectId(user._id),
         title : req.body.title,
-        content: req.body.content
+        content: req.body.content,
+        is_liked: false
     });
     await Post.create(data);
     req.flash('success', {update: {msg: 'Create post successfully'}});
@@ -25,24 +26,26 @@ async function createPost(req,res){
 
 async function getAllPostByConditions(req,res){
     var user = auth.user(req);
-    let posts= await Post.find({}).sort({'created_at':-1});
+    let posts= await Post.find({}).sort({'created_at':-1}).populate("owner");
     const value = "Tháng";
     posts = posts.map(item=>{
-        console.log(item.date);
-        let date = moment(item.created_at).format('DD : MM YYYY');
-        item.date = date.replace(':',` ${value} `);
+        item.owner = item.owner.username;
+        let date = dayjs(item.created_at).format('DD : MM YYYY');
+        item.date = date.replace(':',`${value}`);
         return item;
     });
     const data = {
         user : user,
         posts:posts.length>0? posts: [] 
     }
+    // return res.json(data);
     res.render('post',{data: data})
 };
 
 async function getMyPost(req,res){
     var user = auth.user(req);
-    let posts= await Post.find({$where:{owner : user.username}}).sort({'created_at':-1});
+    var id=  ObjectId(user._id);
+    let posts= await Post.find({$where:{owner : id}}).sort({'created_at':-1});
     const data = {
         user : user,
         posts:posts.length>0? posts: [] 

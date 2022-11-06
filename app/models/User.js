@@ -28,6 +28,22 @@ const userSchema = new mongoose.Schema({
     default: '/images/user.png',
     required: true
   },
+  'like': {
+    type: mongoose.SchemaTypes.Map,
+    of: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'User',
+    },
+    default: {},
+  },
+  'follow': {
+    type: mongoose.SchemaTypes.Map,
+    of: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'User',
+    },
+    default: {},
+  },
   'role': {
     type: String,
     default: Role.NORMAL_ROLES,

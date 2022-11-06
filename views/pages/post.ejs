@@ -40,7 +40,7 @@
                 <div class="col-span-11 flex justify-between">
                   <div>
                     <div class="text-xl font-semibold">
-                      <%= data.posts[i].owner %>
+                      <%= data.posts[i].owner.username%>
                     </div>
                     <div class="text-xs">
                       <%= data.posts[i].date %>
@@ -293,25 +293,3 @@
   </div>
 </div>
 <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
-
-<script>
-  function like(){
-    console.log(document.getElementById('likebtn').getAttribute('data-value'));
-    document.getElementById('likebtn').style.color = "#33CCFF";
-    var button =document.getElementById('btnlike');
-    var val = button.getAttribute("value");
-    console.log(val);
-    button.addEventListener('click', function(e) {
-      fetch('/post-like/6366b3ef61a937e53cfa4cfc', {method: 'POST'})
-    .then(function(response) {
-      if(response.ok) {
-        console.log('Click was recorded');
-        return;
-      }
-      throw new Error('Request failed.');
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
-  }
-</script>

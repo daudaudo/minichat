@@ -11,16 +11,16 @@ const postSchema = new mongoose.Schema({
     text: true,
     required: true,
   },
-  'imageUrl':{
+  'image_url':{
     type: String,
     required: false
   },
-  'isLiked':{
+  'is_liked':{
     type: Boolean,
     default: false ,
   },
   'owner': {
-    type: mongoose.SchemaTypes.String,
+    type: mongoose.SchemaTypes.ObjectId,
     ref: 'User',
   },
   date:{
