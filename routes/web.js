@@ -59,23 +59,11 @@ router.post(
 
 // Admin Router
 
-router.get(
-  "/admin/login",
-  require("../app/controllers/admin/auth").showLoginForm
-);
-router.get(
-  "/admin/dashboard",
-  adminAuth,
-  require("../app/controllers/admin/dashboard").index
-);
-router.get(
-  "/admin/users",
-  adminAuth,
-  require("../app/controllers/admin/users").index
-);
-router.post(
-  "/admin/login",
-  require("../app/controllers/admin/auth").loginAdmin
-);
+
+router.get("/admin/login", require("../app/controllers/admin/auth").showLoginForm);
+router.get("/admin/dashboard", adminAuth, require("../app/controllers/admin/dashboard").index);
+router.get("/admin/users", adminAuth, require("../app/controllers/admin/users").index);
+router.post("/admin/login", loginValidator, validateWithRedirect(), require("../app/controllers/admin/auth").loginAdmin);
+
 
 module.exports = router;

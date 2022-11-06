@@ -1,5 +1,9 @@
-var User = require("../../models/User");
+
+const User = require("../../models/User");
 const Role = require("../../models/Role");
+const bcrypt = require('bcrypt');
+const uuid = require('uuid');
+
 
 const dashboardUrl = "/admin/dashboard";
 
@@ -14,34 +18,23 @@ async function showLoginForm(req, res) {
 
 async function loginAdmin(req, res) {
   try {
-    var user = await User.findOne({ email: req.body.email }).select(
-      "+password"
-    );
-    if (user.role != Role.ADMIN_ROLES) {
-      req.flash("errors", {
-        auth: { msg: "This is not a admin account" },
-      });
-      res.redirect("admin/login");
+
+    var user = await User.findOne({ email: req.body.email }).select("+password");
+    if (user && user.role != Role.ADMIN_ROLES) {
+      req.flash("errors", {auth: { msg: "This is not a admin account" }, });
+      res.redirect("/admin/login");
       return;
     }
     if (user && bcrypt.compareSync(req.body.password, user.password)) {
-      req.session.auth = {
-        user: user,
-        token: uuid.v4(),
-        auth: true,
-      };
+      req.session.auth = {user: user, token: uuid.v4(), auth: true, };
       res.redirect(dashboardUrl);
     } else {
-      req.flash("errors", {
-        auth: { msg: "The email or password is not valid!" },
-      });
-      res.redirect("admin/login");
+      req.flash("errors", { auth: { msg: "The email or password is not valid!" }, });
+      res.redirect("/admin/login");
     }
   } catch (err) {
-    req.flash("errors", {
-      auth: { msg: "The email or password is not valid!" },
-    });
-    res.redirect("admin/login");
+    req.flash("errors", {auth: { msg: "Other Error!!" }, });
+    res.redirect("/admin/login");
   }
 }
 
