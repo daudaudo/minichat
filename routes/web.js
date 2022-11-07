@@ -6,6 +6,7 @@ var oauthcontroller = require("../app/controllers/oauth");
 var authcontroller = require("../app/controllers/auth");
 var chatcontroller = require("../app/controllers/chat");
 var usercontroller = require("../app/controllers/user");
+var postcontroller = require("../app/controllers/post");
 
 var registerValidator = require("../app/validators/register");
 var loginValidator = require("../app/validators/login");
@@ -39,6 +40,10 @@ router.get('/logout', auth, authcontroller.logout);
 
 router.get('/profile', auth, usercontroller.showUpdateProfilesForm);
 router.post('/profile', auth, csrf, require('../app/validators/update-profile'), validateWithRedirect('/profile'), usercontroller.postProfile);
+
+// Post Router
+
+router.get('/posts', postcontroller.index);
 
 // Admin Router
 

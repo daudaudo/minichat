@@ -77,7 +77,7 @@ function renderRoomView(room) {
     allowHTML: true,
     trigger: 'mouseenter',
     content: `
-      <div class="flex flex-col items-center">
+      <div class="flex flex-col items-center p-2">
         <p class="text-slate-700 font-semibold mb-2">Room Ownner</p>
         <img src="${room.primary_user.picture}" class="w-10 h-10 rounded-full object-cover mb-2">
         <p class="text-slate-700 text-xs font-semibold mb-3">${room.primary_user.username}</p>

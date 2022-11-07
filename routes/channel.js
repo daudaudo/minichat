@@ -23,6 +23,8 @@ function socket(io) {
     socket.on('leave_room', require('../app/events/leave-room')(io, socket));
     socket.on('like_user', require('../app/events/like-user')(io, socket));
     socket.on('follow_user', require('../app/events/follow-user')(io, socket));
+    socket.on('create_post', require('../app/events/create-post')(io, socket));
+    socket.on('get_posts_list', require('../app/events/get_posts_list')(io, socket));
   });
 }
 
