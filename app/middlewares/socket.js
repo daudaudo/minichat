@@ -1,7 +1,7 @@
 const Socket = require("socket.io").Socket;
-const Room = require('../models/Room');
 var cookieParser = require('cookie-parser');
 var redisStore = require('../global/redis').store;
+var uuid = require('uuid');
 /**
  * 
  * @param {Socket} socket 
@@ -12,7 +12,18 @@ async function handle(socket, next) {
     cookieParser(process.env.SESSION_SECRET)(socket.handshake, null, () => {
       redisStore.get(socket.handshake.signedCookies['connect.sid'], (err, session) => {
         if(err) rejects(err);
-        resolve(session.auth);
+        if (session)
+          resolve(session.auth);
+        else 
+          resolve({
+            token: uuid.v4(),
+            user: {
+              username: 'Guest',
+              email: null,
+              role: 'guest',
+            },
+            auth: false,
+          });
       });
     });
   });

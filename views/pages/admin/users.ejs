@@ -127,8 +127,7 @@
                                                 </tr>
                                             </thead>
                                             
-                                            <% for (let user = index; user < index + 10; user++) { %>
-                                                <% if (user > users.length - 1) break; %>
+                                            <% for (let user of users) { %>
                                             <tbody class="bg-white divide-y divide-gray-200">
                                                 <tr class="hover:bg-gray-100">
                                                     <td class="p-4 w-4">
@@ -142,18 +141,18 @@
                                                     <td
                                                         class="p-4 flex items-center whitespace-nowrap space-x-6 mr-12 lg:mr-0">
                                                         <img class="h-10 w-10 rounded-full"
-                                                            src="<%=users[user].picture%>"
-                                                            alt="<%=users[user].username%> avatar">
+                                                            src="<%=user.picture%>"
+                                                            alt="<%=user.username%> avatar">
                                                         <div class="text-sm font-normal text-gray-500">
-                                                            <div class="text-base font-semibold text-gray-900"><%=users[user].username%></div>
-                                                            <div class="text-sm font-normal text-gray-500"><%=users[user].email%></div>
+                                                            <div class="text-base font-semibold text-gray-900"><%=user.username%></div>
+                                                            <div class="text-sm font-normal text-gray-500"><%=user.email%></div>
                                                         </div>
                                                     </td>
-                                                    <td>
-                                                        <div class="text-sm font-normal text-gray-500"><%=users[user].like.length%></div>
+                                                    <td class="p-4 whitespace-nowrap">
+                                                        <div class="text-sm font-normal text-gray-500"><%=Object.keys(user.like).length%></div>
                                                     </td>
-                                                    <td>
-                                                        <div class="text-sm font-normal text-gray-500"><%=users[user].follow.length%></div>
+                                                    <td class="p-4 whitespace-nowrap">
+                                                        <div class="text-sm font-normal text-gray-500"><%=Object.keys(user.follow).length%></div>
                                                     </td>
                                                     <td class="p-4 whitespace-nowrap space-x-2">
                                                         <button type="button" data-modal-toggle="user-modal"
@@ -191,7 +190,7 @@
                                 
                             </div>
                             <div class="flex items-center space-x-3">
-                                <a href="#pageindex=<%=index - 1%>"
+                                <a href="?page=<%=page - 1%>"
                                     class="flex-1 text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:ring-sky-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
                                     <svg class="-ml-1 mr-1 h-5 w-5"  fill=" currentColor" viewBox="0 0 20 20"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -201,7 +200,7 @@
                                     </svg>
                                     Previous
                                 </a>
-                                <a href="#pageindex=<%=index + 1%>"
+                                <a href="?page=<%=page + 1%>"
                                     class="flex-1 text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:ring-sky-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center">
                                     Next
                                     <svg class="-mr-1 ml-1 h-5 w-5" fill="currentColor" viewBox="0 0 20 20"
