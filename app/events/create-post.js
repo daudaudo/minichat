@@ -1,6 +1,7 @@
 const Server = require("socket.io").Server;
 const Socket = require("socket.io").Socket;
 const Post = require('../models/Post');
+const maxLengthContent = 300;
 
 /**
  * 
@@ -9,13 +10,15 @@ const Post = require('../models/Post');
  */
 function handle(io, socket) {
   return async data => {
-    var {content} = data;
 
     if (!socket.auth.auth)
       return;
 
-    if (!content || !content?.trim().length)
-        return;
+    var {content} = data;
+    content = content ? content.toString().trim() : '';
+
+    if (!content || !content.length || content.length > maxLengthContent)
+      return;
 
     var post = new Post();
     post.content = content;
