@@ -1,6 +1,6 @@
 const User = require('../../models/User');
 const Role = require('../../models/Role');
-const perPage = 10;
+const paginate = require('../../global/paginate');
 
 /**
  * 
@@ -9,15 +9,9 @@ const perPage = 10;
  */
 
 async function index(req, res) {
-    var page = parseInt(req.query.page);
-    if (page == NaN)
-        page = 1;
-    
-    var users = await User.find({
-        'role' : Role.NORMAL_ROLES,
-    }).limit(perPage).skip(page - 1);
+    var paginationData = await paginate(req, User, {'role': Role.NORMAL_ROLES});
 
-    res.render('admin/users', {users: users, page});
+    res.render('admin/users', {...paginationData});
 }
 
 module.exports = {index};
