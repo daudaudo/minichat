@@ -3,7 +3,7 @@
 
 <head>
     <%- include('../../components/head') %>
-    <title>Dashboard | Minichat Admin</title>
+    <title>Users | Minichat Admin</title>
 </head>
 
 <body>
@@ -145,8 +145,7 @@
                                                         <div class="text-sm font-normal text-gray-500"><%=user.follow.size%></div>
                                                     </td>
                                                     <td class="p-4 whitespace-nowrap space-x-2">
-                                                        <button type="button" data-modal-toggle="user-modal"
-                                                            class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
+                                                        <button type="button" btn-ban-user class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
                                                             <svg class="mr-2 h-5 w-5" fill="currentColor"
                                                                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                                 <path fill-rule="evenodd" 
@@ -155,8 +154,7 @@
                                                             </svg>
                                                             Ban user
                                                         </button>
-                                                        <button type="button" data-modal-toggle="delete-user-modal"
-                                                            class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
+                                                        <button type="button" btn-delete-user data-id="<%= user._id %>" data-username="<%= user.username %>" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center">
                                                             <svg class="mr-2 h-5 w-5" fill="currentColor"
                                                                 viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                                                 <path fill-rule="evenodd"
@@ -210,7 +208,9 @@
                     </main>
                 </div>
         </div>
+        <%- include('../../components/modal-confirm', {modal: {message: 'Are you sure you want to delete user [:username]?', id:'modalConfirmDelete'}}) %>
         <script src="/static/js/sidebar.js"></script>
+        <script src="/js/admin_users.js"></script>
 </body>
 
 </html>

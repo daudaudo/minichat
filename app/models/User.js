@@ -48,7 +48,15 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: Role.NORMAL_ROLES,
     enum: Role.USER_ROLES,
-  }
+  },
+  'deleted_at': {
+    type: mongoose.SchemaTypes.Date,
+    default: null,
+  },
+  'suspended_at': {
+    type: mongoose.SchemaTypes.Date,
+    default: null,
+  },
 }, {
   timestamps: {
     createdAt: 'created_at',
