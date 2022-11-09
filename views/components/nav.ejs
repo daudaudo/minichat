@@ -19,8 +19,21 @@
       <a class="text-slate-700 hover:text-sky-600 block" href="/">Home</a>
       <a class="text-slate-700 hover:text-sky-600 block" href="/chat">Chat</a>
       <% if (auth.auth) { %>
-      <a class="text-slate-700 hover:text-sky-600 block" href="/profile">Profile</a>
       <a class="text-slate-700 hover:text-sky-600 block" href="/posts">Post</a>
+      <div class="flex items-center space-x-2 dropdown-menu py-2">
+        <img class="w-8 h-8 rounded-full object-cover object-center" src="<%= auth.user.picture %>" alt="" srcset="">
+        <button class="text-slate-700 font-semibold text-sm dropdown-menu-toggle space-x-2 w-44">
+          <span class="inline-block flex-1 truncate mr-1"><%= auth.user.username %></span>
+        </button>
+        <ul class="dropdown-menu-list">
+          <li class="px-3 py-2 hover:bg-slate-50">
+            <a class="text-slate-700 hover:text-sky-600 block" href="/myposts">View my posts</a>
+          </li>
+          <li class="px-3 py-2 hover:bg-slate-50">
+            <a class="text-slate-700 hover:text-sky-600 block" href="/profile">Profile</a>
+          </li>
+        </ul>
+      </div>
       <a href="/logout" class="box-border block text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all">Logout</a>
       <% } else { %>
       <a href="/login" class="box-border block text-white p-1 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all">Login</a>
