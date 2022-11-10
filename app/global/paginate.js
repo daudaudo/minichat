@@ -15,7 +15,7 @@ async function paginate(req, model, filter) {
     var numberRecord = await model.estimatedDocumentCount();
     var lastPage = Math.ceil(numberRecord / perPage);
     if (page > lastPage)
-        page = lastPage;
+        page = lastPage > 0 ? lastPage : 1;
     
     var data = await model.find(filter).limit(perPage).skip(page - 1);
 

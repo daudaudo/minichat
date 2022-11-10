@@ -17,7 +17,7 @@
                             class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5">
                             <div class="mb-1 w-full">
                                 <div class="mb-4">
-                                    <%- include('../../components/breadcrumb-admin') %>
+                                    <%- include('../../components/breadcrumb-admin', {breadcrumbs : [{text: "Dashboard", link: "/admin/dashboard"}, {text: "Users", link: "/admin/users"}, ]}) %>
                                     <h1 class="text-xl sm:text-2xl font-semibold text-gray-900">All users</h1>
                                 </div>
                                 <div class="sm:flex">
