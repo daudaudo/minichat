@@ -17,7 +17,7 @@
                             class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5">
                             <div class="mb-1 w-full">
                                 <div class="mb-4">
-                                    <%- include('../../components/breadcrumb-admin') %>
+                                    <%- include('../../components/breadcrumb-admin', {breadcrumbs : [{text: "Dashboard", link: "/admin/dashboard"}, {text: "Posts", link: "/admin/posts"}, ]}) %>
                                     <h1 class="text-xl sm:text-2xl font-semibold text-gray-900">All posts</h1>
                                 </div>
                                 <div class="sm:flex">
@@ -124,10 +124,9 @@
                                                             <label for="checkbox-12" class="sr-only">checkbox</label>
                                                         </div>
                                                     </td>
-                                                    <td
-                                                        class="p-4 flex items-center whitespace-nowrap space-x-6 mr-12 lg:mr-0">
+                                                    <td class="p-4 whitespace-nowrap">
                                                         <div class="text-sm font-normal text-gray-500">
-                                                            <div class="text-base font-semibold text-gray-900"><%=post.content%></div>
+                                                            <div class="text-base font-medium text-gray-500"><%=post.content%></div>
                                                         </div>
                                                     </td>
                                                     <td class="p-4 whitespace-nowrap">
