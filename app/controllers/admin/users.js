@@ -9,7 +9,7 @@ const paginate = require('../../global/paginate');
  */
 
 async function index(req, res) {
-    var paginationData = await paginate(req, User, {'role': Role.NORMAL_ROLES, deleted_at: null, });
+    var paginationData = await paginate(req, User, {'role': Role.NORMAL_ROLES, deleted_at: null, suspended_at: null, });
 
     res.render('admin/users', {...paginationData});
 }
@@ -35,4 +35,19 @@ async function deleteUser(req, res) {
     res.send(user);
 }
 
-module.exports = {index, deleteUser};
+async function suspendUser(req, res) {
+    var id = req.params.id;
+    var user = await User.findById(id);
+    if (!user) {
+        res.status(404);
+        res.send('Not found');
+        return;
+    }
+
+    user.suspended_at = new Date();
+    await user.save();
+
+    res.send(user);
+}
+
+module.exports = {index, deleteUser, suspendUser};
