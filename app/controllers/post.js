@@ -1,3 +1,4 @@
+const auth = require('../global/auth');
 
 /**
  * 
@@ -6,7 +7,11 @@
  */
 
 async function index(req, res) {
-    res.render('post')
+    res.render('post', {filter: {}})
 };
 
-module.exports = {index,}
+async function getMyPost(req, res) {
+    res.render('post', {filter: {owner: auth.user(req)._id}});
+}
+
+module.exports = {index, getMyPost}

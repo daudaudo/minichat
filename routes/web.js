@@ -44,6 +44,7 @@ router.post('/profile', auth, csrf, require('../app/validators/update-profile'),
 // Post Router
 
 router.get('/posts', postcontroller.index);
+router.get('/wall', auth, postcontroller.getMyPost);
 
 // Admin Router
 

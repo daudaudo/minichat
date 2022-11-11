@@ -32,7 +32,7 @@ const callbacks = {
     },
     connect: () => {
         $('#postsList').empty();
-        socket.emit('get_posts_list');
+        socket.emit('get_posts_list', filterPost ?? {});
     }
 }
 
