@@ -9,7 +9,8 @@ const callbacks = {
     public: (evt) => {
         switch (evt.type) {
             case 'post_created':
-                $('#postsList').prepend(renderPost(evt.data.post));
+                if (!filterPost.owner || filterPost.owner == evt.data.post.owner._id)
+                    $('#postsList').prepend(renderPost(evt.data.post));
                 break;
             case 'get_posts_list':
                 evt.data.posts?.forEach(post => $('#postsList').append(renderPost(post)))
@@ -32,7 +33,7 @@ const callbacks = {
     },
     connect: () => {
         $('#postsList').empty();
-        socket.emit('get_posts_list');
+        socket.emit('get_posts_list', filterPost ?? {});
     }
 }
 
@@ -55,7 +56,7 @@ function renderPost(post) {
     var postDom = $(`
         <div data-post-id="${post._id}" class="p-4 shadow-md rounded-md bg-white mb-8">
             <div class="flex items-center space-x-2 mb-4">
-                <div><img src="${post.owner.picture}" class="w-12 h-12 object-cover rounded-full" alt="" srcset=""></div>
+                <a href="/wall/${post.owner._id}"><img src="${post.owner.picture}" class="w-12 h-12 object-cover rounded-full" alt="" srcset=""></a>
                 <div class="">
                     <p class="text-slate-500 text-sm font-semibold">${post.owner.username}</p>
                     <p class="text-slate-400 font-medium text-xs">${dayjs(post.created_at).format('DD-MM-YYYY HH:mm:ss')}</p>
