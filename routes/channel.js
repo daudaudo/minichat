@@ -29,6 +29,7 @@ function socket(io) {
     socket.on('create_comment', require('../app/events/create-comment')(io,socket));
     socket.on('like_comment', require('../app/events/like-comment')(io,socket));
     socket.on('get_comment_list', require('../app/events/get_comment_list')(io, socket))
+    socket.on('delete_post', require('../app/events/delete-post')(io, socket));
   });
 }
 

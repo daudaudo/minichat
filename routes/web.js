@@ -46,17 +46,20 @@ router.post('/profile',auth,csrf,require('../app/validators/update-profile'),val
 // Post Router
 
 router.get('/posts', postcontroller.index);
+router.get('/wall', auth, postcontroller.getMyPost);
+router.get('/wall/:id', postcontroller.getWall);
 
 // Admin Router
 
 router.get('/admin/login', require('../app/controllers/admin/auth').showLoginForm);
 router.get('/admin/dashboard', adminAuth, require('../app/controllers/admin/dashboard').index);
 
-router.get('/admin/users', adminAuth, require('../app/controllers/admin/users').index);
-router.delete('/admin/users/:id', adminAuth, csrf, require('../app/controllers/admin/users').deleteUser);
-router.delete('/admin/users/suspend/:id', adminAuth, csrf, require('../app/controllers/admin/users').suspendUser);
-router.delete('/admin/posts/:id', adminAuth, csrf, require('../app/controllers/admin/posts').deletePost);
-
+router.get("/admin/users", adminAuth, require("../app/controllers/admin/users").index);
+router.delete("/admin/users/:id", adminAuth, csrf, require("../app/controllers/admin/users").deleteUser);
+router.delete("/admin/users", adminAuth, csrf, require("../app/controllers/admin/users").bulkDeleteUsers);
+router.put("/admin/users/suspend/:id", adminAuth, csrf, require("../app/controllers/admin/users").suspendUser);
+router.put("/admin/users/suspend", adminAuth, csrf, require("../app/controllers/admin/users").bulkSuspendUsers);
+router.delete("/admin/posts/:id", adminAuth, csrf, require("../app/controllers/admin/posts").deletePost);
 router.get('/admin/posts', adminAuth, require('../app/controllers/admin/posts').index);
 router.post('/admin/login', loginValidator, validateWithRedirect(), require('../app/controllers/admin/auth').loginAdmin);
 

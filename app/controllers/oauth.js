@@ -1,9 +1,8 @@
 var User = require('../models/User');
 var {google, oauth2Client} = require('../global/oauth');
-var dayjs = require('dayjs');
 const Storage = require('../global/storage');
-var {login} = require('../global/auth');
-var uuid = require('uuid');
+const uuid = require('uuid');
+const bcrypt = require('bcrypt');
 
 const homeUrl = '/';
 
@@ -33,24 +32,49 @@ async function callbackGoogle(req, res) {
   try {
     var {tokens} = await oauth2Client.getToken(req.query.code);
     oauth2Client.setCredentials(tokens);
-    var user = await google.oauth2('v2').userinfo.get({
+    var userGoogle = await google.oauth2('v2').userinfo.get({
       auth: oauth2Client
     });
-    user = user.data;
-    if(!(await login(user, req)))
-    {
+    userGoogle = userGoogle.data;
+    var user = await User.findOne({email: userGoogle.email});
+    if (user) {
+      if (user.deleted_at) {
+        return redirectLoginWithMessage(req, res, "Your account has been deleted !!");
+      }
+      if (user.suspended_at) {
+        return redirectLoginWithMessage(req, res, "Your account has been suspended !!");
+      }
+    } else {
       user = await User.create({
-        username: user.name,
-        email: user.email,
-        picture: Storage.url(await Storage.fromFolder('public/avatar').putFromUrl(user.picture)),
-        password: uuid.v4(),
+        username: userGoogle.name,
+        email: userGoogle.email,
+        picture: Storage.url(await Storage.fromFolder('public/avatar').putFromUrl(userGoogle.picture)),
+        password: bcrypt.hashSync(uuid.v4(), 10),
       });
-      await login(user, req);
     }
+    req.session.auth = {
+      user: user,
+      token: uuid.v4(),
+      auth: true,
+    };
     res.redirect(homeUrl);
   } catch (err) {
     res.status(500).send(err);
   }
+}
+
+/**
+ *
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {Object} msg
+ */
+
+function redirectLoginWithMessage(req, res, msg) {
+  req.flash("errors", {
+    auth: { msg },
+  });
+  res.redirect("/login");
 }
 
 module.exports = {
