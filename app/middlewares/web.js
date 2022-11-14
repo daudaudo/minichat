@@ -26,6 +26,7 @@ module.exports = async function(req, res, next) {
     else 
       req.session.auth.user = user;
   }
+  res.locals.req = req;
   res.locals.auth = req.session.auth;
   res.locals.errors = req.flash('errors')[0] ?? {};
   res.locals.success = req.flash('success')[0] ?? {};

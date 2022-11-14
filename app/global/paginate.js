@@ -4,7 +4,7 @@ const perPage = 10;
  * 
  * @param {import('express').Request} req 
  * @param {import('mongoose').Model<any, {}, {}, {}>} model
- * @param {Object} filter
+ * @param {import('mongoose').FilterQuery<T>} filter
  */
 
 async function paginate(req, model, filter) {
