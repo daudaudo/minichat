@@ -1,5 +1,4 @@
 const Post = require('../../models/Post');
-//const Role = require('../../models/Role');
 const paginate = require('../../global/paginate');
 
 /**
@@ -9,7 +8,6 @@ const paginate = require('../../global/paginate');
  */
 
 async function index(req, res) {
-    //var paginationData = await paginate(req, Post,{deleted_at: null});
     var search = req.query.search ?? '';
     var filter = {
         $and: [
