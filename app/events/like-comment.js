@@ -12,28 +12,25 @@ function handle(io, socket) {
     if (!socket.auth.auth)
         return;
 
-    var data;
-
     var comment = await Comment.findById(commentId);
-    var filter = {_id : commentId};
-    
     if(!comment) return;
 
-    if (comment.like.includes(socket.auth.user._id)) {
-        var index = comment.like.indexOf(socket.auth.user._id);
-        comment.like.splice(index, 1);
-        await Comment.updateOne(filter, { like: comment.like });
-        data = {comment: comment, like:0}
-      } else {
-        comment.like.push(socket.auth.user._id);
-        await Comment.updateOne(filter, { like: comment.like });
-        data = {comment: comment, like:1}
-      }
+    var liked = 0;
 
+    if (comment.like.has(socket.auth.user._id)) {
+        comment.like.delete(socket.auth.user._id);
+    } else {
+      
+      comment.like.set(socket.auth.user._id.toString(), socket.auth.user._id);
+      liked = 1;
+    }
+
+    await comment.save();
     io.emit('public', {
         type: 'like_comment_socket',
         data: {
-            comment: data,
+            comment: comment,
+            like:liked,
         }
     });
   };

@@ -27,10 +27,10 @@ const callbacks = {
                 evt.data.comments.forEach(comment => Dom.append(renderCommentView(comment)));
                 break;
             case 'like_comment_socket':
-                if(evt.data.comment.like == 1){
-                    $(`#postComment [comment-id="${evt.data.comment.comment._id}"]`).find('button[btn-like-comment]').addClass('active');
+                if(evt.data.like == 1){
+                    $(`#postComment [comment-id="${evt.data.comment._id}"]`).find('button[btn-like-comment]').addClass('active');
                 } else {
-                    $(`#postComment [comment-id="${evt.data.comment.comment._id}"]`).find('button[btn-like-comment]').removeClass('active');
+                    $(`#postComment [comment-id="${evt.data.comment._id}"]`).find('button[btn-like-comment]').removeClass('active');
                 }
                 break;
             case 'created_comment' :
@@ -67,7 +67,7 @@ $('#contentInput').on('input', function(e) {
 })
 
 function renderCommentView(comment) {
-    var likeComment = comment.like.includes(authUser.user._id) ? true : false;
+    var likeComment = comment.like[authUser.user._id] ? true : false;
     var commentDom = $(`
     <div comment-id="${comment._id}" class="bg-white dark:bg-gray-800 text-black dark:text-gray-200 antialiased flex max-w-lg">
     <img class="rounded-full h-8 w-8 mr-2 mt-1 " src="${comment.user_id.picture}" style="width: 32px; height: 32px;" />
