@@ -28,7 +28,7 @@ const callbacks = {
                 Dom.empty()
                 evt.data.comments.forEach(comment => Dom.append(renderCommentView(comment)));
                 break;
-            case 'like_comment_socket':
+            case 'changed_comment':
                 if(evt.data.like == 1){
                     $(`#postComment [comment-id="${evt.data.comment._id}"]`).find('button[btn-like-comment]').addClass('active');
                 } else {

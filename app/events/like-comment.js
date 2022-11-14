@@ -27,7 +27,7 @@ function handle(io, socket) {
 
     await comment.save();
     io.emit('public', {
-        type: 'like_comment_socket',
+        type: 'changed_comment',
         data: {
             comment: comment,
             like:liked,
