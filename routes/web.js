@@ -60,6 +60,7 @@ router.put("/admin/users/suspend/:id", adminAuth, csrf, require("../app/controll
 router.put("/admin/users/suspend", adminAuth, csrf, require("../app/controllers/admin/users").bulkSuspendUsers);
 
 router.delete("/admin/posts/:id", adminAuth, csrf, require("../app/controllers/admin/posts").deletePost);
+router.delete("/admin/posts", adminAuth, csrf, require("../app/controllers/admin/posts").bulkDeletePost);
 
 router.get("/admin/posts", adminAuth, require("../app/controllers/admin/posts").index);
 router.post("/admin/login", loginValidator, validateWithRedirect(), require("../app/controllers/admin/auth").loginAdmin);
