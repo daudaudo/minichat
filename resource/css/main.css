@@ -586,6 +586,17 @@ button[btn-like-post].active::before{
   @apply text-sky-700;
 }
 
+button[btn-like-comment] {
+  color: rgb(148 163 184);
+}
+
+button[btn-like-comment].active {
+  color: rgb(3 105 161);
+}
+
+
+
+
 /* Dropdown menu */
 
 .dropdown-menu {
