@@ -7,8 +7,10 @@ const Post = require('../models/Post');
  * @param {Socket} socket 
  */
 function handle(io, socket) {
-    return async () => {
-        var posts = await Post.find({deleted_at: null}).sort({'created_at': -1,}).populate('owner');
+    return async (filter) => {
+        filter = filter ?? {};
+        filter.deleted_at = null;
+        var posts = await Post.find(filter).sort({'created_at': -1,}).populate('owner');
         socket.emit('public', {
             type: 'get_posts_list',
             data: {

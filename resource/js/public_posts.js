@@ -1,5 +1,6 @@
 const $ = require('./animation');
 const dayjs = require('dayjs');
+import tippy from 'tippy.js';
 const maxLengthContent = 300;
 
 const callbacks = {
@@ -9,7 +10,8 @@ const callbacks = {
     public: (evt) => {
         switch (evt.type) {
             case 'post_created':
-                $('#postsList').prepend(renderPost(evt.data.post));
+                if (!filterPost.owner || filterPost.owner == evt.data.post.owner._id)
+                    $('#postsList').prepend(renderPost(evt.data.post));
                 break;
             case 'get_posts_list':
                 evt.data.posts?.forEach(post => $('#postsList').append(renderPost(post)))
@@ -36,6 +38,8 @@ const callbacks = {
             case 'created_comment' :
                 var Dom = $(`#postsList [data-post-id="${evt.data.comment.post_id}"]`).find('#postComment')
                 Dom.prepend(renderCommentView(evt.data.comment))
+            case 'delete_post':
+                refreshPostList();
                 break;
             default:
                 console.log(evt);
@@ -48,7 +52,7 @@ const callbacks = {
     },
     connect: () => {
         $('#postsList').empty();
-        socket.emit('get_posts_list');
+        socket.emit('get_posts_list', filterPost ?? {});
     }
 }
 
@@ -104,12 +108,17 @@ $('#createCommentBtn').on('click touch', function(e) {
     });
   });
 
+function refreshPostList() {
+    $('#postsList').empty();
+    socket.emit('get_posts_list', filterPost ?? {});
+}
+
 function renderPost(post) {
     var likedPost = post.like[authUser.user._id] ? true : false;
     var postDom = $(`
         <div data-post-id="${post._id}" class="p-4 shadow-md rounded-md bg-white mb-8">
             <div class="flex items-center space-x-2 mb-4">
-                <div><img src="${post.owner.picture}" class="w-12 h-12 object-cover rounded-full" alt="" srcset=""></div>
+                <a href="/wall/${post.owner._id}"><img src="${post.owner.picture}" class="w-12 h-12 object-cover rounded-full" alt="" srcset=""></a>
                 <div class="">
                     <p class="text-slate-500 text-sm font-semibold">${post.owner.username}</p>
                     <p class="text-slate-400 font-medium text-xs">${dayjs(post.created_at).format('DD-MM-YYYY HH:mm:ss')}</p>
@@ -134,7 +143,7 @@ function renderPost(post) {
                     </button>
                 </div>
                 <div>
-                    <button class="text-slate-700">
+                    <button setting-post class="text-slate-700">
                         <svg class="w-5 h-5 object-center object-contain" fill="currentColor" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve" width="512" height="512">
                             <g>
                                 <circle cx="256" cy="53.333" r="53.333"/>
@@ -182,5 +191,43 @@ function renderPost(post) {
         }         
     });
 
+    var settingPopper = tippy(postDom.find('button[setting-post]')[0], {
+        allowHTML: true,
+        trigger: 'mouseenter',
+        content: `
+          <div class="flex flex-col items-center p-2">
+            <p class="text-slate-700 font-semibold mb-2">Post Ownner</p>
+            <img src="${post.owner.picture}" class="w-10 h-10 rounded-full object-cover mb-2">
+            <p class="text-slate-700 text-xs font-semibold mb-3">${post.owner.username}</p>
+            <button btn-delete-post class="w-100 flex items-center space-x-2 p-2 mb-2 rounded-md -mx-2 bg-red-500 hover:bg-transparent border-2 border-transparent hover:border-red-500 hover:text-slate-700 group">
+              <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" class="w-4 h-4 fill-gray-100 group-hover:fill-slate-700" width="512" height="512"><path d="M21,4H17.9A5.009,5.009,0,0,0,13,0H11A5.009,5.009,0,0,0,6.1,4H3A1,1,0,0,0,3,6H4V19a5.006,5.006,0,0,0,5,5h6a5.006,5.006,0,0,0,5-5V6h1a1,1,0,0,0,0-2ZM11,2h2a3.006,3.006,0,0,1,2.829,2H8.171A3.006,3.006,0,0,1,11,2Zm7,17a3,3,0,0,1-3,3H9a3,3,0,0,1-3-3V6H18Z"/><path d="M10,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,10,18Z"/><path d="M14,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,14,18Z"/></svg>
+              <p class="text-gray-100 text-xs font-medium group-hover:text-slate-700">Delete post</p>
+            </button>
+            <button btn-edit-post class="w-100 flex items-center space-x-2 p-2 mb-2 rounded-md -mx-2 bg-red-500 hover:bg-transparent border-2 border-transparent hover:border-red-500 hover:text-slate-700 group">
+              <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" class="w-4 h-4 fill-gray-100 group-hover:fill-slate-700" width="512" height="512"><path d="M21,4H17.9A5.009,5.009,0,0,0,13,0H11A5.009,5.009,0,0,0,6.1,4H3A1,1,0,0,0,3,6H4V19a5.006,5.006,0,0,0,5,5h6a5.006,5.006,0,0,0,5-5V6h1a1,1,0,0,0,0-2ZM11,2h2a3.006,3.006,0,0,1,2.829,2H8.171A3.006,3.006,0,0,1,11,2Zm7,17a3,3,0,0,1-3,3H9a3,3,0,0,1-3-3V6H18Z"/><path d="M10,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,10,18Z"/><path d="M14,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,14,18Z"/></svg>
+              <p class="text-gray-100 text-xs font-medium group-hover:text-slate-700">Edit post</p>
+            </button>
+          </div>
+        `,
+        maxWidth: 250,
+        placement: 'bottom',
+        hideOnClick: false,
+        interactive: true,
+        arrow: false,
+      })
+    
+      if (authUser.user._id != post.owner._id) {
+        $(settingPopper.popper).find('button[btn-delete-post]').remove();
+        $(settingPopper.popper).find('button[btn-edit-post]').remove();
+      }
+    
+      $(settingPopper.popper).find('button[btn-delete-post]').on('click touch', function(e) {
+        socket.emit('delete_post', post._id);
+      })
+
+      $(settingPopper.popper).find('button[btn-edit-post]').on('click touch', function(e) {
+        //socket.emit('delete_room', room._id);
+      })
+      
     return postDom;
 }
