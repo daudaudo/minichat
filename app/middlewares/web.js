@@ -21,7 +21,7 @@ module.exports = async function(req, res, next) {
   if (!req.session.auth) req.session.auth = guest;
   if (req.session.auth.auth) {
     var user = await User.findById(req.session.auth.user._id);
-    if (!user || user.deleted_at) 
+    if (!user || user.deleted_at || user.suspended_at) 
       req.session.auth = guest;
     else 
       req.session.auth.user = user;

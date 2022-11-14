@@ -1,6 +1,5 @@
 var User = require("../models/User");
 var bcrypt = require("bcrypt");
-var dayjs = require("dayjs");
 var uuid = require("uuid");
 
 const homeUrl = "/";
@@ -21,10 +20,15 @@ function showLoginForm(req, res) {
  */
 async function login(req, res) {
   try {
-    var user = await User.findOne({ email: req.body.email }).select(
-      "+password"
-    );
+    var user = await User.findOne({ email: req.body.email }).select("+password");
     if (user && bcrypt.compareSync(req.body.password, user.password)) {
+      if (user.deleted_at) {
+        return redirectLoginWithMessage(req, res, "Your account has been deleted !!");
+      }
+      if (user.suspended_at) {
+        return redirectLoginWithMessage(req, res, "Your account has been suspended !!");
+      }
+
       req.session.auth = {
         user: user,
         token: uuid.v4(),
@@ -32,16 +36,10 @@ async function login(req, res) {
       };
       res.redirect(homeUrl);
     } else {
-      req.flash("errors", {
-        auth: { msg: "The email or password is not valid!" },
-      });
-      res.redirect("/login");
+      return redirectLoginWithMessage(req, res, "The email or password is not valid !!");
     }
   } catch (err) {
-    req.flash("errors", {
-      auth: { msg: "The email or password is not valid!" },
-    });
-    res.redirect("/login");
+    return redirectLoginWithMessage(req, res, "The email or password is not valid !!");
   }
 }
 
@@ -99,6 +97,19 @@ function logout(req, res) {
   } catch (err) {
     res.status(500).send(err);
   }
+}
+
+/**
+ *
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {Object} msg
+ */
+function redirectLoginWithMessage(req, res, msg) {
+  req.flash("errors", {
+    auth: { msg },
+  });
+  res.redirect("/login");
 }
 
 module.exports = {
