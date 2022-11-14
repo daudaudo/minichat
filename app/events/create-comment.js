@@ -1,6 +1,7 @@
 const Server = require("socket.io").Server;
 const Socket = require("socket.io").Socket;
 const Comment = require('../models/Comment');
+const Post = require('../models/Post');
 const bcrypt = require('bcrypt');
 
 /**
@@ -19,13 +20,20 @@ const bcrypt = require('bcrypt');
         commentObj.post_id = data.post_id;
       
   
-      await commentObj.save();
+      var res = await commentObj.save();
       await commentObj.populate('user_id');
+
+      var post = await Post.findById(data.post_id)
+      post.comment.set(res._id.toString(), res._id);
+      await post.save();
+      await post.populate('comment')
+
   
-      io.emit('public', {
+  
+      io.sockets.emit('public', {
         type: 'created_comment',
         data: {
-          comment : commentObj
+          comment : commentObj,
         }
       });
     };

@@ -10,7 +10,9 @@ function handle(io, socket) {
     return async (filter) => {
         filter = filter ?? {};
         filter.deleted_at = null;
-        var posts = await Post.find(filter).sort({'created_at': -1,}).populate('owner');
+        var posts = await Post.find(filter).sort({'created_at': -1}).populate('owner').populate('comment');
+
+
         socket.emit('public', {
             type: 'get_posts_list',
             data: {

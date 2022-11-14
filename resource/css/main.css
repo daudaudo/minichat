@@ -594,7 +594,20 @@ button[btn-like-comment].active {
   color: rgb(3 105 161);
 }
 
+button[btn-edit-comment].visible {
+  display:block;
+}
 
+button[btn-edit-comment].invisible {
+  display:none;
+}
+button[btn-delete-comment].visible {
+  display:block;
+}
+
+button[btn-delete-comment].invisible {
+  display:none;
+}
 
 
 /* Dropdown menu */
