@@ -24,7 +24,7 @@ const commentSchema = new mongoose.Schema(
           type: mongoose.SchemaTypes.ObjectId,
       },
       default: {},
-  },
+    },
   },
   {
     timestamps: {
