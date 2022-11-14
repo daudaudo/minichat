@@ -9,7 +9,22 @@ const paginate = require('../../global/paginate');
  */
 
 async function index(req, res) {
-    var paginationData = await paginate(req, User, {'role': Role.NORMAL_ROLES, deleted_at: null, });
+    var search = req.query.search ?? '';
+    var filter = {
+        $and: [
+            {
+                role: Role.NORMAL_ROLES, 
+                deleted_at: null,
+            }, {
+                $or: [
+                    { email: new RegExp(search) },
+                    { username: new RegExp(search) },
+                ]
+            }
+        ]
+    };
+    
+    var paginationData = await paginate(req, User, filter);
 
     res.render('admin/users', {...paginationData});
 }
