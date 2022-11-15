@@ -16,7 +16,7 @@ const postSchema = new mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'User',
     },
-    'comment':{
+    'comments':{
         type: mongoose.SchemaTypes.Map,
         of: {
             type: mongoose.SchemaTypes.ObjectId,

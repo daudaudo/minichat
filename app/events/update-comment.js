@@ -12,7 +12,7 @@ function handle(io, socket) {
         if (!socket.auth.auth)
         return;
 
-        await Comment.findByIdAndUpdate(data.comment_id,{content: data.content}).populate('user_id');
+        await Comment.findByIdAndUpdate(data.comment_id,{content: data.content}).populate('owner');
         // await Comment.populate('user_id');
 
 

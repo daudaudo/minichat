@@ -16,7 +16,7 @@ function handle(io, socket) {
     await comment.save();
     
     var post = await Post.findById(post_id);
-    post.comment.delete(commentId)
+    post.comments.delete(commentId)
     await post.save()
     
     

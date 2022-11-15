@@ -74,14 +74,14 @@ $('#contentInput').on('input', function(e) {
 
 function renderCommentView(comment) {
     var likeComment = comment.like[authUser.user._id] ? true : false;
-    var isUserComment = comment.user_id._id == authUser.user._id ? true : false;
+    var isUserComment = comment.owner._id == authUser.user._id ? true : false;
     var commentDom = $(`
     <div comment-id="${comment._id}" class="bg-white text-black  antialiased flex max-full">
-    <img class="rounded-full h-8 w-8 mr-2 mt-1 " src="${comment.user_id.picture}" style="width: 32px; height: 32px;" />
+    <img class="rounded-full h-8 w-8 mr-2 mt-1 " src="${comment.owner.picture}" style="width: 32px; height: 32px;" />
         <div>
             <div class="bg-gray-100 dark:bg-gray-700 px-4 pt-2 pb-2.5 "
                 style="background-color: #F1F5F9; border-radius: 20px;">
-                <div class="font-bold text-sm leading-relaxed" style="color: #334155;">${comment.user_id.username}</div>
+                <div class="font-bold text-sm leading-relaxed" style="color: #334155;">${comment.owner.username}</div>
                 
                 <span commentContent contenteditable="false" class="text-normal leading-snug md:leading-normal w-fit" style="color: #334155;">${comment.content}</span>
                 <div class="text-xs mt-0.5 text-gray-500 dark:text-gray-400" style="color: #4F4F4F;">${dayjs(comment.created_at).format('DD-MM')}</div>
@@ -124,7 +124,6 @@ function renderCommentView(comment) {
     });
 
     commentDom.find('button[btn-delete-comment]').on('click touch', function(e) {
-       
         socket.emit('delete_comment', comment._id)
         refreshPostList();
     })
@@ -208,7 +207,6 @@ function renderPost(post) {
     postDom.find('button[btn-get-comment]').on('click touch', function(e) {
         var commentDom = postDom.find('#postComment')
         commentDom.empty()
-        postDom.find('#postComment').empty()
         socket.emit('get_comment_list', post._id);
         // for(var i in post.comment) {
         //     commentDom.prepend(renderCommentView(post.comment[i]))
