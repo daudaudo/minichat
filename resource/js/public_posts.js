@@ -91,10 +91,10 @@ function renderCommentView(comment) {
                     <p like class="text-sm  ml-4 font-semibold ${likeComment != true ? "" : "active"}">Like</p>
                 </button>
                 <button btn-edit-comment class="flex items-center text-slate-700 ${isUserComment ? "visible" : "invisible"}">
-                    <p like class="text-sm  ml-4 font-semibold">Sửa</p>
+                    <p like class="text-sm  ml-4 font-semibold">Edit</p>
                 </button> 
                 <button btn-delete-comment class="flex items-center text-red-600 ${isUserComment ? "visible" : "invisible"}">
-                    <p like class="text-sm  ml-4 font-semibold">Xoá</p>
+                    <p like class="text-sm  ml-4 font-semibold">Delete</p>
                 </button> 
             </div>
         </div>

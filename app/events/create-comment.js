@@ -21,7 +21,7 @@ const bcrypt = require('bcrypt');
       
   
       var res = await commentObj.save();
-      await commentObj.populate('user_id');
+      await commentObj.populate('owner');
 
       var post = await Post.findById(data.post_id)
       post.comment.set(res._id.toString(), res._id);
