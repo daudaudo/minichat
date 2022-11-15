@@ -27,6 +27,7 @@ function socket(io) {
     socket.on('get_posts_list', require('../app/events/get_posts_list')(io, socket));
     socket.on('like_post', require('../app/events/like-post')(io, socket));
     socket.on('delete_post', require('../app/events/delete-post')(io, socket));
+    socket.on('edit_post', require('../app/events/edit-post')(io, socket));
   });
 }
 
