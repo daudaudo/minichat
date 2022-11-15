@@ -10,7 +10,7 @@ const commentSchema = new mongoose.Schema(
       type: mongoose.SchemaTypes.ObjectId,
       ref: 'User',
     },
-    'post_id': {
+    'parent_post': {
       type: mongoose.SchemaTypes.ObjectId,
       required: true,
       ref: "Post",

@@ -11,11 +11,11 @@ function handle(io, socket) {
   return async commentId => {
 
     var comment = await Comment.findOne({_id:commentId});
-    var post_id = comment.post_id;
+    var parent_post = comment.parent_post;
     comment.deleted_at = new Date();
     await comment.save();
     
-    var post = await Post.findById(post_id);
+    var post = await Post.findById(parent_post);
     post.comments.delete(commentId)
     await post.save()
     

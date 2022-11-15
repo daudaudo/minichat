@@ -26,7 +26,7 @@ const callbacks = {
                 $(`#postsList [data-post-id="${evt.data.post._id}"]`).find('p[like-count]').text(Object.keys(evt.data.post.like).length.toString());
                 break;
             case 'get_comment_list':
-                var commentDom = $(`#postsList [data-post-id="${evt.data.post_id}"]`).find('#postComment')
+                var commentDom = $(`#postsList [data-post-id="${evt.data.parent_post}"]`).find('#postComment')
                 commentDom.empty()
                 evt.data.comments.forEach(comment => commentDom.append(renderCommentView(comment)));
                 break;
@@ -38,7 +38,7 @@ const callbacks = {
                 }
                 break;
             case 'created_comment':
-                var commentDom = $(`#postsList [data-post-id="${evt.data.comment.post_id}"]`).find('#postComment')
+                var commentDom = $(`#postsList [data-post-id="${evt.data.comment.parent_post}"]`).find('#postComment')
                 commentDom.prepend(renderCommentView(evt.data.comment))
             case 'delete_post':
                 refreshPostList();
@@ -221,7 +221,7 @@ function renderPost(post) {
         if(e.key == 'Enter'){
             if(content.length){
                 e.preventDefault()
-                var data = {content : content, post_id: post._id}
+                var data = {content : content, parent_post: post._id}
                 commentInput.text('')
                 socket.emit('create_comment', data);    
             }

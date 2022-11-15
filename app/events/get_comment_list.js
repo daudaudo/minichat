@@ -9,13 +9,13 @@ const Comment = require('../models/Comment');
 function handle(io, socket) {
     return async (filters) => {
         console.log(filters);
-        var comments = await Comment.find({post_id: filters, deleted_at:null}).sort({'created_at': -1,}).populate('owner');
+        var comments = await Comment.find({parent_post: filters, deleted_at:null}).sort({'created_at': -1,}).populate('owner');
         
         socket.emit('public', {
             type: 'get_comment_list',
             data: {
                 comments: comments,
-                post_id : filters
+                parent_post : filters
             }
         });
     }
