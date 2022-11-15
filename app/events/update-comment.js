@@ -1,6 +1,5 @@
 const Server = require("socket.io").Server;
 const Socket = require("socket.io").Socket;
-const Post = require('../models/Post');
 const Comment = require('../models/Comment')
 /**
  * 

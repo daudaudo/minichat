@@ -1,7 +1,6 @@
 const Server = require("socket.io").Server;
 const Socket = require("socket.io").Socket;
 const Comment = require('../models/Comment');
-const User = require('../models/User');
 /**
  * 
  * @param {Server} io 

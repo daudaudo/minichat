@@ -1,6 +1,5 @@
 const Server = require("socket.io").Server;
 const Socket = require("socket.io").Socket;
-
 const Comment = require('../models/Comment')
 /**
  * 
@@ -18,9 +17,8 @@ function handle(io, socket) {
     var liked = 0;
 
     if (comment.like.has(socket.auth.user._id)) {
-        comment.like.delete(socket.auth.user._id);
+      comment.like.delete(socket.auth.user._id);
     } else {
-      
       comment.like.set(socket.auth.user._id.toString(), socket.auth.user._id);
       liked = 1;
     }

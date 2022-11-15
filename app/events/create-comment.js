@@ -15,7 +15,7 @@ const Post = require('../models/Post');
     
       var commentObj = new Comment();
       commentObj.content = data.content;
-      commentObj.user_id = socket.auth.user._id;
+      commentObj.owner = socket.auth.user._id;
       commentObj.post_id = data.post_id;
       
   
