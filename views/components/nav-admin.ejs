@@ -1,5 +1,5 @@
 <nav class="bg-white border-b border-gray-200 fixed z-30 w-full">
-    <div class="px-3 py-5 lg:px-5 lg:pl-3">
+    <div class="px-3 py-3 lg:px-5 lg:pl-3">
         <div class="flex items-center justify-between">
             <div class="flex items-center justify-start">
                 <button id="toggleSidebarMobile" aria-expanded="true" aria-controls="sidebar"
@@ -22,6 +22,19 @@
                     <img src="/images/minichat.svg" class="h-6 mr-2"
                         alt="Minichat Logo">
                 </a>
+            </div>
+            <div>
+                <div dropdown-direction="br" class="flex items-center space-x-2 dropdown-menu py-1 px-3 border border-slate-300 rounded-full">
+                    <img class="w-8 h-8 rounded-full object-cover object-center" src="<%= auth.user.picture %>" alt="" srcset="">
+                    <button class="text-slate-700 font-semibold text-sm dropdown-menu-toggle space-x-2 max-w-44">
+                      <span class="inline-block flex-1 truncate mr-1"><%= auth.user.username %></span>
+                    </button>
+                    <ul class="dropdown-menu-list">
+                      <li class="px-3 py-2 hover:bg-slate-50">
+                        <a class="text-slate-700 hover:text-sky-600 block" href="/logout">Logout</a>
+                      </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
