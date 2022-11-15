@@ -12,7 +12,7 @@ const Post = require('../models/Post');
     return async data => {
       if (!socket.auth.auth)
         return;
-    
+        
       var commentObj = new Comment();
       commentObj.content = data.content;
       commentObj.owner = socket.auth.user._id;
@@ -29,8 +29,8 @@ const Post = require('../models/Post');
 
   
   
-      io.sockets.emit('public', {
-        type: 'created_comment',
+      io.emit('public', {
+        type: 'comment_created',
         data: {
           comment : commentObj,
         }

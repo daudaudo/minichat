@@ -207,10 +207,9 @@ function renderPost(post) {
     postDom.find('button[btn-get-comment]').on('click touch', function(e) {
         var commentDom = postDom.find('#postComment')
         commentDom.empty()
-        socket.emit('get_comment_list', post._id);
-        // for(var i in post.comment) {
-        //     commentDom.prepend(renderCommentView(post.comment[i]))
-        // }
+        for(var i in post.comments) {
+            commentDom.prepend(renderCommentView(post.comments[i]))
+        }
        
     });
 
