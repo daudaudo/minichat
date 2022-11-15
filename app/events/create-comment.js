@@ -22,7 +22,7 @@ const Post = require('../models/Post');
       var res = await commentObj.save();
       await commentObj.populate('owner');
 
-      var post = await Post.findById(data.post_id)
+      var post = await Post.findById(data.parent_post)
       post.comments.set(res._id.toString(), res._id);
       await post.save();
       await post.populate('comments')
