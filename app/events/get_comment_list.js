@@ -7,18 +7,18 @@ const Comment = require('../models/Comment');
  * @param {Socket} socket 
  */
 function handle(io, socket) {
-    return async (filters) => {
-        console.log(filters);
-        var comments = await Comment.find({parent_post: filters, deleted_at:null}).sort({'created_at': -1,}).populate('owner');
+   return async (filters) => {
+    
+     var comments = await Comment.find({parent_post: filters, deleted_at:null}).sort({'created_at': -1,}).populate('owner');
         
-        socket.emit('public', {
-            type: 'get_comment_list',
-            data: {
-                comments: comments,
-                parent_post : filters
-            }
-        });
-    }
+     socket.emit('public', {
+         type: 'get_comment_list',
+         data: {
+           comments: comments,
+           parent_post : filters
+         }
+      });
+   }
 }
 
 module.exports = handle;
