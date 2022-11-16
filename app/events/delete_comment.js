@@ -19,7 +19,6 @@ function handle(io, socket) {
     post.comments.delete(commentId)
     await post.save()
     
-    
     io.sockets.emit('public', {
         type: 'delete_comment',
         data: {
