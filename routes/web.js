@@ -7,7 +7,6 @@ var authcontroller = require("../app/controllers/auth");
 var chatcontroller = require("../app/controllers/chat");
 var usercontroller = require("../app/controllers/user");
 var postcontroller = require("../app/controllers/post");
-var commentcontroller = require("../app/controllers/comment");
 
 var registerValidator = require("../app/validators/register");
 var loginValidator = require("../app/validators/login");
