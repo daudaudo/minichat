@@ -16,10 +16,18 @@ const postSchema = new mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'User',
     },
+    'comments':{
+        type: mongoose.SchemaTypes.Map,
+        of: {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref:'Comment',
+        },
+        default: {},
+    },
     'deleted_at' : {
         type: mongoose.SchemaTypes.Date,
         default: null,
-    }
+    },
 }, {
     timestamps: {
         createdAt: 'created_at',

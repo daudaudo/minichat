@@ -4,3 +4,4 @@ node_modules/
 public/stylesheets
 public/storage
 public/js
+.DS_Store
