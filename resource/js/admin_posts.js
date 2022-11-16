@@ -6,10 +6,7 @@ $('#modalConfirmDelete').modal();
 $('#modalConfirmBulkDelete').modal();
 
 $('button[btn-delete-post]').on('click touch', function(e) {
-    //var message = $('#modalConfirmDelete').data('message');
     currentDeleteId = $(this).data('id');
-    //message = message.replace(':username', $(this).data('username'));
-    //$('#modalConfirmDelete').find('h3').text(message);
     $('#modalConfirmDelete').showModal();
 });
 
