@@ -8,17 +8,17 @@ const Comment = require('../models/Comment')
  */
 function handle(io, socket) {
     return async (data) => {
-        if (!socket.auth.auth)
-        return;
+    
+      if (!socket.auth.auth)
+       return;
 
-        await Comment.findByIdAndUpdate(data.comment_id,{content: data.content}).populate('owner');
-        // await Comment.populate('user_id');
+       await Comment.findByIdAndUpdate(data.comment_id,{content: data.content}).populate('owner');
 
 
-        io.emit('public', {
-            type: 'updated_comment',
+       io.emit('public', {
+          type: 'updated_comment',
            
-        });
+       });
     }
 }
 
