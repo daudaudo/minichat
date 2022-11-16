@@ -14,9 +14,7 @@ const callbacks = {
                     $('#postsList').prepend(renderPost(evt.data.post));
                 break;
             case 'get_posts_list':
-                evt.data.posts?.forEach(post => {
-                    $('#postsList').append(renderPost(post));
-                })
+                evt.data.posts?.forEach(post => $('#postsList').append(renderPost(post)))
                 break;
             case 'changed_post':
                 if (evt.data.post.like[authUser.user._id])
