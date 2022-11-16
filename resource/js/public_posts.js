@@ -131,16 +131,6 @@ function renderCommentView(comment) {
    return commentDom;
 }
 
-// $('#createCommentBtn').on('click touch', function(e) {
-//     e.preventDefault();
-    
-//     var content = $('#commentInput').val();
-//     socket.emit('create_comment', {
-//       content : content,
-//     //   post_id : ObjectId
-//     });
-//   });
-
 function refreshPostList() {
     $('#postsList').empty();
     socket.emit('get_posts_list', filterPost ?? {});
