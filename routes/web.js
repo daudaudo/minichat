@@ -65,5 +65,4 @@ router.delete("/admin/posts", adminAuth, csrf, require("../app/controllers/admin
 router.get("/admin/posts", adminAuth, require("../app/controllers/admin/posts").index);
 router.post("/admin/login", loginValidator, validateWithRedirect(), require("../app/controllers/admin/auth").loginAdmin);
 
-
 module.exports = router;
