@@ -1,5 +1,4 @@
 const Post = require('../../models/Post');
-//const Role = require('../../models/Role');
 const paginate = require('../../global/paginate');
 
 /**
@@ -9,9 +8,38 @@ const paginate = require('../../global/paginate');
  */
 
 async function index(req, res) {
-    var paginationData = await paginate(req, Post,{deleted_at: null});
+    var search = req.query.search ?? '';
+    var filter = {
+        $and: [
+            {
+                deleted_at: null,
+            }, {
+                $or: [
+                    { content: new RegExp(search) },
+                ]
+            }
+        ]
+    };
 
+    var paginationData = await paginate(req, Post, filter);
     res.render('admin/posts', {...paginationData});
+}
+
+/**
+ * 
+ * @param {import("express").Request} req 
+ * @param {import("express").Response} res 
+ */
+
+ async function bulkDeletePost(req, res) {
+    var ids = req.body['ids[]'] ?? [];
+    if (ids instanceof Array) {
+        await Post.updateMany({_id: {$in: ids}}, {deleted_at: new Date()});
+    } else if (typeof ids == 'string') {
+        await Post.findByIdAndUpdate(ids, {deleted_at: new Date()});
+    }
+
+    res.send('Bulk delete successfully');
 }
 
 /**
@@ -35,4 +63,4 @@ async function deletePost(req, res) {
     res.send(post);
 }
 
-module.exports = {index, deletePost};
+module.exports = {index, deletePost, bulkDeletePost};

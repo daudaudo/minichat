@@ -41,6 +41,9 @@ const callbacks = {
             case 'delete_post':
                 refreshPostList();
                 break;
+            case 'edit_post':
+                refreshPostList();
+                break;
             default:
                 console.log(evt);
                 break;
@@ -145,7 +148,9 @@ function renderPost(post) {
                     <p class="text-slate-400 font-medium text-xs">${dayjs(post.created_at).format('DD-MM-YYYY HH:mm:ss')}</p>
                 </div>
             </div>
-            <p class="text-slate-500 font-medium text-base pb-3 border-b border-slate-300">${post.content}</p>
+            <div div-content-${post._id}>
+                <p content-${post._id} class="text-slate-500 font-medium text-base pb-3 border-b border-slate-300">${post.content}</p>
+            </div>
             <div class="flex items-center justify-between mt-3">
                 <div class="flex space-x-3">
                     <button btn-like-post class="flex items-center ${likedPost ? "active" : ""}">
@@ -221,9 +226,6 @@ function renderPost(post) {
         trigger: 'mouseenter',
         content: `
           <div class="flex flex-col items-center p-2">
-            <p class="text-slate-700 font-semibold mb-2">Post Ownner</p>
-            <img src="${post.owner.picture}" class="w-10 h-10 rounded-full object-cover mb-2">
-            <p class="text-slate-700 text-xs font-semibold mb-3">${post.owner.username}</p>
             <button btn-delete-post class="w-100 flex items-center space-x-2 p-2 mb-2 rounded-md -mx-2 bg-red-500 hover:bg-transparent border-2 border-transparent hover:border-red-500 hover:text-slate-700 group">
               <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" class="w-4 h-4 fill-gray-100 group-hover:fill-slate-700" width="512" height="512"><path d="M21,4H17.9A5.009,5.009,0,0,0,13,0H11A5.009,5.009,0,0,0,6.1,4H3A1,1,0,0,0,3,6H4V19a5.006,5.006,0,0,0,5,5h6a5.006,5.006,0,0,0,5-5V6h1a1,1,0,0,0,0-2ZM11,2h2a3.006,3.006,0,0,1,2.829,2H8.171A3.006,3.006,0,0,1,11,2Zm7,17a3,3,0,0,1-3,3H9a3,3,0,0,1-3-3V6H18Z"/><path d="M10,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,10,18Z"/><path d="M14,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,14,18Z"/></svg>
               <p class="text-gray-100 text-xs font-medium group-hover:text-slate-700">Delete post</p>
@@ -250,9 +252,34 @@ function renderPost(post) {
         socket.emit('delete_post', post._id);
       })
 
-      $(settingPopper.popper).find('button[btn-edit-post]').on('click touch', function(e) {
-        //socket.emit('delete_room', room._id);
-      })
-      
+    var edit_post =  $(`
+        <div class="flex flex-wrap ">
+            <div class="w-5/6 p-2 ">
+                <input input-edit-${post._id} class="p-2 rounded-md border border-slate-200 w-full focus:border-slate-200" type="text" value ="${post.content}">
+            </div>
+            <div class="w-1/6 flex flex-wrap">
+                <div class="w-1/2 p-2 ">
+                    <button btn-content-edit class="w-full box-border text-white p-2 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all flex items-center space-x-2">Edit</button>
+                </div>
+                <div class="w-1/2 p-2 ">
+                    <button btn-content-edit-cancel class="w-full box-border text-white p-2 px-4 hover:bg-white bg-red-500 hover:text-slate-700 rounded rounded-br-lg border-2 border-red-500 transition-all flex items-center space-x-2">Cancel</button>
+                </div>
+            </div>
+        </div>
+        `);
+
+    $(settingPopper.popper).find('button[btn-edit-post]').on('click touch', function(e) {
+       $('p[content-' + post._id + ']').remove();
+       $('div[div-content-' + post._id + ']').append(edit_post);
+    })
+
+    edit_post.find('button[btn-content-edit]').on('click touch', function(e) {
+        if ($('input[input-edit-' + post._id + ']').val() != '')
+            socket.emit('edit_post', post._id, $('input[input-edit-' + post._id + ']').val());
+    });
+    edit_post.find('button[btn-content-edit-cancel]').on('click touch', function(e) {
+        refreshPostList();
+    });
+
     return postDom;
 }

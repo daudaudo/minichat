@@ -32,6 +32,7 @@ function socket(io) {
     socket.on('update_comment' ,require('../app/events/update-comment')(io, socket))
     socket.on('delete_comment', require('../app/events/delete_comment')(io, socket))
     socket.on('delete_post', require('../app/events/delete-post')(io, socket));
+    socket.on('edit_post', require('../app/events/edit-post')(io, socket));
   });
 }
 

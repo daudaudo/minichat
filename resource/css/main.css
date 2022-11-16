@@ -616,6 +616,11 @@ button[btn-delete-comment].invisible {
   position: relative;
 }
 
+.dropdown-menu[dropdown-direction="br"] .dropdown-menu-list{
+  left: auto;
+  right: 0;
+}
+
 .dropdown-menu .dropdown-menu-list {
   opacity: 0;
   visibility: hidden;
