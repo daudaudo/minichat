@@ -192,6 +192,7 @@ function renderPost(post) {
     postDom.find('button[btn-like-post]').on('click touch', function(e) {
         socket.emit('like_post', post._id);
     });
+    
     postDom.find('button[btn-get-comment]').on('click touch', function(e) {
         var commentDom = postDom.find('#postComment')
         commentDom.empty()
