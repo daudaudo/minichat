@@ -31,17 +31,16 @@ router.get('/google/oauth/callback', oauthcontroller.callbackGoogle);
 
 // Auth Router
 router.get('/register', authcontroller.showRegisterForm);
-router.post('/register',registerValidator,validateWithRedirect(),authcontroller.register);
+router.post('/register', registerValidator,validateWithRedirect(), authcontroller.register);
 router.get('/login', authcontroller.showLoginForm);
-router.post('/login',loginValidator,validateWithRedirect(),authcontroller.login);
+router.post('/login', loginValidator,validateWithRedirect(), authcontroller.login);
 router.get('/user', auth, authcontroller.user);
 router.get('/logout', auth, authcontroller.logout);
 
 //User Router
 
 router.get('/profile', auth, usercontroller.showUpdateProfilesForm);
-router.post('/profile',auth,csrf,require('../app/validators/update-profile'),validateWithRedirect('/profile'),usercontroller.postProfile
-);
+router.post('/profile', auth, csrf,require('../app/validators/update-profile'), validateWithRedirect('/profile'), usercontroller.postProfile);
 
 // Post Router
 
