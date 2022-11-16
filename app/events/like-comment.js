@@ -8,6 +8,7 @@ const Comment = require('../models/Comment')
  */
 function handle(io, socket) {
   return async commentId => {
+  
     if (!socket.auth.auth)
         return;
 
