@@ -14,7 +14,14 @@ const callbacks = {
                     $('#postsList').prepend(renderPost(evt.data.post));
                 break;
             case 'get_posts_list':
-                evt.data.posts?.forEach(post => $('#postsList').append(renderPost(post)))
+                evt.data.posts?.forEach(post => {
+                    $('#postsList').append(renderPost(post))
+                    for(var i in post.comments){
+                        console.log(post.comments[i]);
+                        $(`#postsList [data-post-id="${post.comments[i].parent_post}"]`).find('#postComment').prepend(post.comments[i])
+                    }
+                })
+
                 break;
             case 'changed_post':
                 if (evt.data.post.like[authUser.user._id])
