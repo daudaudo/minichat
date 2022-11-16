@@ -16,18 +16,7 @@ const callbacks = {
             case 'get_posts_list':
                 evt.data.posts?.forEach(post => {
                     $('#postsList').append(renderPost(post))
-                    for(var i in post.comments){
-                        console.log(post.comments[i]);
-                        $(`#postsList [data-post-id="${post.comments[i].parent_post}"]`).find('#postComment').prepend(post.comments[i])
-                    }
                 })
-            //     evt.data.posts?.forEach(post => {$('#postsList').append(renderPost(post))})
-            //     evt.data.posts?.forEach(post => {
-            //     for(var i in post.comments){
-            //         console.log(post.comments[i]);
-            //         $(`#postsList [data-post-id="${post.comments[i].parent_post}"]`).find('#postComment').prepend(post.comments[i])
-            //     }
-            // })
                 break;
             case 'changed_post':
                 if (evt.data.post.like[authUser.user._id])
@@ -37,20 +26,19 @@ const callbacks = {
                 $(`#postsList [data-post-id="${evt.data.post._id}"]`).find('p[like-count]').text(Object.keys(evt.data.post.like).length.toString());
                 break;
             case 'get_comment_list':
-                var commentDom = $(`#postsList [data-post-id="${evt.data.parent_post}"]`).find('#postComment')
-                commentDom.empty()
-                evt.data.comments.forEach(comment => commentDom.append(renderCommentView(comment)));
+                var commentsListDom = $(`#postsList [data-post-id="${evt.data.parent_post}"]`).find('[comments-list]')
+                commentsListDom.empty()
+                evt.data.comments.forEach(comment => commentsListDom.append(renderCommentView(comment)));
                 break;
             case 'changed_comment':
                 if(evt.data.like == 1){
-                    $(`#postComment [comment-id="${evt.data.comment._id}"]`).find('button[btn-like-comment]').addClass('active');
+                    $(`[comments-list] [comment-id="${evt.data.comment._id}"]`).find('button[btn-like-comment]').addClass('active');
                 } else {
-                    $(`#postComment [comment-id="${evt.data.comment._id}"]`).find('button[btn-like-comment]').removeClass('active');
+                    $(`[comments-list] [comment-id="${evt.data.comment._id}"]`).find('button[btn-like-comment]').removeClass('active');
                 }
                 break;
-            case 'created_comment':
-                var commentDom = $(`#postsList [data-post-id="${evt.data.comment.parent_post}"]`).find('#postComment')
-                commentDom.prepend(renderCommentView(evt.data.comment))
+            case 'comment_created':
+                $(`#postsList [data-post-id="${evt.data.comment.parent_post}"]`).find('[comments-list]').prepend(renderCommentView(evt.data.comment))
             case 'delete_post':
                 refreshPostList();
                 break;
@@ -90,43 +78,47 @@ function renderCommentView(comment) {
     var likeComment = comment.like[authUser.user._id] ? true : false;
     var isUserComment = comment.owner._id == authUser.user._id ? true : false;
     var commentDom = $(`
-    <div comment-id="${comment._id}" class="bg-white text-black  antialiased flex max-full">
-    <img class="rounded-full h-8 w-8 mr-2 mt-1 " src="${comment.owner.picture}" style="width: 32px; height: 32px;" />
-        <div>
-            <div class="bg-gray-100 dark:bg-gray-700 px-4 pt-2 pb-2.5 "
-                style="background-color: #F1F5F9; border-radius: 20px;">
-                <div class="font-bold text-sm leading-relaxed" style="color: #334155;">${comment.owner.username}</div>
-                
-                <span commentContent contenteditable="false" class="text-normal leading-snug md:leading-normal w-fit" style="color: #334155;">${comment.content}</span>
-                <div class="text-xs mt-0.5 text-gray-500 dark:text-gray-400" style="color: #4F4F4F;">${dayjs(comment.created_at).format('DD-MM')}</div>
-            </div>
-            <div class="flex ml-1.5">
-                <button btn-like-comment class="flex items-center ${likeComment != true ? "" : "active"}">
-                    <p like class="text-sm  ml-4 font-semibold ${likeComment != true ? "" : "active"}">Like</p>
-                </button>
-                <button btn-edit-comment class="flex items-center text-slate-700 ${isUserComment ? "visible" : "invisible"}">
-                    <p like class="text-sm  ml-4 font-semibold">Edit</p>
+        <div comment-id="${comment._id}" class="bg-white text-black  antialiased flex max-full">
+            <img class="rounded-full h-8 w-8 mr-2 mt-1 " src="${comment.owner.picture}" style="width: 32px; height: 32px;" />
+            <div>
+                <div class="bg-gray-100 dark:bg-gray-700 px-4 pt-2 pb-2.5 "
+                    style="background-color: #F1F5F9; border-radius: 20px;">
+                    <div class="font-bold text-sm leading-relaxed" style="color: #334155;">${comment.owner.username}</div>
+                    
+                    <span commentContent contenteditable="false" class="text-normal leading-snug md:leading-normal w-fit" style="color: #334155;">${comment.content}</span>
+                    <div class="text-xs mt-0.5 text-gray-500 dark:text-gray-400" style="color: #4F4F4F;">${dayjs(comment.created_at).format('DD-MM')}</div>
+                </div>
+                <div class="flex ml-1.5">
+                    <button btn-like-comment class="flex items-center ${likeComment != true ? "" : "active"}">
+                        <p like class="text-sm  ml-4 font-semibold ${likeComment != true ? "" : "active"}">Like</p>
+                    </button>
+                    <button btn-edit-comment class="flex items-center text-slate-700 ${isUserComment ? "visible" : "invisible"}">
+                        <p like class="text-sm  ml-4 font-semibold">Edit</p>
+                    </button> 
                 </button> 
-                <button btn-delete-comment class="flex items-center text-red-600 ${isUserComment ? "visible" : "invisible"}">
-                    <p like class="text-sm  ml-4 font-semibold">Delete</p>
+                    </button> 
+                    <button btn-delete-comment class="flex items-center text-red-600 ${isUserComment ? "visible" : "invisible"}">
+                        <p like class="text-sm  ml-4 font-semibold">Delete</p>
+                    </button> 
                 </button> 
+                    </button> 
+                </div>
             </div>
         </div>
-    </div>
     `);
 
-   commentDom.find('button[btn-like-comment]').on('click touch', function(e) {
-    socket.emit('like_comment', comment._id);
-   });
+    commentDom.find('button[btn-like-comment]').on('click touch', function(e) {
+        socket.emit('like_comment', comment._id);
+    });
 
-   commentDom.find('button[btn-edit-comment]').on('click touch', function(e) {
+    commentDom.find('button[btn-edit-comment]').on('click touch', function(e) {
         commentDom.find('span[commentContent]').attr('contenteditable', true);
-   });
+    });
 
-   var commentInput = commentDom.find('span[commentContent]')
+    var commentInput = commentDom.find('span[commentContent]')
 
-   commentInput.on('keypress', function(e) {
-   var content = commentInput.text().trim()
+    commentInput.on('keypress', function(e) {
+    var content = commentInput.text().trim()
         if(e.key == 'Enter'){
             if(content.length){
                 e.preventDefault()
@@ -142,7 +134,7 @@ function renderCommentView(comment) {
         refreshPostList();
     })
 
-   return commentDom;
+    return commentDom;
 }
 
 function refreshPostList() {
@@ -199,7 +191,7 @@ function renderPost(post) {
                         style="color: #334155;background-color: #F1F5F9;max-width:95%;border-radius: 20px;"></span>
             </div>
            
-            <div id="postComment" data-post-id="${post._id}" class="px-4 space-y-4 pt-2 w-full">
+            <div comments-list data-post-id="${post._id}" class="px-4 space-y-4 pt-2 w-full">
             </div>
             <button btn-get-comment>
                 <p class="text-slate-500 font-medium text-base">Xem binh luan</p>
@@ -210,14 +202,13 @@ function renderPost(post) {
     postDom.find('button[btn-like-post]').on('click touch', function(e) {
         socket.emit('like_post', post._id);
     });
+
+    for(let comment of Object.values(post.comments)) {
+        postDom.find('[comments-list]').append(renderCommentView(comment))
+    }
     
     postDom.find('button[btn-get-comment]').on('click touch', function(e) {
-        var commentDom = postDom.find('#postComment')
-        commentDom.empty()
-        for(var i in post.comments) {
-            commentDom.prepend(renderCommentView(post.comments[i]))
-        }
-       
+        // TODO: Load more comment
     });
 
     var commentInput = postDom.find('span[commentInput]')
@@ -231,7 +222,7 @@ function renderPost(post) {
                 commentInput.text('')
                 socket.emit('create_comment', data);    
             }
-        }         
+        }
     });
 
     var settingPopper = tippy(postDom.find('button[setting-post]')[0], {
