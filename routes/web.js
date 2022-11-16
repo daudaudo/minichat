@@ -30,9 +30,9 @@ router.get('/google/oauth/callback', oauthcontroller.callbackGoogle);
 
 // Auth Router
 router.get('/register', authcontroller.showRegisterForm);
-router.post('/register', registerValidator,validateWithRedirect(), authcontroller.register);
+router.post('/register', registerValidator, validateWithRedirect(), authcontroller.register);
 router.get('/login', authcontroller.showLoginForm);
-router.post('/login', loginValidator,validateWithRedirect(), authcontroller.login);
+router.post('/login', loginValidator, validateWithRedirect(), authcontroller.login);
 router.get('/user', auth, authcontroller.user);
 router.get('/logout', auth, authcontroller.logout);
 
