@@ -10,6 +10,7 @@ const Post = require('../models/Post');
  */
  function handle(io, socket) {
     return async data => {
+    
       if (!socket.auth.auth)
         return;
         
@@ -18,7 +19,6 @@ const Post = require('../models/Post');
       commentObj.owner = socket.auth.user._id;
       commentObj.parent_post = data.parent_post;
       
-  
       var res = await commentObj.save();
       await commentObj.populate('owner');
 
@@ -27,8 +27,6 @@ const Post = require('../models/Post');
       await post.save();
       await post.populate('comments')
 
-  
-  
       io.emit('public', {
         type: 'comment_created',
         data: {
