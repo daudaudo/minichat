@@ -20,6 +20,7 @@ function handle(io, socket) {
     await userObj.save();
 
     io.to(roomId).emit('room', {type: 'notification', data: {type: 'primary', text: `User ${socket.auth.user.username} has just liked ${userObj.username}.`}});
+    io.to(roomId).emit('room', {type: 'like_user_success', data: {user: userId}});
   };
 }
 
