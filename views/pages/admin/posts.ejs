@@ -61,6 +61,10 @@
                                                     </th>
                                                     <th scope="col"
                                                         class="p-4 text-left text-xs font-medium text-gray-500 uppercase">
+                                                        Owner
+                                                    </th>
+                                                    <th scope="col"
+                                                        class="p-4 text-left text-xs font-medium text-gray-500 uppercase">
                                                         post
                                                     </th>
                                                     <th scope="col"
@@ -79,6 +83,16 @@
                                                         <div class="flex items-center">
                                                             <input checkbox-normal data-id="<%= post._id %>" id="checkbox-<%= post._id %>" type="checkbox" class="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-sky-200 h-4 w-4 rounded">
                                                             <label for="checkbox-<%= post._id %>" class="sr-only">checkbox</label>
+                                                        </div>
+                                                    </td>
+                                                    <td
+                                                        class="p-4 flex items-center whitespace-nowrap space-x-6 mr-12 lg:mr-0">
+                                                        <img class="h-10 w-10 rounded-full"
+                                                            src="<%=post.owner.picture%>"
+                                                            alt="<%=post.owner.username%> avatar">
+                                                        <div class="text-sm font-normal text-gray-500">
+                                                            <div class="text-base font-semibold text-gray-900"><%=post.owner.username%></div>
+                                                            <div class="text-sm font-normal text-gray-500"><%=post.owner.email%></div>
                                                         </div>
                                                     </td>
                                                     <td class="p-4 whitespace-nowrap">

@@ -21,7 +21,7 @@ async function index(req, res) {
         ]
     };
 
-    var paginationData = await paginate(req, Post, filter);
+    var paginationData = await paginate(req, Post, filter,"post");
     res.render('admin/posts', {...paginationData});
 }
 
