@@ -39,6 +39,7 @@ const callbacks = {
                 break;
             case 'comment_created':
                 $(`#postsList [data-post-id="${evt.data.comment.parent_post}"]`).find('[comments-list]').prepend(renderCommentView(evt.data.comment))
+                break;
             case 'delete_post':
                 refreshPostList();
                 break;
@@ -194,7 +195,7 @@ function renderPost(post) {
             <div comments-list data-post-id="${post._id}" class="px-4 space-y-4 pt-2 w-full">
             </div>
             <button btn-get-comment>
-                <p class="text-slate-500 font-medium text-base">Xem binh luan</p>
+                <p class="text-slate-500 font-medium text-base">View all comment</p>
             </button>
         </div>
     `);
@@ -203,12 +204,22 @@ function renderPost(post) {
         socket.emit('like_post', post._id);
     });
 
+    let count = 0;
+
     for(let comment of Object.values(post.comments)) {
-        postDom.find('[comments-list]').append(renderCommentView(comment))
+        if(count < 2){
+            count++;
+            postDom.find('[comments-list]').append(renderCommentView(comment))
+        } 
     }
     
     postDom.find('button[btn-get-comment]').on('click touch', function(e) {
         // TODO: Load more comment
+        var commentDom = postDom.find('[comments-list]')
+        commentDom.empty()
+        for(var i in post.comments) {
+            commentDom.prepend(renderCommentView(post.comments[i]))
+        }    
     });
 
     var commentInput = postDom.find('span[commentInput]')
