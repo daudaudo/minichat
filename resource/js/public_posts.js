@@ -46,6 +46,9 @@ const callbacks = {
             case 'edit_post':
                 refreshPostList();
                 break;
+            case 'delete_comment':
+                refreshPostList();
+                break;
             default:
                 console.log(evt);
                 break;
@@ -79,29 +82,31 @@ function renderCommentView(comment) {
     var likeComment = comment.like[authUser.user._id] ? true : false;
     var isUserComment = comment.owner._id == authUser.user._id ? true : false;
     var commentDom = $(`
-        <div comment-id="${comment._id}" class="bg-white text-black  antialiased flex max-full">
-            <img class="rounded-full h-8 w-8 mr-2 mt-1 " src="${comment.owner.picture}" style="width: 32px; height: 32px;" />
+        <div comment-id="${comment._id}" class="bg-white text-black antialiased flex max-full font-medium">
+            <a href="/wall/${comment.owner._id}" class="block">
+                <img class="rounded-full h-8 w-8 object-cover mr-2 mt-1 " src="${comment.owner.picture}"/>
+            </a>
             <div>
-                <div class="bg-gray-100 dark:bg-gray-700 px-4 pt-2 pb-2.5 "
-                    style="background-color: #F1F5F9; border-radius: 20px;">
+                <div class="bg-gray-100 dark:bg-gray-700 px-4 pt-2 pb-2.5" style="background-color: #F1F5F9; border-radius: 20px;">
                     <div class="font-bold text-sm leading-relaxed" style="color: #334155;">${comment.owner.username}</div>
-                    
-                    <span commentContent contenteditable="false" class="text-normal leading-snug md:leading-normal w-fit" style="color: #334155;">${comment.content}</span>
-                    <div class="text-xs mt-0.5 text-gray-500 dark:text-gray-400" style="color: #4F4F4F;">${dayjs(comment.created_at).format('DD-MM')}</div>
+                    <span comment-content contenteditable="false" class="text-base font-medium text-slate-700 leading-snug md:leading-normal w-fit">${comment.content}</span>
+                    <div class="text-xs font-medium mt-0.5 text-slate-400">${dayjs(comment.created_at).format('DD-MM-YYYY HH:mm:ss')}</div>
                 </div>
                 <div class="flex ml-1.5">
+                <div class="flex flex-wrap justify-center space-x-1">
+        <div class="">
+          <svg class="w-4 h-4 fill-red-400" xmlns="http://www.w3.org/2000/svg" id="Filled" viewBox="0 0 24 24" width="512" height="512"><path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z"/></svg>
+        </div>
+        <p class="font-medium text-slate-700 text-sm">${Object.keys(comment.like).length}</p>
+      </div>
                     <button btn-like-comment class="flex items-center ${likeComment != true ? "" : "active"}">
                         <p like class="text-sm  ml-4 font-semibold ${likeComment != true ? "" : "active"}">Like</p>
                     </button>
                     <button btn-edit-comment class="flex items-center text-slate-700 ${isUserComment ? "visible" : "invisible"}">
                         <p like class="text-sm  ml-4 font-semibold">Edit</p>
                     </button> 
-                </button> 
-                    </button> 
                     <button btn-delete-comment class="flex items-center text-red-600 ${isUserComment ? "visible" : "invisible"}">
                         <p like class="text-sm  ml-4 font-semibold">Delete</p>
-                    </button> 
-                </button> 
                     </button> 
                 </div>
             </div>
@@ -110,21 +115,20 @@ function renderCommentView(comment) {
 
     commentDom.find('button[btn-like-comment]').on('click touch', function(e) {
         socket.emit('like_comment', comment._id);
+        refreshPostList();
     });
 
     commentDom.find('button[btn-edit-comment]').on('click touch', function(e) {
-        commentDom.find('span[commentContent]').attr('contenteditable', true);
+        commentDom.find('span[comment-content]').attr('contenteditable', true).trigger('focus');
     });
 
-    var commentInput = commentDom.find('span[commentContent]')
-
-    commentInput.on('keypress', function(e) {
-    var content = commentInput.text().trim()
+    commentDom.find('span[comment-content]').on('keypress', function(e) {
+        var content = $(this).text().trim();
         if(e.key == 'Enter'){
             if(content.length){
                 e.preventDefault()
                 var data = {content : content, comment_id: comment._id}
-                commentInput.attr('contenteditable', false);
+                $(this).attr('contenteditable', false);
                 socket.emit('update_comment', data);    
             }
         }
@@ -132,7 +136,6 @@ function renderCommentView(comment) {
 
     commentDom.find('button[btn-delete-comment]').on('click touch', function(e) {
         socket.emit('delete_comment', comment._id)
-        refreshPostList();
     })
 
     return commentDom;
@@ -157,21 +160,13 @@ function renderPost(post) {
             <div div-content-${post._id}>
                 <p content-${post._id} class="text-slate-500 font-medium text-base pb-3 border-b border-slate-300">${post.content}</p>
             </div>
-            <div class="flex items-center justify-between mt-3">
+            <div class="flex items-center justify-between mt-3 border-b border-slate-300 pb-3">
                 <div class="flex space-x-3">
                     <button btn-like-post class="flex items-center ${likedPost ? "active" : ""}">
                         <p like-count class="text-sm text-slate-700 ml-2 font-semibold">${Object.keys(post.like).length}</p>
                     </button>
                     <button class="flex items-center text-slate-600 hover:text-red-400">
                         <svg fill="currentColor" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" id="Isolation_Mode" data-name="Isolation Mode" viewBox="0 0 24 24" width="512" height="512"><path d="M16.514,4.213c-1.122-.953-2.282-1.937-3.446-3.1L12,.048,10.941,1.114a14.411,14.411,0,0,0-3.317,6.1c-.015-.052-.029-.1-.043-.157L6.947,4.6,5.1,6.334C3.245,8.073,1.531,10.154,1.53,13.58A10.376,10.376,0,0,0,9.3,23.711a10.984,10.984,0,0,0,2.69.337A10.464,10.464,0,0,0,22.47,13.582C22.47,9.27,19.709,6.926,16.514,4.213Zm.069,15.261c-.109.084-.225.154-.337.232a4.584,4.584,0,0,0,.35-1.753c0-2.539-2.3-3.552-4.6-5.85-2.507,2.507-4.6,3.311-4.6,5.85A4.574,4.574,0,0,0,7.8,19.8,7.469,7.469,0,0,1,4.536,13.58a5.463,5.463,0,0,1,1.137-3.449c.109.172.224.338.346.5a2.253,2.253,0,0,0,2.32.854A2.314,2.314,0,0,0,10.1,9.7a15.809,15.809,0,0,1,2.043-5.316c.844.776,1.67,1.477,2.426,2.12,3.218,2.731,4.9,4.287,4.9,7.078A7.423,7.423,0,0,1,16.583,19.474Z"/></svg>
-                    </button>
-                    <button class="flex items-center text-slate-600 hover:text-red-400" btn-comment-post>
-                        <svg  fill="currentColor" class="w-6 h-6" viewBox="0 0 30 30" width="512" height="512"><path d="M27.184,1.605H2.156C0.967,1.605,0,2.572,0,3.76v17.572c0,1.188,0.967,2.155,2.156,2.155h13.543
-                        l5.057,3.777c0.414,0.31,0.842,0.468,1.268,0.468c0.789,0,1.639-0.602,1.637-1.923v-2.322h3.523c1.188,0,2.154-0.967,2.154-2.155
-                        V3.76C29.338,2.572,28.371,1.605,27.184,1.605z M27.34,21.332c0,0.085-0.068,0.155-0.154,0.155h-5.523v3.955l-5.297-3.956H2.156
-                        c-0.086,0-0.154-0.07-0.154-0.155V3.759c0-0.085,0.068-0.155,0.154-0.155v0.001h25.029c0.086,0,0.154,0.07,0.154,0.155
-                        L27.34,21.332L27.34,21.332z M5.505,10.792h4.334v4.333H5.505C5.505,15.125,5.505,10.792,5.505,10.792z M12.505,10.792h4.334v4.333
-                        h-4.334V10.792z M19.505,10.792h4.334v4.333h-4.334V10.792z"/> </svg>
                     </button>
                 </div>
                 <div>
@@ -186,17 +181,15 @@ function renderPost(post) {
                     </button>
                 </div>
             </div>
-            <div class="bg-white  text-black p-4 antialiased max-full flex" >
-                <img class="rounded-full h-8 w-8 mr-2 mt-1 " src="${authUser.user.picture}" />
-                <span contenteditable="true" commentInput class="text-normal leading-snug md:leading-normal bg-gray-100  dark:bg-gray-700 w-full pt-2 pb-2.5 px-4 inputComment"
-                        style="color: #334155;background-color: #F1F5F9;max-width:95%;border-radius: 20px;"></span>
+
+            <div class="bg-white text-black p-4 antialiased flex items-center mt-3" >
+                <img class="rounded-full h-8 w-8 mr-2" src="${authUser.user.picture}" />
+                <span contenteditable="true" comment-input class="text-normal font-medium text-slate-700 text-base leading-snug md:leading-normal bg-gray-100 w-full pt-2 pb-2.5 px-4" style="color: #334155;background-color: #F1F5F9;max-width:95%;border-radius: 20px;"></span>
             </div>
            
             <div comments-list data-post-id="${post._id}" class="px-4 space-y-4 pt-2 w-full">
+
             </div>
-            <button btn-get-comment>
-                <p class="text-slate-500 font-medium text-base">View all comment</p>
-            </button>
         </div>
     `);
 
@@ -204,25 +197,11 @@ function renderPost(post) {
         socket.emit('like_post', post._id);
     });
 
-    let count = 0;
-
     for(let comment of Object.values(post.comments)) {
-        if(count < 2){
-            count++;
-            postDom.find('[comments-list]').append(renderCommentView(comment))
-        } 
+        postDom.find('[comments-list]').append(renderCommentView(comment))
     }
-    
-    postDom.find('button[btn-get-comment]').on('click touch', function(e) {
-        // TODO: Load more comment
-        var commentDom = postDom.find('[comments-list]')
-        commentDom.empty()
-        for(var i in post.comments) {
-            commentDom.prepend(renderCommentView(post.comments[i]))
-        }    
-    });
 
-    var commentInput = postDom.find('span[commentInput]')
+    var commentInput = postDom.find('span[comment-input]')
 
     commentInput.on('keypress', function(e) {
         var content = commentInput.text().trim()
@@ -240,48 +219,50 @@ function renderPost(post) {
         allowHTML: true,
         trigger: 'mouseenter',
         content: `
-          <div class="flex flex-col items-center p-2">
-            <button btn-delete-post class="w-100 flex items-center space-x-2 p-2 mb-2 rounded-md -mx-2 bg-red-500 hover:bg-transparent border-2 border-transparent hover:border-red-500 hover:text-slate-700 group">
-              <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" class="w-4 h-4 fill-gray-100 group-hover:fill-slate-700" width="512" height="512"><path d="M21,4H17.9A5.009,5.009,0,0,0,13,0H11A5.009,5.009,0,0,0,6.1,4H3A1,1,0,0,0,3,6H4V19a5.006,5.006,0,0,0,5,5h6a5.006,5.006,0,0,0,5-5V6h1a1,1,0,0,0,0-2ZM11,2h2a3.006,3.006,0,0,1,2.829,2H8.171A3.006,3.006,0,0,1,11,2Zm7,17a3,3,0,0,1-3,3H9a3,3,0,0,1-3-3V6H18Z"/><path d="M10,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,10,18Z"/><path d="M14,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,14,18Z"/></svg>
-              <p class="text-gray-100 text-xs font-medium group-hover:text-slate-700">Delete post</p>
-            </button>
-            <button btn-edit-post class="w-100 flex items-center space-x-2 p-2 mb-2 rounded-md -mx-2 bg-red-500 hover:bg-transparent border-2 border-transparent hover:border-red-500 hover:text-slate-700 group">
-              <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" class="w-4 h-4 fill-gray-100 group-hover:fill-slate-700" width="512" height="512"><path d="M21,4H17.9A5.009,5.009,0,0,0,13,0H11A5.009,5.009,0,0,0,6.1,4H3A1,1,0,0,0,3,6H4V19a5.006,5.006,0,0,0,5,5h6a5.006,5.006,0,0,0,5-5V6h1a1,1,0,0,0,0-2ZM11,2h2a3.006,3.006,0,0,1,2.829,2H8.171A3.006,3.006,0,0,1,11,2Zm7,17a3,3,0,0,1-3,3H9a3,3,0,0,1-3-3V6H18Z"/><path d="M10,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,10,18Z"/><path d="M14,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,14,18Z"/></svg>
-              <p class="text-gray-100 text-xs font-medium group-hover:text-slate-700">Edit post</p>
-            </button>
-          </div>
+            <div class="py-2 min-w-32">
+                <div class="-mx-1">
+                    <button btn-edit-post class="px-3 py-2 hover:bg-slate-50 text-slate-700 hover:text-sky-600 block w-full font-medium text-left text-base rounded-md">
+                        Edit post
+                    </button>
+                </div>
+                <div class="-mx-1">
+                    <button btn-delete-post class="px-3 py-2 hover:bg-slate-50 text-slate-700 hover:text-sky-600 block w-full font-medium text-left text-base rounded-md">
+                        Delete post
+                    </button>
+                </div>
+            </div>
         `,
         maxWidth: 250,
         placement: 'bottom',
         hideOnClick: false,
         interactive: true,
         arrow: false,
-      })
+    })
     
-      if (authUser.user._id != post.owner._id) {
+    if (authUser.user._id != post.owner._id) {
         $(settingPopper.popper).find('button[btn-delete-post]').remove();
         $(settingPopper.popper).find('button[btn-edit-post]').remove();
-      }
-    
-      $(settingPopper.popper).find('button[btn-delete-post]').on('click touch', function(e) {
+    }
+
+    $(settingPopper.popper).find('button[btn-delete-post]').on('click touch', function(e) {
         socket.emit('delete_post', post._id);
-      })
+    })
 
     var edit_post =  $(`
         <div class="flex flex-wrap ">
-            <div class="w-5/6 p-2 ">
+            <div class="flex-1 p-2">
                 <input input-edit-${post._id} class="p-2 rounded-md border border-slate-200 w-full focus:border-slate-200" type="text" value ="${post.content}">
             </div>
-            <div class="w-1/6 flex flex-wrap">
-                <div class="w-1/2 p-2 ">
-                    <button btn-content-edit class="w-full box-border text-white p-2 px-4 hover:bg-white bg-sky-700 hover:text-slate-700 rounded rounded-br-lg border-2 border-sky-700 transition-all flex items-center space-x-2">Edit</button>
-                </div>
-                <div class="w-1/2 p-2 ">
-                    <button btn-content-edit-cancel class="w-full box-border text-white p-2 px-4 hover:bg-white bg-red-500 hover:text-slate-700 rounded rounded-br-lg border-2 border-red-500 transition-all flex items-center space-x-2">Cancel</button>
-                </div>
+            <div class="flex items-center flex-wrap space-x-3">
+                <button btn-content-edit class="text-slate-400 hover:text-slate-700">
+                    <svg class="w-4 h-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="512" height="512"><path d="M22.853,1.148a3.626,3.626,0,0,0-5.124,0L1.465,17.412A4.968,4.968,0,0,0,0,20.947V23a1,1,0,0,0,1,1H3.053a4.966,4.966,0,0,0,3.535-1.464L22.853,6.271A3.626,3.626,0,0,0,22.853,1.148ZM5.174,21.122A3.022,3.022,0,0,1,3.053,22H2V20.947a2.98,2.98,0,0,1,.879-2.121L15.222,6.483l2.3,2.3ZM21.438,4.857,18.932,7.364l-2.3-2.295,2.507-2.507a1.623,1.623,0,1,1,2.295,2.3Z"/></svg>
+                </button>
+                <button btn-content-edit-cancel class="text-slate-400">
+                    <svg class="w-4 h-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24" width="512" height="512"><polygon points="24 1.414 22.586 0 12 10.586 1.414 0 0 1.414 10.586 12 0 22.586 1.414 24 12 13.414 22.586 24 24 22.586 13.414 12 24 1.414"/></svg>
+                </button>
             </div>
         </div>
-        `);
+    `);
 
     $(settingPopper.popper).find('button[btn-edit-post]').on('click touch', function(e) {
        $('p[content-' + post._id + ']').remove();
