@@ -39,6 +39,7 @@ const callbacks = {
                 break;
             case 'comment_created':
                 $(`#postsList [data-post-id="${evt.data.comment.parent_post}"]`).find('[comments-list]').prepend(renderCommentView(evt.data.comment))
+                break;
             case 'delete_post':
                 refreshPostList();
                 break;
